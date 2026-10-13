@@ -1,0 +1,28 @@
+{
+  "name": "api-security-billing-express",
+  "version": "1.0.0",
+  "description": "Express.js Stripe Checkout & License Verification Backend for API Security Scanner",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js",
+    "dev": "nodemon server.js"
+  },
+  "dependencies": {
+    "cors": "^2.8.5",
+    "dotenv": "^16.4.5",
+    "express": "^4.19.2",
+    "stripe": "^14.21.0",
+    "uuid": "^9.0.1"
+  },
+  "devDependencies": {
+    "nodemon": "^3.1.0"
+  },
+  "keywords": [
+    "stripe",
+    "checkout",
+    "licensing",
+    "security-scanner"
+  ],
+  "author": "API Security Scanner Team",
+  "license": "Apache-2.0"
+}

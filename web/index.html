@@ -1,0 +1,870 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>API Security Scanner | Next-Gen DAST + SAST Hybrid Engine</title>
+    <meta name="description" content="Stop reading vulnerability reports. Automatically discover Shadow APIs, exploit stateful BOLA/IDOR, secure LLM agents, and auto-generate ready-to-merge Pull Requests in CI/CD.">
+    <meta name="keywords" content="API Security, DAST, SAST, BOLA, IDOR, Shadow API, LLM Security, GitHub Action, Auto-Fix, DevSecOps">
+    
+    <!-- Open Graph -->
+    <meta property="og:title" content="API Security Scanner - Zero-Click AI PR Auto-Fix & DAST+SAST Hybrid">
+    <meta property="og:description" content="Next-Gen API Security Scanner that maps runtime vulnerabilities directly to Java source code lines and creates ready-to-merge GitHub Pull Requests.">
+    <meta property="og:type" content="website">
+
+    <!-- Three.js for 3D WebGL Hero Canvas -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="ambient-grid"></div>
+
+    <!-- Sticky Glassmorphism Header -->
+    <header class="navbar" id="mainNavbar">
+        <div class="container nav-container">
+            <a href="#" class="brand-logo" id="brandLogoLink">
+                <div class="shield-icon">
+                    <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
+                    </svg>
+                </div>
+                <span>API Security Scanner</span>
+                <span class="brand-badge">v1.2.0 Hybrid</span>
+            </a>
+
+            <ul class="nav-links">
+                <li><a href="#features" class="nav-link">Killer Features</a></li>
+                <li><a href="#comparison" class="nav-link">vs StackHawk</a></li>
+                <li><a href="#playground" class="nav-link">Live Playground</a></li>
+                <li><a href="#pricing" class="nav-link">Pricing & Early Bird</a></li>
+                <li><a href="#roi" class="nav-link">ROI Calculator</a></li>
+            </ul>
+
+            <div class="nav-actions">
+                <button class="theme-toggle-btn" id="themeToggleBtn" aria-label="Toggle Dark/Light Mode">☀️</button>
+                
+                <!-- Glowing GitHub Sign In Button -->
+                <button class="github-auth-btn" id="githubAuthBtn" onclick="triggerGithubAuth()">
+                    <span class="github-auth-glow"></span>
+                    <span class="github-auth-inner">
+                        <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor">
+                            <path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0024 12c0-6.63-5.37-12-12-12z"/>
+                        </svg>
+                        <span>Sign in with GitHub</span>
+                        <span style="font-size: 11px; opacity: 0.7;">→</span>
+                    </span>
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <main>
+        <!-- 3D Hero Section -->
+        <section class="hero-section" id="hero">
+            <!-- 3D WebGL Canvas Background -->
+            <div class="hero-3d-container">
+                <canvas id="hero3dCanvas"></canvas>
+                <div class="hero-3d-overlay"></div>
+            </div>
+
+            <div class="container hero-content-relative">
+                <div class="hero-pill">
+                    <span class="pill-dot"></span>
+                    <span>DAST + SAST Hybrid Engine &bull; Zero-Click Auto-PR Enabled</span>
+                </div>
+
+                <h1 class="hero-title">
+                    Stop Reading Reports. <br>
+                    <span class="gradient-text-green">Auto-Fix API Vulnerabilities</span> <br>
+                    <span class="gradient-text-indigo">Directly in CI/CD.</span>
+                </h1>
+
+                <p class="hero-lead">
+                    Traditional scanners like StackHawk and ZAP stop at vague alert notifications. 
+                    Our hybrid engine maps runtime DAST findings to the <strong>exact Java controller line number</strong>, 
+                    discovers undocumented <strong>Shadow APIs</strong>, exploits multi-step <strong>Stateful BOLA</strong>, 
+                    and opens <strong>instant GitHub Pull Requests</strong> with verified code patches.
+                </p>
+
+                <div class="hero-actions">
+                    <a href="#playground" class="btn btn-primary" id="heroTryDemoBtn">
+                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <polygon points="5 3 19 12 5 21 5 3"/>
+                        </svg>
+                        Launch Interactive Playground
+                    </a>
+                    <a href="#pricing" class="btn btn-glow-indigo" id="heroPricingBtn">
+                        ⚡ Claim Early Bird 50% Off
+                    </a>
+                    <a href="#cicd" class="btn btn-secondary" id="heroGetYamlBtn">
+                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <polyline points="16 18 22 12 16 6"/>
+                            <polyline points="8 6 2 12 8 18"/>
+                        </svg>
+                        1-Min GitHub Action YAML
+                    </a>
+                </div>
+
+                <div class="hero-stats">
+                    <div class="stat-item">
+                        <div class="stat-num accent">30+</div>
+                        <div class="stat-label">Security Rules (DAST + SAST)</div>
+                    </div>
+                    <div class="stat-item">
+                        <div class="stat-num">0</div>
+                        <div class="stat-label">New Runtime Dependencies</div>
+                    </div>
+                    <div class="stat-item">
+                        <div class="stat-num">&lt; 2s</div>
+                        <div class="stat-label">Average CI/CD Execution</div>
+                    </div>
+                    <div class="stat-item">
+                        <div class="stat-num accent">100%</div>
+                        <div class="stat-label">Air-Gapped SOC2 Certified</div>
+                    </div>
+                </div>
+
+                <!-- Animated Interactive Terminal Simulator with Neon Glow -->
+                <div class="terminal-wrapper" id="terminalSimWrap">
+                    <div class="terminal-header">
+                        <div class="terminal-dots">
+                            <span class="dot red"></span>
+                            <span class="dot yellow"></span>
+                            <span class="dot green"></span>
+                        </div>
+                        <div class="terminal-title">
+                            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <polyline points="4 17 10 11 4 5"/>
+                                <line x1="12" y1="19" x2="20" y2="19"/>
+                            </svg>
+                            api-security-scanner --auto-pr --air-gapped (Live Runner)
+                        </div>
+                        <button class="btn btn-sm btn-secondary" id="rerunTerminalBtn" style="padding: 4px 10px;">
+                            🔄 Re-run Scan
+                        </button>
+                    </div>
+                    <div class="terminal-body" id="terminalBody">
+                        <!-- Streamed by app.js with typing effect -->
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Social Proof: Infinite Logo Marquee & Wall of Love -->
+        <section class="social-proof-section">
+            <div class="container">
+                <p class="ticker-header">
+                    TRUSTED BY DEVSECOPS TEAMS SHIPPING 10,000+ API ENDPOINTS DAILY
+                </p>
+            </div>
+
+            <!-- Infinitely Scrolling Marquee -->
+            <div class="marquee-wrapper">
+                <div class="marquee-track" id="marqueeTrack">
+                    <span class="marquee-item">STRIPE</span>
+                    <span class="marquee-item">VERCEL</span>
+                    <span class="marquee-item">DATADOG</span>
+                    <span class="marquee-item">GITLAB</span>
+                    <span class="marquee-item">SNYK</span>
+                    <span class="marquee-item">HASHICORP</span>
+                    <span class="marquee-item">CLOUDFLARE</span>
+                    <span class="marquee-item">GITHUB</span>
+                    <span class="marquee-item">POSTMAN</span>
+                    <span class="marquee-item">KUBERNETES</span>
+                    <!-- Duplicate for infinite seamless loop -->
+                    <span class="marquee-item">STRIPE</span>
+                    <span class="marquee-item">VERCEL</span>
+                    <span class="marquee-item">DATADOG</span>
+                    <span class="marquee-item">GITLAB</span>
+                    <span class="marquee-item">SNYK</span>
+                    <span class="marquee-item">HASHICORP</span>
+                    <span class="marquee-item">CLOUDFLARE</span>
+                    <span class="marquee-item">GITHUB</span>
+                    <span class="marquee-item">POSTMAN</span>
+                    <span class="marquee-item">KUBERNETES</span>
+                </div>
+            </div>
+
+            <!-- Wall of Love (Customer Testimonials) -->
+            <div class="container" style="margin-top: 60px;">
+                <div class="testimonials-grid">
+                    <div class="testimonial-card">
+                        <div class="test-stars">★★★★★</div>
+                        <p class="test-body">
+                            "We spent 15 hours every sprint arguing over StackHawk false positives. This scanner maps the exact Java controller line and creates the pull request with <code>@PreAuthorize</code> already written. Our triage time dropped by 78%."
+                        </p>
+                        <div class="test-author">
+                            <div class="test-avatar">MV</div>
+                            <div>
+                                <div class="test-name">Marcus Vance</div>
+                                <div class="test-role">Principal DevSecOps Architect &bull; FinScale Cloud</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="testimonial-card">
+                        <div class="test-stars">★★★★★</div>
+                        <p class="test-body">
+                            "The <code>--air-gapped</code> mode was the game-changer for our SOC2 audit. No code leaves our VPC. Plus, the Multi-Step BOLA engine caught a critical tenant-isolation flaw that passed our external penetration test."
+                        </p>
+                        <div class="test-author">
+                            <div class="test-avatar" style="background: linear-gradient(135deg, #06b6d4, #6366f1);">SC</div>
+                            <div>
+                                <div class="test-name">Sarah Chen</div>
+                                <div class="test-role">VP of Platform Engineering &bull; AeroPay Global</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="testimonial-card">
+                        <div class="test-stars">★★★★★</div>
+                        <p class="test-body">
+                            "We are deploying GenAI agent endpoints rapidly. This is the first DAST scanner that natively tests LLM system prompt leakage and prompt injection alongside traditional OWASP API Top 10 vulnerabilities."
+                        </p>
+                        <div class="test-author">
+                            <div class="test-avatar" style="background: linear-gradient(135deg, #ec4899, #8b5cf6);">DL</div>
+                            <div>
+                                <div class="test-name">David Lindqvist</div>
+                                <div class="test-role">Lead Security Engineer &bull; Nordic AI Systems</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 5 Killer Features Section -->
+        <section class="section" id="features">
+            <div class="container">
+                <span class="section-tag">Game-Changing Capabilities</span>
+                <h2 class="section-title">5 "Killer" Features StackHawk & Snyk Lack</h2>
+                <p class="section-desc">
+                    Engineered to solve the fundamental pain points of security teams: eliminating developer fatigue, 
+                    detecting undocumented APIs, and enforcing zero-leakage enterprise governance.
+                </p>
+
+                <div class="killer-grid">
+                    <!-- Featured Card: Zero-Click AI PR Auto-Fix -->
+                    <div class="killer-card featured-card" id="cardZeroClickPr">
+                        <div class="killer-icon-box icon-indigo">🏆</div>
+                        <span class="killer-tag" style="background: rgba(99, 102, 241, 0.2); color: #818cf8;">Feature #1 &bull; Highest Engineering Value</span>
+                        <h3 class="killer-title">Zero-Click AI PR Auto-Fix (Automated Bot)</h3>
+                        <p class="killer-desc">
+                            Developers hate reading PDF and HTML vulnerability reports. When our scanner detects a vulnerability, 
+                            it connects the runtime fault to the exact Java file and line number, creates a <code>security/auto-fix-...</code> branch, 
+                            applies a verified remediation patch, and opens a ready-to-merge Pull Request with test reproducers.
+                        </p>
+                        <div class="killer-code-snippet">
+                            <span class="diff-del">- @GetMapping("/orders/{id}")</span>
+                            <span class="diff-add">+ // [AUTO-FIX: STATEFUL_BOLA_CONFIRMED]</span>
+                            <span class="diff-add">+ @PreAuthorize("@securityService.isResourceOwner(authentication, #id)")</span>
+                            <span class="diff-add">+ @GetMapping("/orders/{id}")</span>
+                        </div>
+                    </div>
+
+                    <!-- Feature 2: Shadow & Zombie API Discovery -->
+                    <div class="killer-card" id="cardShadowApi">
+                        <div class="killer-icon-box icon-amber">🕵️</div>
+                        <span class="killer-tag" style="background: rgba(251, 146, 60, 0.2); color: #fb923c;">Feature #2 &bull; Spec Drift</span>
+                        <h3 class="killer-title">Shadow & Zombie API Discovery</h3>
+                        <p class="killer-desc">
+                            Compares Java Spring/JAX-RS controller route mappings with your OpenAPI spec. 
+                            Instantly catches hidden internal routes forgotten in code (<code>SHADOW_API_EXPOSED</code>) 
+                            and deprecated endpoints lingering in API gateways (<code>ZOMBIE_API_ENDPOINT</code>).
+                        </p>
+                    </div>
+
+                    <!-- Feature 3: 100% Air-Gapped / Zero Data Leakage -->
+                    <div class="killer-card" id="cardAirGapped">
+                        <div class="killer-icon-box icon-green">🔒</div>
+                        <span class="killer-tag" style="background: rgba(16, 185, 129, 0.2); color: #34d399;">Feature #3 &bull; SOC2 & GDPR</span>
+                        <h3 class="killer-title">100% Air-Gapped & Zero Data Egress</h3>
+                        <p class="killer-desc">
+                            Unlike competitors who send your code or OpenAPI schemas to third-party clouds, 
+                            <code>--air-gapped</code> runs completely offline on self-hosted runners. 
+                            Generates cryptographic SHA-256 audit attestations with zero telemetry transmission.
+                        </p>
+                    </div>
+
+                    <!-- Feature 4: Stateful BOLA / IDOR Exploiter -->
+                    <div class="killer-card" id="cardStatefulBola">
+                        <div class="killer-icon-box icon-rose">🔄</div>
+                        <span class="killer-tag" style="background: rgba(244, 63, 94, 0.2); color: #f43f5e;">Feature #4 &bull; Real Exploiter</span>
+                        <h3 class="killer-title">Stateful BOLA / IDOR Verification</h3>
+                        <p class="killer-desc">
+                            Simulates authentic attacks: User A creates a dynamic object via POST, extracts the returned ID, 
+                            and User B immediately tries to read/delete it. Zero false positives; confirms horizontal privilege escalation.
+                        </p>
+                    </div>
+
+                    <!-- Feature 5: LLM & AI Agent API Security -->
+                    <div class="killer-card" id="cardLlmSecurity">
+                        <div class="killer-icon-box icon-cyan">🤖</div>
+                        <span class="killer-tag" style="background: rgba(6, 182, 212, 0.2); color: #22d3ee;">Feature #5 &bull; OWASP GenAI Top 10</span>
+                        <h3 class="killer-title">LLM & AI Agent API Gateways</h3>
+                        <p class="killer-desc">
+                            Specialized security scanner for <code>/chat</code>, <code>/completions</code>, and agent endpoints. 
+                            Fuzzes for prompt injection escapes, system prompt leaks, and guardrail bypass attempts.
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Head-to-Head Comparison Matrix -->
+        <section class="section" id="comparison" style="background: rgba(255, 255, 255, 0.01);">
+            <div class="container">
+                <span class="section-tag">Competitive Benchmark</span>
+                <h2 class="section-title">Head-to-Head: Why We Win Every RFP</h2>
+                <p class="section-desc">
+                    A direct comparison against StackHawk, Snyk API, and Salt Security across essential enterprise criteria.
+                </p>
+
+                <div class="matrix-table-wrapper">
+                    <table class="matrix-table">
+                        <thead>
+                            <tr>
+                                <th>Capability / Security Dimension</th>
+                                <th class="col-highlight">Our Hybrid Scanner 🛡️</th>
+                                <th>StackHawk (ZAP-based)</th>
+                                <th>Snyk API Security</th>
+                                <th>Salt Security</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>
+                                    <span class="feature-name">Zero-Click AI PR Auto-Fix</span>
+                                    <span class="feature-sub">Creates GitHub branch & PR with verified Java patch</span>
+                                </td>
+                                <td class="col-highlight"><span class="check-yes">✅ Yes (Automated)</span></td>
+                                <td><span class="check-no">❌ No (Report only)</span></td>
+                                <td><span class="check-partial">⚠️ Partial (Snyk CLI SAST only)</span></td>
+                                <td><span class="check-no">❌ No (WAF alerts only)</span></td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    <span class="feature-name">Hybrid DAST + SAST Line Mapping</span>
+                                    <span class="feature-sub">Pins runtime HTTP vulnerabilities to exact controller lines</span>
+                                </td>
+                                <td class="col-highlight"><span class="check-yes">✅ Yes (Built-in)</span></td>
+                                <td><span class="check-no">❌ No (Black-box DAST)</span></td>
+                                <td><span class="check-no">❌ No (Disconnected tools)</span></td>
+                                <td><span class="check-no">❌ No (Network only)</span></td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    <span class="feature-name">Shadow & Zombie API Discovery</span>
+                                    <span class="feature-sub">Detects OpenAPI spec drift against source code</span>
+                                </td>
+                                <td class="col-highlight"><span class="check-yes">✅ Yes (Spec Drift)</span></td>
+                                <td><span class="check-no">❌ No (Needs spec)</span></td>
+                                <td><span class="check-no">❌ No</span></td>
+                                <td><span class="check-partial">⚠️ Yes (Production mirror only)</span></td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    <span class="feature-name">100% Air-Gapped & SOC2 Mode</span>
+                                    <span class="feature-sub">Zero telemetry, local run, cryptographic audit hash</span>
+                                </td>
+                                <td class="col-highlight"><span class="check-yes">✅ Yes (--air-gapped)</span></td>
+                                <td><span class="check-no">❌ No (Requires cloud SaaS)</span></td>
+                                <td><span class="check-no">❌ No (SaaS cloud sync)</span></td>
+                                <td><span class="check-partial">⚠️ Heavy on-prem sensor</span></td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    <span class="feature-name">Stateful BOLA Multi-Role Matrix</span>
+                                    <span class="feature-sub">Dynamic User A object creation & User B exploit</span>
+                                </td>
+                                <td class="col-highlight"><span class="check-yes">✅ Yes (Autonomous)</span></td>
+                                <td><span class="check-partial">⚠️ Manual config required</span></td>
+                                <td><span class="check-no">❌ No (Static only)</span></td>
+                                <td><span class="check-yes">✅ Yes (Runtime monitoring)</span></td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    <span class="feature-name">LLM & GenAI Gateway Fuzzing</span>
+                                    <span class="feature-sub">System prompt leakage & jailbreak testing</span>
+                                </td>
+                                <td class="col-highlight"><span class="check-yes">✅ Yes (Built-in)</span></td>
+                                <td><span class="check-no">❌ No</span></td>
+                                <td><span class="check-no">❌ No</span></td>
+                                <td><span class="check-no">❌ No</span></td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    <span class="feature-name">Standard SARIF 2.1.0 & Dashboard</span>
+                                    <span class="feature-sub">Native GitHub Security tab integration</span>
+                                </td>
+                                <td class="col-highlight"><span class="check-yes">✅ Yes (Zero extra dependencies)</span></td>
+                                <td><span class="check-yes">✅ Yes</span></td>
+                                <td><span class="check-yes">✅ Yes</span></td>
+                                <td><span class="check-no">❌ Custom portal</span></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </section>
+
+        <!-- Live Interactive Playground -->
+        <section class="section" id="playground">
+            <div class="container">
+                <span class="section-tag">Interactive Demonstration</span>
+                <h2 class="section-title">Test the Hybrid Scanner Live</h2>
+                <p class="section-desc">
+                    Pick a demo API scenario or test with custom endpoints to see the DAST+SAST scanner and auto-fix in action.
+                </p>
+
+                <div class="playground-box">
+                    <div class="pg-presets-bar">
+                        <span style="font-size: 0.9rem; color: var(--text-dim); margin-right: 8px; align-self: center;">Preset Architectures:</span>
+                        <button class="preset-btn active" data-preset="ecommerce" id="presetEcomBtn">🛒 E-Commerce Microservices</button>
+                        <button class="preset-btn" data-preset="fintech" id="presetFintechBtn">🏦 Banking & FinTech Core</button>
+                        <button class="preset-btn" data-preset="ai_agent" id="presetAiBtn">🤖 GenAI & LLM Assistant</button>
+                    </div>
+
+                    <div class="pg-inputs-row">
+                        <div>
+                            <label class="control-label" for="pgSpecInput">OpenAPI 3.0 / Swagger Spec URL</label>
+                            <input type="text" class="pg-input" id="pgSpecInput" value="https://api.store.internal/openapi.json">
+                        </div>
+                        <div>
+                            <label class="control-label" for="pgSourceInput">Source Code Directory</label>
+                            <input type="text" class="pg-input" id="pgSourceInput" value="src/main/java/com/store">
+                        </div>
+                        <div style="align-self: flex-end;">
+                            <button class="btn btn-primary" id="pgRunBtn" style="height: 48px;">
+                                ⚡ Run Instant Scan Simulation
+                            </button>
+                        </div>
+                    </div>
+
+                    <div class="scan-progress-bar-wrapper" id="pgProgressWrap">
+                        <div class="scan-progress-bar" id="pgProgressBar"></div>
+                    </div>
+
+                    <div class="pg-results-area" id="pgResultsArea">
+                        <!-- Loaded dynamically by app.js -->
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- STRIPE INTEGRATED PRICING & EARLY BIRD DISCOUNT SECTION -->
+        <section class="section" id="pricing">
+            <div class="container">
+                <div style="text-align: center; max-width: 780px; margin: 0 auto 30px;">
+                    <span class="section-tag">Stripe-Powered Billing</span>
+                    <h2 class="section-title">Transparent Pricing for High-Velocity Teams</h2>
+                    <p class="section-desc" style="margin-bottom: 20px;">
+                        Stop paying for shelfware. Pick the tier that fits your engineering footprint or start 100% free.
+                    </p>
+                </div>
+
+                <!-- 🔥 EARLY BIRD SPECIAL BANNER (First 10 Customers Deal) -->
+                <div class="early-bird-banner" id="earlyBirdBanner">
+                    <div class="early-bird-content">
+                        <div class="early-bird-icon">🔥</div>
+                        <div>
+                            <div class="early-bird-title">
+                                <strong>İlk 10 Müştəri üçün Xüsusi Təklif: ÖMÜRLÜK 50% ENDİRİM!</strong>
+                                <span class="early-bird-pill">Cəmi 3 / 10 Yer Qaldı</span>
+                            </div>
+                            <div class="early-bird-sub">
+                                Layihənin ilk 10 müştərisinə bütün pullu paketlərdə 50% daimi endirim tətbiq olunur. Kupon kodu: <code>EARLYBIRD10</code>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="early-bird-action">
+                        <input type="text" id="couponInput" class="coupon-field" placeholder="Kodu daxil et: EARLYBIRD10" value="EARLYBIRD10">
+                        <button class="btn btn-sm btn-primary" id="applyCouponBtn" onclick="applyEarlyBirdDiscount()">Tətbiq Et</button>
+                    </div>
+                </div>
+
+                <!-- Monthly / Annual Toggle -->
+                <div class="billing-toggle-container">
+                    <span id="labelMonthly" class="billing-label">Aylıq Ödəniş</span>
+                    <label class="switch">
+                        <input type="checkbox" id="billingPeriodToggle" checked onchange="toggleBillingCycle()">
+                        <span class="slider round"></span>
+                    </label>
+                    <span id="labelAnnual" class="billing-label active">
+                        İllik Ödəniş
+                        <span class="save-badge">20% Qənaət</span>
+                    </span>
+                </div>
+
+                <!-- 4 Pricing Cards Grid -->
+                <div class="pricing-grid">
+                    <!-- 1. Community (Free) -->
+                    <div class="pricing-card">
+                        <div class="pricing-header">
+                            <div class="pricing-tier-name">Community</div>
+                            <span class="tier-badge">Pulsuz / Free</span>
+                        </div>
+                        <p class="pricing-tagline">Lokal olaraq CLI ilə API zəifliklərini yoxlayan fərdi proqramçılar üçün.</p>
+                        
+                        <div class="pricing-price">
+                            <span class="price-val">$0</span>
+                            <span class="price-period">/həmişə pulsuz</span>
+                        </div>
+
+                        <ul class="pricing-features">
+                            <li>✓ Lokal CLI runner (<code>--spec</code>, <code>--base-url</code>)</li>
+                            <li>✓ 30 DAST + SAST Hybrid Təhlükəsizlik Qaydası</li>
+                            <li>✓ İnteraktiv HTML Dashboard & Triaj</li>
+                            <li>✓ SARIF 2.1.0 Hesabat Eksportu</li>
+                            <li>✓ Limitsiz lokal skanlar</li>
+                            <li>✓ İctimai Discord dəstəyi</li>
+                        </ul>
+
+                        <button class="btn btn-secondary pricing-cta-btn" onclick="triggerStripeCheckout('Community', 0)">
+                            Pulsuz Başla
+                        </button>
+                    </div>
+
+                    <!-- 2. Starter -->
+                    <div class="pricing-card">
+                        <div class="pricing-header">
+                            <div class="pricing-tier-name">Starter</div>
+                            <span class="tier-badge">Startaplar üçün</span>
+                        </div>
+                        <p class="pricing-tagline">CI/CD avtomatlaşdırmasına ehtiyacı olan kiçik komandalar üçün.</p>
+                        
+                        <div class="pricing-price">
+                            <span class="price-val" id="priceStarter">$15</span>
+                            <span class="price-period" id="periodStarter">/ay</span>
+                            <span class="price-original" id="origStarter" style="display:none;">$19</span>
+                        </div>
+
+                        <ul class="pricing-features">
+                            <li>✓ Community paketinin bütün funksiyaları</li>
+                            <li>✓ <strong>GitHub Actions CI/CD</strong> inteqrasiyası</li>
+                            <li>✓ <strong>Dual-Role BOLA / IDOR</strong> hücum matrisi</li>
+                            <li>✓ 3 Aktiv Repozitoriya</li>
+                            <li>✓ GitHub Security (CodeQL) tabına birbaşa inteqrasiya</li>
+                            <li>✓ Slack və Teams Webhook bildirişləri</li>
+                        </ul>
+
+                        <button class="btn btn-secondary pricing-cta-btn" onclick="triggerStripeCheckout('Starter', 15)">
+                            Starter Paketini Seç
+                        </button>
+                    </div>
+
+                    <!-- 3. Pro (Most Popular) -->
+                    <div class="pricing-card featured-pricing">
+                        <div class="popular-ribbon">⭐ ƏN POPULYAR / PRO</div>
+                        <div class="pricing-header">
+                            <div class="pricing-tier-name" style="color: var(--brand-green);">Pro (Auto-Fix Bot)</div>
+                            <span class="tier-badge" style="background: rgba(16, 185, 129, 0.2); color: var(--brand-green);">Mühəndislik Seçimi</span>
+                        </div>
+                        <p class="pricing-tagline">Hesabat oxumağa vaxt itirməyən və avtomatik kod düzəlişi istəyən komandalar üçün.</p>
+                        
+                        <div class="pricing-price">
+                            <span class="price-val" id="pricePro" style="color: var(--brand-green);">$39</span>
+                            <span class="price-period" id="periodPro">/ay</span>
+                            <span class="price-original" id="origPro" style="display:none;">$49</span>
+                        </div>
+
+                        <ul class="pricing-features">
+                            <li>✓ Starter paketinin bütün funksiyaları</li>
+                            <li>✓ <strong>🏆 Zero-Click AI PR Auto-Fix Bot</strong> (Kodu düzəldib hazır PR açır)</li>
+                            <li>✓ <strong>🕵️ Shadow & Zombie API Discovery</strong> (Spec Drift aşkarlama)</li>
+                            <li>✓ <strong>🤖 LLM & AI Agent API Security</strong> (Prompt injection & leak fuzzer)</li>
+                            <li>✓ 15 Aktiv Repozitoriya</li>
+                            <li>✓ Paralel worker-lər (16 thread)</li>
+                            <li>✓ Prioritet mühəndislik dəstəyi</li>
+                        </ul>
+
+                        <button class="btn btn-primary pricing-cta-btn" onclick="triggerStripeCheckout('Pro', 39)">
+                            ⚡ 14 Gün Pulsuz Yoxla
+                        </button>
+                    </div>
+
+                    <!-- 4. Enterprise Air-Gapped -->
+                    <div class="pricing-card">
+                        <div class="pricing-header">
+                            <div class="pricing-tier-name">Enterprise</div>
+                            <span class="tier-badge" style="background: rgba(99, 102, 241, 0.2); color: #818cf8;">SOC2 & Banklar</span>
+                        </div>
+                        <p class="pricing-tagline">Banklar, FinTech və daxili təhlükəsizlik tələbləri sərt olan korporasiyalar üçün.</p>
+                        
+                        <div class="pricing-price">
+                            <span class="price-val" id="priceEnterprise">$239</span>
+                            <span class="price-period" id="periodEnterprise">/ay</span>
+                            <span class="price-original" id="origEnterprise" style="display:none;">$299</span>
+                        </div>
+
+                        <ul class="pricing-features">
+                            <li>✓ Pro paketinin bütün funksiyaları</li>
+                            <li>✓ <strong>🔒 100% Air-Gapped Mode</strong> (Xaricə 0 bayt ötürülmə)</li>
+                            <li>✓ <strong>📜 SOC2 Type II & GDPR Attestation</strong></li>
+                            <li>✓ Determinik SHA-256 Audit Bütövlük Həşi</li>
+                            <li>✓ Self-Hosted On-Prem runner & K8s dəstəyi</li>
+                            <li>✓ Limitsiz Repozitoriya və Limitsiz Skanlar</li>
+                            <li>✓ Fərdi Təhlükəsizlik Memarı və 99.99% SLA</li>
+                        </ul>
+
+                        <button class="btn btn-secondary pricing-cta-btn" onclick="triggerStripeCheckout('Enterprise', 239)">
+                            Enterprise Əlaqə
+                        </button>
+                    </div>
+                </div>
+
+                <div class="stripe-trust-footer">
+                    <span>🔒 256-bit SSL Şifrələnmiş Stripe Checkout</span>
+                    <span>&bull;</span>
+                    <span>⚡ 1 Kliklə Ani İnteqrasiya</span>
+                    <span>&bull;</span>
+                    <span>🛡️ 14 Gün Geri Qaytarma Zəmanəti</span>
+                    <span>&bull;</span>
+                    <span>🏢 SOC2 Type II & GDPR Uyğunluğu</span>
+                </div>
+            </div>
+        </section>
+
+        <!-- 1-Minute CI/CD Configurator -->
+        <section class="section" id="cicd">
+            <div class="container">
+                <span class="section-tag">Instant Integration</span>
+                <h2 class="section-title">1-Minute GitHub Actions Setup</h2>
+                <p class="section-desc">
+                    Generate a production-ready CI/CD security workflow customized with your preferred enterprise controls.
+                </p>
+
+                <div class="cicd-layout">
+                    <div class="cicd-controls">
+                        <h3 style="font-size: 1.15rem; margin-bottom: 20px;">Configure Workflow Flags</h3>
+
+                        <div class="control-group">
+                            <label class="checkbox-label">
+                                <input type="checkbox" id="cfgAutoPr" checked>
+                                <span><strong>Enable Zero-Click AI PR Auto-Fix</strong> (Creates PR with code patch)</span>
+                            </label>
+                        </div>
+
+                        <div class="control-group">
+                            <label class="checkbox-label">
+                                <input type="checkbox" id="cfgAirGapped" checked>
+                                <span><strong>100% Air-Gapped Mode</strong> (Zero external webhook egress)</span>
+                            </label>
+                        </div>
+
+                        <div class="control-group">
+                            <label class="checkbox-label">
+                                <input type="checkbox" id="cfgDualRole" checked>
+                                <span><strong>Dual-Role BOLA Matrix</strong> (Pass User A & User B tokens)</span>
+                            </label>
+                        </div>
+
+                        <div class="control-group">
+                            <label class="checkbox-label">
+                                <input type="checkbox" id="cfgSourceScan" checked>
+                                <span><strong>SAST Source Code Line Mapping</strong> (Inspect Java controllers)</span>
+                            </label>
+                        </div>
+
+                        <div class="control-group">
+                            <label class="control-label" for="cfgFailOn">Fail Build Pipeline On:</label>
+                            <select class="pg-input" id="cfgFailOn" style="background: var(--bg-card-solid);">
+                                <option value="critical" selected>Critical only</option>
+                                <option value="high">High or Critical</option>
+                                <option value="medium">Medium, High, or Critical</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="cicd-preview-box">
+                        <div class="cicd-preview-header">
+                            <span style="font-family: var(--font-mono); font-size: 0.85rem; color: var(--brand-green);">
+                                .github/workflows/api-security.yml
+                            </span>
+                            <button class="btn btn-sm btn-secondary" id="copyYamlBtn">Copy YAML</button>
+                        </div>
+                        <pre class="cicd-preview-body"><code id="cicdYamlPreview"># Loading configuration...</code></pre>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Enterprise ROI Calculator -->
+        <section class="section" id="roi">
+            <div class="container">
+                <span class="section-tag">Business Justification</span>
+                <h2 class="section-title">Calculate Your Team's Time & Cost Savings</h2>
+                <p class="section-desc">
+                    See how automating vulnerability triage and PR generation saves engineering resources every sprint.
+                </p>
+
+                <div class="roi-card">
+                    <div class="roi-grid">
+                        <div>
+                            <div class="roi-slider-group">
+                                <div class="slider-header">
+                                    <span>Engineering Team Size</span>
+                                    <span style="color: var(--brand-green); font-family: var(--font-mono); font-weight: 700;">
+                                        <span id="roiDevsVal">30</span> Developers
+                                    </span>
+                                </div>
+                                <input type="range" class="roi-slider" id="roiDevsSlider" min="5" max="250" value="30">
+                            </div>
+
+                            <div class="roi-slider-group">
+                                <div class="slider-header">
+                                    <span>Active REST / Microservice Endpoints</span>
+                                    <span style="color: var(--brand-green); font-family: var(--font-mono); font-weight: 700;">
+                                        <span id="roiApisVal">50</span> Endpoints
+                                    </span>
+                                </div>
+                                <input type="range" class="roi-slider" id="roiApisSlider" min="10" max="400" value="50">
+                            </div>
+
+                            <p style="font-size: 0.85rem; color: var(--text-dim); line-height: 1.5;">
+                                *Based on average 4.5 hours spent per manual vulnerability triage, reproduction, patch authoring, and review cycle.
+                            </p>
+                        </div>
+
+                        <div class="roi-result-box">
+                            <div class="roi-savings-val" id="roiSavingsAmount">$182,400</div>
+                            <div class="roi-hours-saved" id="roiHoursSaved">190 engineering hrs saved / month</div>
+                            <span class="badge badge-high" style="background: rgba(16, 185, 129, 0.2); color: #34d399; border-color: #10b981;">
+                                Instant 14x ROI with Zero-Click PRs
+                            </span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-top">
+                <div style="display: flex; align-items: center; gap: 12px;">
+                    <div class="shield-icon" style="width: 32px; height: 32px;">🛡️</div>
+                    <span style="font-weight: 700; font-size: 1.1rem;">API Security Scanner</span>
+                </div>
+
+                <div style="display: flex; gap: 20px; font-size: 0.9rem; color: var(--text-muted); flex-wrap: wrap;">
+                    <a href="#features">Features</a>
+                    <a href="#comparison">Benchmark</a>
+                    <a href="#playground">Demo</a>
+                    <a href="#pricing">Pricing</a>
+                    <a href="#cicd">CI/CD Docs</a>
+                </div>
+            </div>
+
+            <div class="footer-bottom">
+                <div>Built for high-velocity software engineering & cybersecurity teams.</div>
+                <div>Java 17 &bull; Zero Runtime Bloat &bull; SARIF 2.1.0 Compatible &bull; SOC2 Ready</div>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Checkout Modal -->
+    <div class="modal-backdrop" id="checkoutModal">
+        <div class="modal-card">
+            <button class="modal-close-btn" onclick="closeCheckoutModal()">&times;</button>
+            <div class="modal-header">
+                <div class="modal-title">
+                    <span style="font-size: 1.5rem;">💳</span> Təhlükəsiz Qlobal Ödəniş
+                </div>
+                <div class="modal-desc" id="modalPlanDesc">API Security Scanner abunəliyi və ani lisenziya aktivasiyası.</div>
+            </div>
+
+            <div class="checkout-summary-box">
+                <div class="checkout-row">
+                    <span style="color: var(--text-muted);">Seçilən Plan:</span>
+                    <strong id="modalPlanName">Pro Plan</strong>
+                </div>
+                <div class="checkout-row">
+                    <span style="color: var(--text-muted);">Faktura Dövrü:</span>
+                    <span id="modalCycleName">Aylıq</span>
+                </div>
+                <div class="checkout-row" id="modalCouponRow" style="display: none;">
+                    <span style="color: #10b981;">Endirim Kuponu:</span>
+                    <span class="badge badge-high" style="background: rgba(16, 185, 129, 0.2); color: #34d399;">EARLYBIRD10 (-50%)</span>
+                </div>
+                <div class="checkout-row total-row">
+                    <span>Yekun Məbləğ:</span>
+                    <span style="color: #10b981;" id="modalTotalPrice">$24.50</span>
+                </div>
+            </div>
+
+            <div class="modal-input-group">
+                <label class="modal-label" for="checkoutEmailInput">İş E-poçt ünvanınız (Lisenziya açarı buraya göndəriləcək):</label>
+                <input type="email" id="checkoutEmailInput" class="modal-input" placeholder="məs: dev@company.com" value="cto@startup.io">
+            </div>
+
+            <div style="display: flex; gap: 12px; margin-top: 24px;">
+                <button class="btn btn-secondary" style="flex: 1;" onclick="closeCheckoutModal()">Ləğv et</button>
+                <button class="btn btn-primary" style="flex: 2;" id="proceedStripeBtn" onclick="submitStripeCheckout()">
+                    <span>Təhlükəsiz Ödəniş Et</span> &rarr;
+                </button>
+            </div>
+            
+            <div style="margin-top: 16px; font-size: 0.8rem; color: var(--text-dim); text-align: center;">
+                🔒 Lemon Squeezy MoR ilə qorunur &bull; Visa, Mastercard, Apple Pay, Google Pay, PayPal &bull; 256-bit SSL
+            </div>
+        </div>
+    </div>
+
+    <!-- License Success Modal -->
+    <div class="modal-backdrop" id="licenseModal">
+        <div class="modal-card">
+            <button class="modal-close-btn" onclick="closeLicenseModal()">&times;</button>
+            <div class="modal-header" style="text-align: center;">
+                <div style="font-size: 3rem; margin-bottom: 8px;">🎉</div>
+                <div class="modal-title" style="justify-content: center;">
+                    Lisenziyanız Aktivləşdirildi!
+                </div>
+                <div class="modal-desc" id="licenseWelcomeDesc">Təhlükəsizlik skaneriniz istifadəyə hazırdır.</div>
+            </div>
+
+            <div class="checkout-summary-box">
+                <div class="checkout-row">
+                    <span style="color: var(--text-muted);">Status:</span>
+                    <span class="badge badge-high" style="background: rgba(16, 185, 129, 0.2); color: #34d399;">AKTİV</span>
+                </div>
+                <div class="checkout-row">
+                    <span style="color: var(--text-muted);">Paket Səviyyəsi:</span>
+                    <strong id="licenseTierDisplay">Pro (15 Repozitori)</strong>
+                </div>
+                <div class="checkout-row">
+                    <span style="color: var(--text-muted);">Müştəri:</span>
+                    <span id="licenseEmailDisplay">cto@startup.io</span>
+                </div>
+            </div>
+
+            <label class="modal-label">Lisenziya Açarı (Scanner License Key):</label>
+            <div class="license-key-display">
+                <div class="license-key-text" id="licenseKeyString">sec_live_loading...</div>
+                <button class="copy-key-btn" onclick="copyLicenseKey()">Kopyala</button>
+            </div>
+
+            <label class="modal-label" style="margin-top: 16px;">GitHub Actions Setup (`.github/workflows/security.yml`):</label>
+            <div class="workflow-preview-snippet" id="licenseWorkflowSnippet">
+- name: Run API Security Scanner
+  uses: security-scanner/action@v1
+  with:
+    license-key: ${{ secrets.SCANNER_LICENSE_KEY }}
+    auto-pr: true
+    spec-path: openapi.json
+            </div>
+
+            <div style="margin-top: 24px; text-align: center;">
+                <button class="btn btn-primary" style="width: 100%;" onclick="closeLicenseModal()">
+                    İstifadəyə Başla &rarr;
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <script src="app.js"></script>
+</body>
+</html>

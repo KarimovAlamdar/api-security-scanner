@@ -1,0 +1,36 @@
+# ==============================================================================
+# API Security Scanner - Root .gitignore
+# ==============================================================================
+
+# Maven Build Artifacts
+target/
+**/target/
+*.class
+**/*.class
+dependency-reduced-pom.xml
+**/dependency-reduced-pom.xml
+
+# Customer Data & Secrets
+server/data/licenses.json
+**/data/licenses.json
+.env
+*.env.local
+**/.env
+
+# Node.js
+node_modules/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# IDE & OS Artifacts
+.idea/
+*.iml
+.vscode/
+.DS_Store
+Thumbs.db
+
+# Logs & Temporary Files
+*.log
+scratch/
+.system_generated/

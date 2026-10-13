@@ -1,0 +1,1113 @@
+{
+  "$schema" : "https://raw.githubusercontent.com/oasis-tcs/sarif-spec/master/Schemata/sarif-schema-2.1.0.json",
+  "version" : "2.1.0",
+  "runs" : [ {
+    "tool" : {
+      "driver" : {
+        "name" : "api-security-scanner",
+        "semanticVersion" : "1.2.0",
+        "informationUri" : "https://github.com/scanner/api-security-scanner",
+        "rules" : [ {
+          "id" : "BOLA_IDOR_VULNERABILITY",
+          "name" : "BrokenObjectLevelAuthorization",
+          "shortDescription" : {
+            "text" : "Broken Object Level Authorization (BOLA / IDOR)"
+          },
+          "fullDescription" : {
+            "text" : "Cross-tenant or secondary user accessed or modified another user's private object without authorization check."
+          },
+          "defaultConfiguration" : {
+            "level" : "error"
+          },
+          "help" : {
+            "text" : "Cross-tenant or secondary user accessed or modified another user's private object without authorization check.",
+            "markdown" : "**Broken Object Level Authorization (BOLA / IDOR)**\n\nCross-tenant or secondary user accessed or modified another user's private object without authorization check."
+          },
+          "properties" : {
+            "precision" : "high",
+            "security-severity" : "9.5",
+            "tags" : [ "security", "owasp-api1", "CWE-639", "CWE-285" ]
+          }
+        }, {
+          "id" : "SQLI_INDICATOR",
+          "name" : "SqlInjectionIndicator",
+          "shortDescription" : {
+            "text" : "Database syntax error suggests potential SQL Injection"
+          },
+          "fullDescription" : {
+            "text" : "Fuzzing payload triggered database syntax error or SQL exception in server response."
+          },
+          "defaultConfiguration" : {
+            "level" : "error"
+          },
+          "help" : {
+            "text" : "Fuzzing payload triggered database syntax error or SQL exception in server response.",
+            "markdown" : "**Database syntax error suggests potential SQL Injection**\n\nFuzzing payload triggered database syntax error or SQL exception in server response."
+          },
+          "properties" : {
+            "precision" : "high",
+            "security-severity" : "9.0",
+            "tags" : [ "security", "owasp-api8", "CWE-89" ]
+          }
+        }, {
+          "id" : "AUTH_BYPASS",
+          "name" : "AuthenticationBypass",
+          "shortDescription" : {
+            "text" : "Endpoint missing authentication requirement"
+          },
+          "fullDescription" : {
+            "text" : "Secured or state-changing endpoint accepted a request without valid authentication credentials."
+          },
+          "defaultConfiguration" : {
+            "level" : "error"
+          },
+          "help" : {
+            "text" : "Secured or state-changing endpoint accepted a request without valid authentication credentials.",
+            "markdown" : "**Endpoint missing authentication requirement**\n\nSecured or state-changing endpoint accepted a request without valid authentication credentials."
+          },
+          "properties" : {
+            "precision" : "high",
+            "security-severity" : "8.5",
+            "tags" : [ "security", "owasp-api2", "CWE-306" ]
+          }
+        }, {
+          "id" : "XSS_REFLECTED",
+          "name" : "ReflectedCrossSiteScripting",
+          "shortDescription" : {
+            "text" : "Reflected Cross-Site Scripting (XSS)"
+          },
+          "fullDescription" : {
+            "text" : "Input payload was echoed unencoded in the response body, enabling script injection in user browsers."
+          },
+          "defaultConfiguration" : {
+            "level" : "error"
+          },
+          "help" : {
+            "text" : "Input payload was echoed unencoded in the response body, enabling script injection in user browsers.",
+            "markdown" : "**Reflected Cross-Site Scripting (XSS)**\n\nInput payload was echoed unencoded in the response body, enabling script injection in user browsers."
+          },
+          "properties" : {
+            "precision" : "high",
+            "security-severity" : "8.5",
+            "tags" : [ "security", "owasp-api8", "CWE-79" ]
+          }
+        }, {
+          "id" : "CORS_REFLECTED_ORIGIN",
+          "name" : "CorsReflectedOrigin",
+          "shortDescription" : {
+            "text" : "CORS reflects arbitrary origin with credentials"
+          },
+          "fullDescription" : {
+            "text" : "Endpoint reflects arbitrary Origin header while setting Access-Control-Allow-Credentials: true."
+          },
+          "defaultConfiguration" : {
+            "level" : "error"
+          },
+          "help" : {
+            "text" : "Endpoint reflects arbitrary Origin header while setting Access-Control-Allow-Credentials: true.",
+            "markdown" : "**CORS reflects arbitrary origin with credentials**\n\nEndpoint reflects arbitrary Origin header while setting Access-Control-Allow-Credentials: true."
+          },
+          "properties" : {
+            "precision" : "high",
+            "security-severity" : "8.0",
+            "tags" : [ "security", "owasp-api7", "CWE-942" ]
+          }
+        }, {
+          "id" : "CORS_WILDCARD",
+          "name" : "CorsWildcardOrigin",
+          "shortDescription" : {
+            "text" : "CORS wildcard origin allows cross-origin reading"
+          },
+          "fullDescription" : {
+            "text" : "Endpoint returns Access-Control-Allow-Origin: * allowing untrusted third-party origins to access API."
+          },
+          "defaultConfiguration" : {
+            "level" : "warning"
+          },
+          "help" : {
+            "text" : "Endpoint returns Access-Control-Allow-Origin: * allowing untrusted third-party origins to access API.",
+            "markdown" : "**CORS wildcard origin allows cross-origin reading**\n\nEndpoint returns Access-Control-Allow-Origin: * allowing untrusted third-party origins to access API."
+          },
+          "properties" : {
+            "precision" : "high",
+            "security-severity" : "6.0",
+            "tags" : [ "security", "owasp-api7", "CWE-942" ]
+          }
+        }, {
+          "id" : "MISSING_HSTS",
+          "name" : "MissingStrictTransportSecurity",
+          "shortDescription" : {
+            "text" : "Missing or weak Strict-Transport-Security (HSTS) header"
+          },
+          "fullDescription" : {
+            "text" : "Response does not include HSTS or max-age is below recommended 6-month minimum, allowing protocol downgrade attacks."
+          },
+          "defaultConfiguration" : {
+            "level" : "warning"
+          },
+          "help" : {
+            "text" : "Response does not include HSTS or max-age is below recommended 6-month minimum, allowing protocol downgrade attacks.",
+            "markdown" : "**Missing or weak Strict-Transport-Security (HSTS) header**\n\nResponse does not include HSTS or max-age is below recommended 6-month minimum, allowing protocol downgrade attacks."
+          },
+          "properties" : {
+            "precision" : "high",
+            "security-severity" : "5.5",
+            "tags" : [ "security", "owasp-api7", "CWE-319" ]
+          }
+        }, {
+          "id" : "COOKIE_NO_HTTPONLY",
+          "name" : "CookieMissingHttpOnly",
+          "shortDescription" : {
+            "text" : "Cookie missing HttpOnly flag"
+          },
+          "fullDescription" : {
+            "text" : "Set-Cookie header does not include HttpOnly attribute, making cookie accessible to JavaScript and vulnerable to XSS theft."
+          },
+          "defaultConfiguration" : {
+            "level" : "warning"
+          },
+          "help" : {
+            "text" : "Set-Cookie header does not include HttpOnly attribute, making cookie accessible to JavaScript and vulnerable to XSS theft.",
+            "markdown" : "**Cookie missing HttpOnly flag**\n\nSet-Cookie header does not include HttpOnly attribute, making cookie accessible to JavaScript and vulnerable to XSS theft."
+          },
+          "properties" : {
+            "precision" : "high",
+            "security-severity" : "5.5",
+            "tags" : [ "security", "owasp-api8", "CWE-1004" ]
+          }
+        }, {
+          "id" : "COOKIE_NO_SECURE",
+          "name" : "CookieMissingSecure",
+          "shortDescription" : {
+            "text" : "Cookie missing Secure flag on HTTPS endpoint"
+          },
+          "fullDescription" : {
+            "text" : "Set-Cookie header on an HTTPS endpoint does not include Secure attribute, allowing cookie transmission over plaintext HTTP."
+          },
+          "defaultConfiguration" : {
+            "level" : "warning"
+          },
+          "help" : {
+            "text" : "Set-Cookie header on an HTTPS endpoint does not include Secure attribute, allowing cookie transmission over plaintext HTTP.",
+            "markdown" : "**Cookie missing Secure flag on HTTPS endpoint**\n\nSet-Cookie header on an HTTPS endpoint does not include Secure attribute, allowing cookie transmission over plaintext HTTP."
+          },
+          "properties" : {
+            "precision" : "high",
+            "security-severity" : "5.0",
+            "tags" : [ "security", "owasp-api8", "CWE-614" ]
+          }
+        }, {
+          "id" : "ERROR_LEAK",
+          "name" : "InternalErrorLeak",
+          "shortDescription" : {
+            "text" : "Endpoint leaks internal stack trace or framework error details"
+          },
+          "fullDescription" : {
+            "text" : "Server returned stack trace or internal error messages containing implementation details."
+          },
+          "defaultConfiguration" : {
+            "level" : "warning"
+          },
+          "help" : {
+            "text" : "Server returned stack trace or internal error messages containing implementation details.",
+            "markdown" : "**Endpoint leaks internal stack trace or framework error details**\n\nServer returned stack trace or internal error messages containing implementation details."
+          },
+          "properties" : {
+            "precision" : "high",
+            "security-severity" : "5.0",
+            "tags" : [ "security", "CWE-209" ]
+          }
+        }, {
+          "id" : "MISSING_CSP",
+          "name" : "MissingContentSecurityPolicy",
+          "shortDescription" : {
+            "text" : "Missing Content-Security-Policy header"
+          },
+          "fullDescription" : {
+            "text" : "Response does not include Content-Security-Policy header, leaving clients vulnerable to content injection attacks."
+          },
+          "defaultConfiguration" : {
+            "level" : "note"
+          },
+          "help" : {
+            "text" : "Response does not include Content-Security-Policy header, leaving clients vulnerable to content injection attacks.",
+            "markdown" : "**Missing Content-Security-Policy header**\n\nResponse does not include Content-Security-Policy header, leaving clients vulnerable to content injection attacks."
+          },
+          "properties" : {
+            "precision" : "high",
+            "security-severity" : "4.0",
+            "tags" : [ "security", "owasp-api7", "CWE-693" ]
+          }
+        }, {
+          "id" : "MISSING_XCTO",
+          "name" : "MissingXContentTypeOptions",
+          "shortDescription" : {
+            "text" : "Missing or incorrect X-Content-Type-Options header"
+          },
+          "fullDescription" : {
+            "text" : "Response does not include X-Content-Type-Options: nosniff, allowing MIME-type sniffing attacks."
+          },
+          "defaultConfiguration" : {
+            "level" : "note"
+          },
+          "help" : {
+            "text" : "Response does not include X-Content-Type-Options: nosniff, allowing MIME-type sniffing attacks.",
+            "markdown" : "**Missing or incorrect X-Content-Type-Options header**\n\nResponse does not include X-Content-Type-Options: nosniff, allowing MIME-type sniffing attacks."
+          },
+          "properties" : {
+            "precision" : "high",
+            "security-severity" : "3.5",
+            "tags" : [ "security", "owasp-api7", "CWE-693" ]
+          }
+        }, {
+          "id" : "MISSING_XFO",
+          "name" : "MissingXFrameOptions",
+          "shortDescription" : {
+            "text" : "Missing X-Frame-Options / CSP frame-ancestors"
+          },
+          "fullDescription" : {
+            "text" : "Response lacks both X-Frame-Options header and CSP frame-ancestors directive, enabling clickjacking attacks."
+          },
+          "defaultConfiguration" : {
+            "level" : "note"
+          },
+          "help" : {
+            "text" : "Response lacks both X-Frame-Options header and CSP frame-ancestors directive, enabling clickjacking attacks.",
+            "markdown" : "**Missing X-Frame-Options / CSP frame-ancestors**\n\nResponse lacks both X-Frame-Options header and CSP frame-ancestors directive, enabling clickjacking attacks."
+          },
+          "properties" : {
+            "precision" : "high",
+            "security-severity" : "3.5",
+            "tags" : [ "security", "owasp-api7", "CWE-1021" ]
+          }
+        }, {
+          "id" : "COOKIE_NO_SAMESITE",
+          "name" : "CookieMissingSameSite",
+          "shortDescription" : {
+            "text" : "Cookie missing SameSite attribute"
+          },
+          "fullDescription" : {
+            "text" : "Set-Cookie header does not include SameSite attribute (or uses SameSite=None without Secure), enabling CSRF attacks."
+          },
+          "defaultConfiguration" : {
+            "level" : "note"
+          },
+          "help" : {
+            "text" : "Set-Cookie header does not include SameSite attribute (or uses SameSite=None without Secure), enabling CSRF attacks.",
+            "markdown" : "**Cookie missing SameSite attribute**\n\nSet-Cookie header does not include SameSite attribute (or uses SameSite=None without Secure), enabling CSRF attacks."
+          },
+          "properties" : {
+            "precision" : "high",
+            "security-severity" : "3.5",
+            "tags" : [ "security", "owasp-api8", "CWE-1275" ]
+          }
+        }, {
+          "id" : "SERVER_VERSION_LEAK",
+          "name" : "ServerVersionDisclosure",
+          "shortDescription" : {
+            "text" : "Server header discloses version information"
+          },
+          "fullDescription" : {
+            "text" : "The Server response header reveals software name and version, aiding attackers in identifying known vulnerabilities."
+          },
+          "defaultConfiguration" : {
+            "level" : "note"
+          },
+          "help" : {
+            "text" : "The Server response header reveals software name and version, aiding attackers in identifying known vulnerabilities.",
+            "markdown" : "**Server header discloses version information**\n\nThe Server response header reveals software name and version, aiding attackers in identifying known vulnerabilities."
+          },
+          "properties" : {
+            "precision" : "high",
+            "security-severity" : "3.0",
+            "tags" : [ "security", "CWE-200" ]
+          }
+        }, {
+          "id" : "TECH_STACK_LEAK",
+          "name" : "TechnologyStackDisclosure",
+          "shortDescription" : {
+            "text" : "X-Powered-By header leaks technology stack"
+          },
+          "fullDescription" : {
+            "text" : "The X-Powered-By header reveals framework or runtime details, aiding targeted exploitation."
+          },
+          "defaultConfiguration" : {
+            "level" : "note"
+          },
+          "help" : {
+            "text" : "The X-Powered-By header reveals framework or runtime details, aiding targeted exploitation.",
+            "markdown" : "**X-Powered-By header leaks technology stack**\n\nThe X-Powered-By header reveals framework or runtime details, aiding targeted exploitation."
+          },
+          "properties" : {
+            "precision" : "high",
+            "security-severity" : "3.0",
+            "tags" : [ "security", "CWE-200" ]
+          }
+        }, {
+          "id" : "SSRF_DETECTED",
+          "name" : "ServerSideRequestForgery",
+          "shortDescription" : {
+            "text" : "Server-Side Request Forgery (SSRF) to cloud metadata or internal host"
+          },
+          "fullDescription" : {
+            "text" : "Endpoint forwarded request to internal cloud metadata service (169.254.169.254) or localhost and returned internal metadata or service banners."
+          },
+          "defaultConfiguration" : {
+            "level" : "error"
+          },
+          "help" : {
+            "text" : "Endpoint forwarded request to internal cloud metadata service (169.254.169.254) or localhost and returned internal metadata or service banners.",
+            "markdown" : "**Server-Side Request Forgery (SSRF) to cloud metadata or internal host**\n\nEndpoint forwarded request to internal cloud metadata service (169.254.169.254) or localhost and returned internal metadata or service banners."
+          },
+          "properties" : {
+            "precision" : "high",
+            "security-severity" : "9.5",
+            "tags" : [ "security", "owasp-api7", "CWE-918" ]
+          }
+        }, {
+          "id" : "SSRF_POTENTIAL",
+          "name" : "PotentialServerSideRequestForgery",
+          "shortDescription" : {
+            "text" : "Potential Server-Side Request Forgery"
+          },
+          "fullDescription" : {
+            "text" : "Endpoint accepted an internal URL payload and responded with HTTP 200, suggesting lack of destination IP/hostname validation."
+          },
+          "defaultConfiguration" : {
+            "level" : "warning"
+          },
+          "help" : {
+            "text" : "Endpoint accepted an internal URL payload and responded with HTTP 200, suggesting lack of destination IP/hostname validation.",
+            "markdown" : "**Potential Server-Side Request Forgery**\n\nEndpoint accepted an internal URL payload and responded with HTTP 200, suggesting lack of destination IP/hostname validation."
+          },
+          "properties" : {
+            "precision" : "high",
+            "security-severity" : "7.5",
+            "tags" : [ "security", "owasp-api7", "CWE-918" ]
+          }
+        }, {
+          "id" : "PATH_TRAVERSAL",
+          "name" : "PathTraversalArbitraryFileRead",
+          "shortDescription" : {
+            "text" : "Path Traversal / Arbitrary File Read"
+          },
+          "fullDescription" : {
+            "text" : "File system path traversal sequence escaped root folder and returned sensitive system configuration files."
+          },
+          "defaultConfiguration" : {
+            "level" : "error"
+          },
+          "help" : {
+            "text" : "File system path traversal sequence escaped root folder and returned sensitive system configuration files.",
+            "markdown" : "**Path Traversal / Arbitrary File Read**\n\nFile system path traversal sequence escaped root folder and returned sensitive system configuration files."
+          },
+          "properties" : {
+            "precision" : "high",
+            "security-severity" : "9.0",
+            "tags" : [ "security", "owasp-api8", "CWE-22" ]
+          }
+        }, {
+          "id" : "SQLI_BLIND_TIME",
+          "name" : "TimeBasedBlindSqlInjection",
+          "shortDescription" : {
+            "text" : "Time-based Blind SQL Injection"
+          },
+          "fullDescription" : {
+            "text" : "Injected SQL delay payload caused significant server response latency matching the injected sleep duration."
+          },
+          "defaultConfiguration" : {
+            "level" : "error"
+          },
+          "help" : {
+            "text" : "Injected SQL delay payload caused significant server response latency matching the injected sleep duration.",
+            "markdown" : "**Time-based Blind SQL Injection**\n\nInjected SQL delay payload caused significant server response latency matching the injected sleep duration."
+          },
+          "properties" : {
+            "precision" : "high",
+            "security-severity" : "9.2",
+            "tags" : [ "security", "owasp-api8", "CWE-89" ]
+          }
+        }, {
+          "id" : "COMMAND_INJECTION",
+          "name" : "RemoteOsCommandInjection",
+          "shortDescription" : {
+            "text" : "Remote OS Command Injection"
+          },
+          "fullDescription" : {
+            "text" : "Injected shell command / delay payload triggered remote operating system command execution."
+          },
+          "defaultConfiguration" : {
+            "level" : "error"
+          },
+          "help" : {
+            "text" : "Injected shell command / delay payload triggered remote operating system command execution.",
+            "markdown" : "**Remote OS Command Injection**\n\nInjected shell command / delay payload triggered remote operating system command execution."
+          },
+          "properties" : {
+            "precision" : "high",
+            "security-severity" : "9.8",
+            "tags" : [ "security", "owasp-api8", "CWE-78" ]
+          }
+        }, {
+          "id" : "SSTI_DETECTED",
+          "name" : "ServerSideTemplateInjection",
+          "shortDescription" : {
+            "text" : "Server-Side Template Injection (SSTI)"
+          },
+          "fullDescription" : {
+            "text" : "Template expression evaluation payload was computed and reflected by the server template engine."
+          },
+          "defaultConfiguration" : {
+            "level" : "error"
+          },
+          "help" : {
+            "text" : "Template expression evaluation payload was computed and reflected by the server template engine.",
+            "markdown" : "**Server-Side Template Injection (SSTI)**\n\nTemplate expression evaluation payload was computed and reflected by the server template engine."
+          },
+          "properties" : {
+            "precision" : "high",
+            "security-severity" : "8.5",
+            "tags" : [ "security", "owasp-api8", "CWE-1336" ]
+          }
+        }, {
+          "id" : "OPEN_REDIRECT",
+          "name" : "OpenRedirect",
+          "shortDescription" : {
+            "text" : "Open URL Redirection"
+          },
+          "fullDescription" : {
+            "text" : "Endpoint issues HTTP 3xx redirect to untrusted external URL from user-controlled parameter."
+          },
+          "defaultConfiguration" : {
+            "level" : "warning"
+          },
+          "help" : {
+            "text" : "Endpoint issues HTTP 3xx redirect to untrusted external URL from user-controlled parameter.",
+            "markdown" : "**Open URL Redirection**\n\nEndpoint issues HTTP 3xx redirect to untrusted external URL from user-controlled parameter."
+          },
+          "properties" : {
+            "precision" : "high",
+            "security-severity" : "6.5",
+            "tags" : [ "security", "owasp-api7", "CWE-601" ]
+          }
+        }, {
+          "id" : "NOSQL_INJECTION",
+          "name" : "NoSqlInjection",
+          "shortDescription" : {
+            "text" : "NoSQL Operator Injection"
+          },
+          "fullDescription" : {
+            "text" : "MongoDB/NoSQL query operator payload altered database query logic or bypassed filtering."
+          },
+          "defaultConfiguration" : {
+            "level" : "error"
+          },
+          "help" : {
+            "text" : "MongoDB/NoSQL query operator payload altered database query logic or bypassed filtering.",
+            "markdown" : "**NoSQL Operator Injection**\n\nMongoDB/NoSQL query operator payload altered database query logic or bypassed filtering."
+          },
+          "properties" : {
+            "precision" : "high",
+            "security-severity" : "8.5",
+            "tags" : [ "security", "owasp-api8", "CWE-943" ]
+          }
+        }, {
+          "id" : "SHADOW_API_EXPOSED",
+          "name" : "ShadowApiExposed",
+          "shortDescription" : {
+            "text" : "Shadow / Undocumented API Endpoint Exposed in Source Code"
+          },
+          "fullDescription" : {
+            "text" : "Endpoint exists in source code controllers but is completely omitted from the OpenAPI specification, exposing unmonitored attack surface."
+          },
+          "defaultConfiguration" : {
+            "level" : "error"
+          },
+          "help" : {
+            "text" : "Endpoint exists in source code controllers but is completely omitted from the OpenAPI specification, exposing unmonitored attack surface.",
+            "markdown" : "**Shadow / Undocumented API Endpoint Exposed in Source Code**\n\nEndpoint exists in source code controllers but is completely omitted from the OpenAPI specification, exposing unmonitored attack surface."
+          },
+          "properties" : {
+            "precision" : "high",
+            "security-severity" : "8.5",
+            "tags" : [ "security", "owasp-api9", "CWE-1059", "shadow-api" ]
+          }
+        }, {
+          "id" : "ZOMBIE_API_ENDPOINT",
+          "name" : "ZombieApiEndpoint",
+          "shortDescription" : {
+            "text" : "Zombie / Deprecated API Endpoint Missing in Codebase"
+          },
+          "fullDescription" : {
+            "text" : "Endpoint is declared in the OpenAPI specification but could not be located in source code controllers, indicating dead code or specification drift."
+          },
+          "defaultConfiguration" : {
+            "level" : "note"
+          },
+          "help" : {
+            "text" : "Endpoint is declared in the OpenAPI specification but could not be located in source code controllers, indicating dead code or specification drift.",
+            "markdown" : "**Zombie / Deprecated API Endpoint Missing in Codebase**\n\nEndpoint is declared in the OpenAPI specification but could not be located in source code controllers, indicating dead code or specification drift."
+          },
+          "properties" : {
+            "precision" : "high",
+            "security-severity" : "3.0",
+            "tags" : [ "security", "owasp-api9", "CWE-1059", "zombie-api" ]
+          }
+        }, {
+          "id" : "STATEFUL_BOLA_CONFIRMED",
+          "name" : "StatefulBolaConfirmed",
+          "shortDescription" : {
+            "text" : "Stateful BOLA / IDOR Confirmed Via Dynamic Resource Creation"
+          },
+          "fullDescription" : {
+            "text" : "User A dynamically created an entity, and secondary user (User B) successfully accessed or manipulated it with zero false positive verification."
+          },
+          "defaultConfiguration" : {
+            "level" : "error"
+          },
+          "help" : {
+            "text" : "User A dynamically created an entity, and secondary user (User B) successfully accessed or manipulated it with zero false positive verification.",
+            "markdown" : "**Stateful BOLA / IDOR Confirmed Via Dynamic Resource Creation**\n\nUser A dynamically created an entity, and secondary user (User B) successfully accessed or manipulated it with zero false positive verification."
+          },
+          "properties" : {
+            "precision" : "high",
+            "security-severity" : "10.0",
+            "tags" : [ "security", "owasp-api1", "CWE-639", "CWE-285", "stateful-bola" ]
+          }
+        }, {
+          "id" : "LLM_SYSTEM_PROMPT_LEAK",
+          "name" : "LlmSystemPromptLeak",
+          "shortDescription" : {
+            "text" : "LLM System Prompt / Sensitive Pre-Prompt Leakage"
+          },
+          "fullDescription" : {
+            "text" : "Target endpoint processed an injection prompt and leaked internal system directives, safety guardrails, or hidden developer instructions."
+          },
+          "defaultConfiguration" : {
+            "level" : "error"
+          },
+          "help" : {
+            "text" : "Target endpoint processed an injection prompt and leaked internal system directives, safety guardrails, or hidden developer instructions.",
+            "markdown" : "**LLM System Prompt / Sensitive Pre-Prompt Leakage**\n\nTarget endpoint processed an injection prompt and leaked internal system directives, safety guardrails, or hidden developer instructions."
+          },
+          "properties" : {
+            "precision" : "high",
+            "security-severity" : "8.5",
+            "tags" : [ "security", "owasp-llm06", "CWE-200", "ai-security" ]
+          }
+        }, {
+          "id" : "LLM_PROMPT_INJECTION",
+          "name" : "LlmPromptInjection",
+          "shortDescription" : {
+            "text" : "LLM Prompt Injection / Guardrail Compromised"
+          },
+          "fullDescription" : {
+            "text" : "Direct prompt injection successfully bypassed LLM safety guardrails and executed adversarial instructions."
+          },
+          "defaultConfiguration" : {
+            "level" : "error"
+          },
+          "help" : {
+            "text" : "Direct prompt injection successfully bypassed LLM safety guardrails and executed adversarial instructions.",
+            "markdown" : "**LLM Prompt Injection / Guardrail Compromised**\n\nDirect prompt injection successfully bypassed LLM safety guardrails and executed adversarial instructions."
+          },
+          "properties" : {
+            "precision" : "high",
+            "security-severity" : "8.8",
+            "tags" : [ "security", "owasp-llm01", "CWE-94", "ai-security" ]
+          }
+        }, {
+          "id" : "SERVER_ERROR",
+          "name" : "UnhandledServerError",
+          "shortDescription" : {
+            "text" : "Payload triggered unexpected HTTP 5xx error"
+          },
+          "fullDescription" : {
+            "text" : "Endpoint returned an internal server error response when processing edge-case input payload."
+          },
+          "defaultConfiguration" : {
+            "level" : "note"
+          },
+          "help" : {
+            "text" : "Endpoint returned an internal server error response when processing edge-case input payload.",
+            "markdown" : "**Payload triggered unexpected HTTP 5xx error**\n\nEndpoint returned an internal server error response when processing edge-case input payload."
+          },
+          "properties" : {
+            "precision" : "high",
+            "security-severity" : "3.0",
+            "tags" : [ "security", "CWE-398" ]
+          }
+        } ]
+      }
+    },
+    "results" : [ {
+      "ruleId" : "SHADOW_API_EXPOSED",
+      "ruleIndex" : 24,
+      "level" : "error",
+      "message" : {
+        "text" : "[GET /] Shadow / Undocumented API Exposed: Route GET / implemented in demo/UserController.java:16 was omitted from OpenAPI specification. (repro: curl -i -X GET 'http://localhost:8080/')"
+      },
+      "locations" : [ {
+        "physicalLocation" : {
+          "artifactLocation" : {
+            "uri" : "demo/UserController.java",
+            "uriBaseId" : "%SRCROOT%"
+          },
+          "region" : {
+            "startLine" : 16,
+            "startColumn" : 1
+          }
+        }
+      } ],
+      "fixes" : [ {
+        "description" : {
+          "text" : "Apply suggested security remediation patch"
+        },
+        "fileChanges" : [ {
+          "artifactLocation" : {
+            "uri" : "demo/UserController.java",
+            "uriBaseId" : "%SRCROOT%"
+          },
+          "replacements" : [ {
+            "deletedRegion" : {
+              "startLine" : 16,
+              "startColumn" : 1
+            },
+            "insertedContent" : {
+              "text" : "// [Remediation: Shadow API] Either register this endpoint in the OpenAPI specification\n// or restrict/remove this unmonitored internal controller endpoint:\n// 1. Add route to openapi.json/openapi.yaml or document with @Operation.\n// 2. If intentionally internal, mark with @Hidden or restrict to ADMIN:\n@Hidden\n@PreAuthorize(\"hasRole('ADMIN')\")\n// Or disable in production profiles:\n@Profile(\"!production\")\n"
+            }
+          } ]
+        } ]
+      } ]
+    }, {
+      "ruleId" : "SHADOW_API_EXPOSED",
+      "ruleIndex" : 24,
+      "level" : "error",
+      "message" : {
+        "text" : "[POST /] Shadow / Undocumented API Exposed: Route POST / implemented in demo/UserController.java:21 was omitted from OpenAPI specification. (repro: curl -i -X POST 'http://localhost:8080/')"
+      },
+      "locations" : [ {
+        "physicalLocation" : {
+          "artifactLocation" : {
+            "uri" : "demo/UserController.java",
+            "uriBaseId" : "%SRCROOT%"
+          },
+          "region" : {
+            "startLine" : 21,
+            "startColumn" : 1
+          }
+        }
+      } ],
+      "fixes" : [ {
+        "description" : {
+          "text" : "Apply suggested security remediation patch"
+        },
+        "fileChanges" : [ {
+          "artifactLocation" : {
+            "uri" : "demo/UserController.java",
+            "uriBaseId" : "%SRCROOT%"
+          },
+          "replacements" : [ {
+            "deletedRegion" : {
+              "startLine" : 21,
+              "startColumn" : 1
+            },
+            "insertedContent" : {
+              "text" : "// [Remediation: Shadow API] Either register this endpoint in the OpenAPI specification\n// or restrict/remove this unmonitored internal controller endpoint:\n// 1. Add route to openapi.json/openapi.yaml or document with @Operation.\n// 2. If intentionally internal, mark with @Hidden or restrict to ADMIN:\n@Hidden\n@PreAuthorize(\"hasRole('ADMIN')\")\n// Or disable in production profiles:\n@Profile(\"!production\")\n"
+            }
+          } ]
+        } ]
+      } ]
+    }, {
+      "ruleId" : "SHADOW_API_EXPOSED",
+      "ruleIndex" : 24,
+      "level" : "error",
+      "message" : {
+        "text" : "[GET /] Shadow / Undocumented API Exposed: Route GET / implemented in demo/VulnerableDemoServer.java:21 was omitted from OpenAPI specification. (repro: curl -i -X GET 'http://localhost:8080/')"
+      },
+      "locations" : [ {
+        "physicalLocation" : {
+          "artifactLocation" : {
+            "uri" : "demo/VulnerableDemoServer.java",
+            "uriBaseId" : "%SRCROOT%"
+          },
+          "region" : {
+            "startLine" : 21,
+            "startColumn" : 1
+          }
+        }
+      } ],
+      "fixes" : [ {
+        "description" : {
+          "text" : "Apply suggested security remediation patch"
+        },
+        "fileChanges" : [ {
+          "artifactLocation" : {
+            "uri" : "demo/VulnerableDemoServer.java",
+            "uriBaseId" : "%SRCROOT%"
+          },
+          "replacements" : [ {
+            "deletedRegion" : {
+              "startLine" : 21,
+              "startColumn" : 1
+            },
+            "insertedContent" : {
+              "text" : "// [Remediation: Shadow API] Either register this endpoint in the OpenAPI specification\n// or restrict/remove this unmonitored internal controller endpoint:\n// 1. Add route to openapi.json/openapi.yaml or document with @Operation.\n// 2. If intentionally internal, mark with @Hidden or restrict to ADMIN:\n@Hidden\n@PreAuthorize(\"hasRole('ADMIN')\")\n// Or disable in production profiles:\n@Profile(\"!production\")\n"
+            }
+          } ]
+        } ]
+      } ]
+    }, {
+      "ruleId" : "SHADOW_API_EXPOSED",
+      "ruleIndex" : 24,
+      "level" : "error",
+      "message" : {
+        "text" : "[GET /.] Shadow / Undocumented API Exposed: Route GET /. implemented in src/main/java/com/scanner/ApiSecurityScanner.java:2331 was omitted from OpenAPI specification. (repro: curl -i -X GET 'http://localhost:8080/.')"
+      },
+      "locations" : [ {
+        "physicalLocation" : {
+          "artifactLocation" : {
+            "uri" : "src/main/java/com/scanner/ApiSecurityScanner.java",
+            "uriBaseId" : "%SRCROOT%"
+          },
+          "region" : {
+            "startLine" : 2331,
+            "startColumn" : 1
+          }
+        }
+      } ],
+      "fixes" : [ {
+        "description" : {
+          "text" : "Apply suggested security remediation patch"
+        },
+        "fileChanges" : [ {
+          "artifactLocation" : {
+            "uri" : "src/main/java/com/scanner/ApiSecurityScanner.java",
+            "uriBaseId" : "%SRCROOT%"
+          },
+          "replacements" : [ {
+            "deletedRegion" : {
+              "startLine" : 2331,
+              "startColumn" : 1
+            },
+            "insertedContent" : {
+              "text" : "// [Remediation: Shadow API] Either register this endpoint in the OpenAPI specification\n// or restrict/remove this unmonitored internal controller endpoint:\n// 1. Add route to openapi.json/openapi.yaml or document with @Operation.\n// 2. If intentionally internal, mark with @Hidden or restrict to ADMIN:\n@Hidden\n@PreAuthorize(\"hasRole('ADMIN')\")\n// Or disable in production profiles:\n@Profile(\"!production\")\n"
+            }
+          } ]
+        } ]
+      } ]
+    }, {
+      "ruleId" : "SHADOW_API_EXPOSED",
+      "ruleIndex" : 24,
+      "level" : "error",
+      "message" : {
+        "text" : "[GET /] Shadow / Undocumented API Exposed: Route GET / implemented in src/main/java/com/scanner/SourceCodeMapper.java:33 was omitted from OpenAPI specification. (repro: curl -i -X GET 'http://localhost:8080/')"
+      },
+      "locations" : [ {
+        "physicalLocation" : {
+          "artifactLocation" : {
+            "uri" : "src/main/java/com/scanner/SourceCodeMapper.java",
+            "uriBaseId" : "%SRCROOT%"
+          },
+          "region" : {
+            "startLine" : 33,
+            "startColumn" : 1
+          }
+        }
+      } ],
+      "fixes" : [ {
+        "description" : {
+          "text" : "Apply suggested security remediation patch"
+        },
+        "fileChanges" : [ {
+          "artifactLocation" : {
+            "uri" : "src/main/java/com/scanner/SourceCodeMapper.java",
+            "uriBaseId" : "%SRCROOT%"
+          },
+          "replacements" : [ {
+            "deletedRegion" : {
+              "startLine" : 33,
+              "startColumn" : 1
+            },
+            "insertedContent" : {
+              "text" : "// [Remediation: Shadow API] Either register this endpoint in the OpenAPI specification\n// or restrict/remove this unmonitored internal controller endpoint:\n// 1. Add route to openapi.json/openapi.yaml or document with @Operation.\n// 2. If intentionally internal, mark with @Hidden or restrict to ADMIN:\n@Hidden\n@PreAuthorize(\"hasRole('ADMIN')\")\n// Or disable in production profiles:\n@Profile(\"!production\")\n"
+            }
+          } ]
+        } ]
+      } ]
+    }, {
+      "ruleId" : "SHADOW_API_EXPOSED",
+      "ruleIndex" : 24,
+      "level" : "error",
+      "message" : {
+        "text" : "[POST /] Shadow / Undocumented API Exposed: Route POST / implemented in src/main/java/com/scanner/SourceCodeMapper.java:33 was omitted from OpenAPI specification. (repro: curl -i -X POST 'http://localhost:8080/')"
+      },
+      "locations" : [ {
+        "physicalLocation" : {
+          "artifactLocation" : {
+            "uri" : "src/main/java/com/scanner/SourceCodeMapper.java",
+            "uriBaseId" : "%SRCROOT%"
+          },
+          "region" : {
+            "startLine" : 33,
+            "startColumn" : 1
+          }
+        }
+      } ],
+      "fixes" : [ {
+        "description" : {
+          "text" : "Apply suggested security remediation patch"
+        },
+        "fileChanges" : [ {
+          "artifactLocation" : {
+            "uri" : "src/main/java/com/scanner/SourceCodeMapper.java",
+            "uriBaseId" : "%SRCROOT%"
+          },
+          "replacements" : [ {
+            "deletedRegion" : {
+              "startLine" : 33,
+              "startColumn" : 1
+            },
+            "insertedContent" : {
+              "text" : "// [Remediation: Shadow API] Either register this endpoint in the OpenAPI specification\n// or restrict/remove this unmonitored internal controller endpoint:\n// 1. Add route to openapi.json/openapi.yaml or document with @Operation.\n// 2. If intentionally internal, mark with @Hidden or restrict to ADMIN:\n@Hidden\n@PreAuthorize(\"hasRole('ADMIN')\")\n// Or disable in production profiles:\n@Profile(\"!production\")\n"
+            }
+          } ]
+        } ]
+      } ]
+    }, {
+      "ruleId" : "SHADOW_API_EXPOSED",
+      "ruleIndex" : 24,
+      "level" : "error",
+      "message" : {
+        "text" : "[PUT /] Shadow / Undocumented API Exposed: Route PUT / implemented in src/main/java/com/scanner/SourceCodeMapper.java:33 was omitted from OpenAPI specification. (repro: curl -i -X PUT 'http://localhost:8080/')"
+      },
+      "locations" : [ {
+        "physicalLocation" : {
+          "artifactLocation" : {
+            "uri" : "src/main/java/com/scanner/SourceCodeMapper.java",
+            "uriBaseId" : "%SRCROOT%"
+          },
+          "region" : {
+            "startLine" : 33,
+            "startColumn" : 1
+          }
+        }
+      } ],
+      "fixes" : [ {
+        "description" : {
+          "text" : "Apply suggested security remediation patch"
+        },
+        "fileChanges" : [ {
+          "artifactLocation" : {
+            "uri" : "src/main/java/com/scanner/SourceCodeMapper.java",
+            "uriBaseId" : "%SRCROOT%"
+          },
+          "replacements" : [ {
+            "deletedRegion" : {
+              "startLine" : 33,
+              "startColumn" : 1
+            },
+            "insertedContent" : {
+              "text" : "// [Remediation: Shadow API] Either register this endpoint in the OpenAPI specification\n// or restrict/remove this unmonitored internal controller endpoint:\n// 1. Add route to openapi.json/openapi.yaml or document with @Operation.\n// 2. If intentionally internal, mark with @Hidden or restrict to ADMIN:\n@Hidden\n@PreAuthorize(\"hasRole('ADMIN')\")\n// Or disable in production profiles:\n@Profile(\"!production\")\n"
+            }
+          } ]
+        } ]
+      } ]
+    }, {
+      "ruleId" : "SHADOW_API_EXPOSED",
+      "ruleIndex" : 24,
+      "level" : "error",
+      "message" : {
+        "text" : "[DELETE /] Shadow / Undocumented API Exposed: Route DELETE / implemented in src/main/java/com/scanner/SourceCodeMapper.java:33 was omitted from OpenAPI specification. (repro: curl -i -X DELETE 'http://localhost:8080/')"
+      },
+      "locations" : [ {
+        "physicalLocation" : {
+          "artifactLocation" : {
+            "uri" : "src/main/java/com/scanner/SourceCodeMapper.java",
+            "uriBaseId" : "%SRCROOT%"
+          },
+          "region" : {
+            "startLine" : 33,
+            "startColumn" : 1
+          }
+        }
+      } ],
+      "fixes" : [ {
+        "description" : {
+          "text" : "Apply suggested security remediation patch"
+        },
+        "fileChanges" : [ {
+          "artifactLocation" : {
+            "uri" : "src/main/java/com/scanner/SourceCodeMapper.java",
+            "uriBaseId" : "%SRCROOT%"
+          },
+          "replacements" : [ {
+            "deletedRegion" : {
+              "startLine" : 33,
+              "startColumn" : 1
+            },
+            "insertedContent" : {
+              "text" : "// [Remediation: Shadow API] Either register this endpoint in the OpenAPI specification\n// or restrict/remove this unmonitored internal controller endpoint:\n// 1. Add route to openapi.json/openapi.yaml or document with @Operation.\n// 2. If intentionally internal, mark with @Hidden or restrict to ADMIN:\n@Hidden\n@PreAuthorize(\"hasRole('ADMIN')\")\n// Or disable in production profiles:\n@Profile(\"!production\")\n"
+            }
+          } ]
+        } ]
+      } ]
+    }, {
+      "ruleId" : "SHADOW_API_EXPOSED",
+      "ruleIndex" : 24,
+      "level" : "error",
+      "message" : {
+        "text" : "[PATCH /] Shadow / Undocumented API Exposed: Route PATCH / implemented in src/main/java/com/scanner/SourceCodeMapper.java:33 was omitted from OpenAPI specification. (repro: curl -i -X PATCH 'http://localhost:8080/')"
+      },
+      "locations" : [ {
+        "physicalLocation" : {
+          "artifactLocation" : {
+            "uri" : "src/main/java/com/scanner/SourceCodeMapper.java",
+            "uriBaseId" : "%SRCROOT%"
+          },
+          "region" : {
+            "startLine" : 33,
+            "startColumn" : 1
+          }
+        }
+      } ],
+      "fixes" : [ {
+        "description" : {
+          "text" : "Apply suggested security remediation patch"
+        },
+        "fileChanges" : [ {
+          "artifactLocation" : {
+            "uri" : "src/main/java/com/scanner/SourceCodeMapper.java",
+            "uriBaseId" : "%SRCROOT%"
+          },
+          "replacements" : [ {
+            "deletedRegion" : {
+              "startLine" : 33,
+              "startColumn" : 1
+            },
+            "insertedContent" : {
+              "text" : "// [Remediation: Shadow API] Either register this endpoint in the OpenAPI specification\n// or restrict/remove this unmonitored internal controller endpoint:\n// 1. Add route to openapi.json/openapi.yaml or document with @Operation.\n// 2. If intentionally internal, mark with @Hidden or restrict to ADMIN:\n@Hidden\n@PreAuthorize(\"hasRole('ADMIN')\")\n// Or disable in production profiles:\n@Profile(\"!production\")\n"
+            }
+          } ]
+        } ]
+      } ]
+    }, {
+      "ruleId" : "SHADOW_API_EXPOSED",
+      "ruleIndex" : 24,
+      "level" : "error",
+      "message" : {
+        "text" : "[GET /] Shadow / Undocumented API Exposed: Route GET / implemented in src/main/java/com/scanner/SourceCodeMapper.java:142 was omitted from OpenAPI specification. (repro: curl -i -X GET 'http://localhost:8080/')"
+      },
+      "locations" : [ {
+        "physicalLocation" : {
+          "artifactLocation" : {
+            "uri" : "src/main/java/com/scanner/SourceCodeMapper.java",
+            "uriBaseId" : "%SRCROOT%"
+          },
+          "region" : {
+            "startLine" : 142,
+            "startColumn" : 1
+          }
+        }
+      } ],
+      "fixes" : [ {
+        "description" : {
+          "text" : "Apply suggested security remediation patch"
+        },
+        "fileChanges" : [ {
+          "artifactLocation" : {
+            "uri" : "src/main/java/com/scanner/SourceCodeMapper.java",
+            "uriBaseId" : "%SRCROOT%"
+          },
+          "replacements" : [ {
+            "deletedRegion" : {
+              "startLine" : 142,
+              "startColumn" : 1
+            },
+            "insertedContent" : {
+              "text" : "// [Remediation: Shadow API] Either register this endpoint in the OpenAPI specification\n// or restrict/remove this unmonitored internal controller endpoint:\n// 1. Add route to openapi.json/openapi.yaml or document with @Operation.\n// 2. If intentionally internal, mark with @Hidden or restrict to ADMIN:\n@Hidden\n@PreAuthorize(\"hasRole('ADMIN')\")\n// Or disable in production profiles:\n@Profile(\"!production\")\n"
+            }
+          } ]
+        } ]
+      } ]
+    }, {
+      "ruleId" : "SHADOW_API_EXPOSED",
+      "ruleIndex" : 24,
+      "level" : "error",
+      "message" : {
+        "text" : "[GET /...] Shadow / Undocumented API Exposed: Route GET /... implemented in src/main/java/com/scanner/SourceCodeMapper.java:39 was omitted from OpenAPI specification. (repro: curl -i -X GET 'http://localhost:8080/...')"
+      },
+      "locations" : [ {
+        "physicalLocation" : {
+          "artifactLocation" : {
+            "uri" : "src/main/java/com/scanner/SourceCodeMapper.java",
+            "uriBaseId" : "%SRCROOT%"
+          },
+          "region" : {
+            "startLine" : 39,
+            "startColumn" : 1
+          }
+        }
+      } ],
+      "fixes" : [ {
+        "description" : {
+          "text" : "Apply suggested security remediation patch"
+        },
+        "fileChanges" : [ {
+          "artifactLocation" : {
+            "uri" : "src/main/java/com/scanner/SourceCodeMapper.java",
+            "uriBaseId" : "%SRCROOT%"
+          },
+          "replacements" : [ {
+            "deletedRegion" : {
+              "startLine" : 39,
+              "startColumn" : 1
+            },
+            "insertedContent" : {
+              "text" : "// [Remediation: Shadow API] Either register this endpoint in the OpenAPI specification\n// or restrict/remove this unmonitored internal controller endpoint:\n// 1. Add route to openapi.json/openapi.yaml or document with @Operation.\n// 2. If intentionally internal, mark with @Hidden or restrict to ADMIN:\n@Hidden\n@PreAuthorize(\"hasRole('ADMIN')\")\n// Or disable in production profiles:\n@Profile(\"!production\")\n"
+            }
+          } ]
+        } ]
+      } ]
+    }, {
+      "ruleId" : "SHADOW_API_EXPOSED",
+      "ruleIndex" : 24,
+      "level" : "error",
+      "message" : {
+        "text" : "[POST /] Shadow / Undocumented API Exposed: Route POST / implemented in src/test/java/com/scanner/ApiSecurityScannerTest.java:77 was omitted from OpenAPI specification. (repro: curl -i -X POST 'http://localhost:8080/')"
+      },
+      "locations" : [ {
+        "physicalLocation" : {
+          "artifactLocation" : {
+            "uri" : "src/test/java/com/scanner/ApiSecurityScannerTest.java",
+            "uriBaseId" : "%SRCROOT%"
+          },
+          "region" : {
+            "startLine" : 77,
+            "startColumn" : 1
+          }
+        }
+      } ],
+      "fixes" : [ {
+        "description" : {
+          "text" : "Apply suggested security remediation patch"
+        },
+        "fileChanges" : [ {
+          "artifactLocation" : {
+            "uri" : "src/test/java/com/scanner/ApiSecurityScannerTest.java",
+            "uriBaseId" : "%SRCROOT%"
+          },
+          "replacements" : [ {
+            "deletedRegion" : {
+              "startLine" : 77,
+              "startColumn" : 1
+            },
+            "insertedContent" : {
+              "text" : "// [Remediation: Shadow API] Either register this endpoint in the OpenAPI specification\n// or restrict/remove this unmonitored internal controller endpoint:\n// 1. Add route to openapi.json/openapi.yaml or document with @Operation.\n// 2. If intentionally internal, mark with @Hidden or restrict to ADMIN:\n@Hidden\n@PreAuthorize(\"hasRole('ADMIN')\")\n// Or disable in production profiles:\n@Profile(\"!production\")\n"
+            }
+          } ]
+        } ]
+      } ]
+    } ]
+  } ]
+}

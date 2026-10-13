@@ -1,0 +1,5 @@
+target/
+.git/
+*.iml
+.idea/
+scan-report.json
