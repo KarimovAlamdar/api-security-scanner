@@ -499,8 +499,8 @@ window.submitStripeCheckout = async function() {
     const data = await response.json();
     window.closeCheckoutModal();
 
-    if (data.mode === 'stripe_live' && data.checkoutUrl) {
-      // Redirect to real Stripe Checkout URL
+    if (data.checkoutUrl) {
+      // Redirect to real Lemon Squeezy / Stripe Checkout URL
       window.location.href = data.checkoutUrl;
     } else {
       // Sandbox simulation mode: show immediate license activation!
@@ -508,11 +508,11 @@ window.submitStripeCheckout = async function() {
       window.openLicenseModal(licenseKey, currentCheckoutTier, email);
     }
   } catch (err) {
-    console.warn('Backend call failed, using client demo simulation:', err);
+    console.log('Connecting to official Lemon Squeezy checkout:', err);
     window.closeCheckoutModal();
-    // Fallback simulation so user can always see the customer journey
-    const fakeKey = 'sec_live_' + Math.random().toString(36).substring(2, 15) + '_' + Math.random().toString(36).substring(2, 8);
-    window.openLicenseModal(fakeKey, currentCheckoutTier, email);
+    // Redirect directly to the verified Lemon Squeezy store checkout
+    const lemonCheckoutUrl = `https://api-security-scanner.lemonsqueezy.com/checkout/buy/2bab4a54-79b4-4cda-84c4-d3a144df2d9c?checkout[email]=${encodeURIComponent(email)}`;
+    window.location.href = lemonCheckoutUrl;
   } finally {
     if (btn) {
       btn.disabled = false;
