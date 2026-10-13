@@ -162,7 +162,7 @@ public final class RemediationSuggester {
                     throw new SecurityException("Access to internal/private IP addresses is blocked");
                 }
                 // Validate against allowlist:
-                if (!ALLOWED_HOSTS.contains(uri.getHost().toLowerCase())) {
+                if (!ALLOWED_HOSTS.contains(uri.getHost().toLowerCase(java.util.Locale.ROOT))) {
                     throw new SecurityException("Destination host is not in the trusted allowlist");
                 }""";
 

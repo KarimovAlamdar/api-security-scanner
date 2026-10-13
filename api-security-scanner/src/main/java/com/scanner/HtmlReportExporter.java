@@ -9,6 +9,7 @@ import java.time.Instant;
 import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 import java.util.stream.Collectors;
 
@@ -75,7 +76,7 @@ public final class HtmlReportExporter {
         int index = 0;
         for (Finding f : findings) {
             index++;
-            String sev = f.severity().name().toLowerCase();
+            String sev = f.severity().name().toLowerCase(Locale.ROOT);
             findingsHtml.append(String.format("""
                 <div class="finding-card" data-severity="%s" data-method="%s" data-path="%s" id="finding-%d">
                     <div class="finding-header" onclick="toggleDetails('finding-%d')">
@@ -122,7 +123,7 @@ public final class HtmlReportExporter {
                 index,
                 sev,
                 f.severity().name(),
-                f.method().toLowerCase(),
+                f.method().toLowerCase(Locale.ROOT),
                 escapeHtml(f.method()),
                 escapeHtml(f.path()),
                 escapeHtml(f.id()),

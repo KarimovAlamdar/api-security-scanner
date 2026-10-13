@@ -344,14 +344,14 @@ window.applyEarlyBirdDiscount = function() {
     }
     const btn = document.getElementById('applyCouponBtn');
     if (btn) {
-      btn.textContent = 'Aktiv Olundu ✓';
+      btn.textContent = 'Applied ✓';
       btn.style.background = '#10b981';
       btn.style.color = '#000';
     }
-    alert('Təbriklər! "EARLYBIRD10" kuponu qəbul olundu. İlk 10 müştəri üçün 50% ömürlük endirim bütün paketlərə tətbiq edildi!');
+    alert('Congratulations! "EARLYBIRD10" coupon accepted. 50% lifetime discount applied across all plans!');
     updatePricingDisplay();
   } else {
-    alert('Zəhmət olmasa düzgün kupon kodunu daxil edin: EARLYBIRD10');
+    alert('Please enter a valid coupon code: EARLYBIRD10');
   }
 };
 
@@ -409,10 +409,10 @@ window.triggerStripeCheckout = function(tierName, price) {
   const finalPrice = isEarlyBirdApplied ? Math.round(basePrice * 0.5) : basePrice;
 
   if (planNameElem) planNameElem.textContent = `${tierName} Plan`;
-  if (cycleNameElem) cycleNameElem.textContent = isAnnualBilling ? 'İllik (Hər ay fakturalaşdırılır)' : 'Aylıq';
+  if (cycleNameElem) cycleNameElem.textContent = isAnnualBilling ? 'Annual (Billed monthly)' : 'Monthly';
   if (couponRowElem) couponRowElem.style.display = isEarlyBirdApplied ? 'flex' : 'none';
-  if (totalPriceElem) totalPriceElem.textContent = `$${finalPrice} / ay`;
-  if (planDescElem) planDescElem.textContent = `${tierName} Planı üçün Stripe ödəniş və avtomatik lisenziya aktivasiyası.`;
+  if (totalPriceElem) totalPriceElem.textContent = `$${finalPrice} / mo`;
+  if (planDescElem) planDescElem.textContent = `${tierName} Plan subscription and instant license activation.`;
 
   if (modal) {
     modal.classList.add('active');
@@ -436,7 +436,7 @@ window.copyLicenseKey = function() {
     navigator.clipboard.writeText(keyElem.textContent).then(() => {
       if (btn) {
         const orig = btn.textContent;
-        btn.textContent = 'Kopyalandı! ✓';
+        btn.textContent = 'Copied! ✓';
         setTimeout(() => { btn.textContent = orig; }, 2000);
       }
     });
@@ -451,7 +451,7 @@ window.openLicenseModal = function(key, tier, email) {
   const snippetElem = document.getElementById('licenseWorkflowSnippet');
 
   if (keyElem) keyElem.textContent = key || 'sec_live_demo_key';
-  if (tierElem) tierElem.textContent = `${tier || 'Pro'} Plan (Aktiv)`;
+  if (tierElem) tierElem.textContent = `${tier || 'Pro'} Plan (Active)`;
   if (emailElem) emailElem.textContent = email || 'cto@company.io';
 
   if (snippetElem && key) {
@@ -473,7 +473,7 @@ window.submitStripeCheckout = async function() {
   
   if (btn) {
     btn.disabled = true;
-    btn.innerHTML = '<span>Ödəniş qapısı açılır...</span>';
+    btn.innerHTML = '<span>Redirecting to checkout...</span>';
   }
 
   const payload = {
@@ -516,7 +516,7 @@ window.submitStripeCheckout = async function() {
   } finally {
     if (btn) {
       btn.disabled = false;
-      btn.innerHTML = '<span>Təhlükəsiz Ödəniş Et</span> &rarr;';
+      btn.innerHTML = '<span>Proceed to Checkout</span> &rarr;';
     }
   }
 };
@@ -542,7 +542,7 @@ async function submitStripeCheckoutForCommunity() {
 }
 
 window.triggerGithubAuth = function() {
-  alert('GitHub OAuth ilə avtorizasiya açılır (https://github.com/login/oauth/authorize)...');
+  alert('Redirecting to GitHub OAuth authorization (https://github.com/login/oauth/authorize)...');
 };
 
 /* -------------------------------- Live Interactive Playground -------------------------------- */

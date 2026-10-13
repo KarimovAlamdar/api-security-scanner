@@ -470,31 +470,31 @@
                         <div class="early-bird-icon">🔥</div>
                         <div>
                             <div class="early-bird-title">
-                                <strong>İlk 10 Müştəri üçün Xüsusi Təklif: ÖMÜRLÜK 50% ENDİRİM!</strong>
-                                <span class="early-bird-pill">Cəmi 3 / 10 Yer Qaldı</span>
+                                <strong>Exclusive Founder Deal: 50% LIFETIME DISCOUNT!</strong>
+                                <span class="early-bird-pill">Only 3 / 10 Spots Left</span>
                             </div>
                             <div class="early-bird-sub">
-                                Layihənin ilk 10 müştərisinə bütün pullu paketlərdə 50% daimi endirim tətbiq olunur. Kupon kodu: <code>EARLYBIRD10</code>
+                                The first 10 customers receive an unconditional 50% lifetime discount across all plans. Coupon code: <code>EARLYBIRD10</code>
                             </div>
                         </div>
                     </div>
 
                     <div class="early-bird-action">
-                        <input type="text" id="couponInput" class="coupon-field" placeholder="Kodu daxil et: EARLYBIRD10" value="EARLYBIRD10">
-                        <button class="btn btn-sm btn-primary" id="applyCouponBtn" onclick="applyEarlyBirdDiscount()">Tətbiq Et</button>
+                        <input type="text" id="couponInput" class="coupon-field" placeholder="Coupon: EARLYBIRD10" value="EARLYBIRD10">
+                        <button class="btn btn-sm btn-primary" id="applyCouponBtn" onclick="applyEarlyBirdDiscount()">Apply</button>
                     </div>
                 </div>
 
                 <!-- Monthly / Annual Toggle -->
                 <div class="billing-toggle-container">
-                    <span id="labelMonthly" class="billing-label">Aylıq Ödəniş</span>
+                    <span id="labelMonthly" class="billing-label">Monthly Billing</span>
                     <label class="switch">
                         <input type="checkbox" id="billingPeriodToggle" checked onchange="toggleBillingCycle()">
                         <span class="slider round"></span>
                     </label>
                     <span id="labelAnnual" class="billing-label active">
-                        İllik Ödəniş
-                        <span class="save-badge">20% Qənaət</span>
+                        Annual Billing
+                        <span class="save-badge">Save 20%</span>
                     </span>
                 </div>
 
@@ -504,26 +504,26 @@
                     <div class="pricing-card">
                         <div class="pricing-header">
                             <div class="pricing-tier-name">Community</div>
-                            <span class="tier-badge">Pulsuz / Free</span>
+                            <span class="tier-badge">Free Forever</span>
                         </div>
-                        <p class="pricing-tagline">Lokal olaraq CLI ilə API zəifliklərini yoxlayan fərdi proqramçılar üçün.</p>
+                        <p class="pricing-tagline">For individual developers running fast local API vulnerability checks via CLI.</p>
                         
                         <div class="pricing-price">
                             <span class="price-val">$0</span>
-                            <span class="price-period">/həmişə pulsuz</span>
+                            <span class="price-period">/free forever</span>
                         </div>
 
                         <ul class="pricing-features">
-                            <li>✓ Lokal CLI runner (<code>--spec</code>, <code>--base-url</code>)</li>
-                            <li>✓ 30 DAST + SAST Hybrid Təhlükəsizlik Qaydası</li>
-                            <li>✓ İnteraktiv HTML Dashboard & Triaj</li>
-                            <li>✓ SARIF 2.1.0 Hesabat Eksportu</li>
-                            <li>✓ Limitsiz lokal skanlar</li>
-                            <li>✓ İctimai Discord dəstəyi</li>
+                            <li>✓ Local CLI runner (<code>--spec</code>, <code>--base-url</code>)</li>
+                            <li>✓ 30 DAST + SAST Hybrid Security Rules</li>
+                            <li>✓ Interactive HTML Dashboard &amp; Triage</li>
+                            <li>✓ Native SARIF 2.1.0 Report Export</li>
+                            <li>✓ Unlimited local scans</li>
+                            <li>✓ Public Community Discord support</li>
                         </ul>
 
                         <button class="btn btn-secondary pricing-cta-btn" onclick="triggerStripeCheckout('Community', 0)">
-                            Pulsuz Başla
+                            Start Free
                         </button>
                     </div>
 
@@ -531,57 +531,57 @@
                     <div class="pricing-card">
                         <div class="pricing-header">
                             <div class="pricing-tier-name">Starter</div>
-                            <span class="tier-badge">Startaplar üçün</span>
+                            <span class="tier-badge">For Startups</span>
                         </div>
-                        <p class="pricing-tagline">CI/CD avtomatlaşdırmasına ehtiyacı olan kiçik komandalar üçün.</p>
+                        <p class="pricing-tagline">For agile engineering teams needing CI/CD automation &amp; security gate.</p>
                         
                         <div class="pricing-price">
                             <span class="price-val" id="priceStarter">$15</span>
-                            <span class="price-period" id="periodStarter">/ay</span>
+                            <span class="price-period" id="periodStarter">/mo</span>
                             <span class="price-original" id="origStarter" style="display:none;">$19</span>
                         </div>
 
                         <ul class="pricing-features">
-                            <li>✓ Community paketinin bütün funksiyaları</li>
-                            <li>✓ <strong>GitHub Actions CI/CD</strong> inteqrasiyası</li>
-                            <li>✓ <strong>Dual-Role BOLA / IDOR</strong> hücum matrisi</li>
-                            <li>✓ 3 Aktiv Repozitoriya</li>
-                            <li>✓ GitHub Security (CodeQL) tabına birbaşa inteqrasiya</li>
-                            <li>✓ Slack və Teams Webhook bildirişləri</li>
+                            <li>✓ Everything in Community plan</li>
+                            <li>✓ <strong>GitHub Actions CI/CD</strong> integration</li>
+                            <li>✓ <strong>Dual-Role BOLA / IDOR</strong> attack matrix</li>
+                            <li>✓ 3 Active Repositories</li>
+                            <li>✓ Direct GitHub Security (CodeQL) tab integration</li>
+                            <li>✓ Slack &amp; Microsoft Teams Webhook alerts</li>
                         </ul>
 
                         <button class="btn btn-secondary pricing-cta-btn" onclick="triggerStripeCheckout('Starter', 15)">
-                            Starter Paketini Seç
+                            Choose Starter
                         </button>
                     </div>
 
                     <!-- 3. Pro (Most Popular) -->
                     <div class="pricing-card featured-pricing">
-                        <div class="popular-ribbon">⭐ ƏN POPULYAR / PRO</div>
+                        <div class="popular-ribbon">⭐ MOST POPULAR / PRO</div>
                         <div class="pricing-header">
                             <div class="pricing-tier-name" style="color: var(--brand-green);">Pro (Auto-Fix Bot)</div>
-                            <span class="tier-badge" style="background: rgba(16, 185, 129, 0.2); color: var(--brand-green);">Mühəndislik Seçimi</span>
+                            <span class="tier-badge" style="background: rgba(16, 185, 129, 0.2); color: var(--brand-green);">Engineering Choice</span>
                         </div>
-                        <p class="pricing-tagline">Hesabat oxumağa vaxt itirməyən və avtomatik kod düzəlişi istəyən komandalar üçün.</p>
+                        <p class="pricing-tagline">For teams that refuse to waste engineering hours reading reports and want automated PR patches.</p>
                         
                         <div class="pricing-price">
                             <span class="price-val" id="pricePro" style="color: var(--brand-green);">$39</span>
-                            <span class="price-period" id="periodPro">/ay</span>
+                            <span class="price-period" id="periodPro">/mo</span>
                             <span class="price-original" id="origPro" style="display:none;">$49</span>
                         </div>
 
                         <ul class="pricing-features">
-                            <li>✓ Starter paketinin bütün funksiyaları</li>
-                            <li>✓ <strong>🏆 Zero-Click AI PR Auto-Fix Bot</strong> (Kodu düzəldib hazır PR açır)</li>
-                            <li>✓ <strong>🕵️ Shadow & Zombie API Discovery</strong> (Spec Drift aşkarlama)</li>
-                            <li>✓ <strong>🤖 LLM & AI Agent API Security</strong> (Prompt injection & leak fuzzer)</li>
-                            <li>✓ 15 Aktiv Repozitoriya</li>
-                            <li>✓ Paralel worker-lər (16 thread)</li>
-                            <li>✓ Prioritet mühəndislik dəstəyi</li>
+                            <li>✓ Everything in Starter plan</li>
+                            <li>✓ <strong>🏆 Zero-Click AI PR Auto-Fix Bot</strong> (Patches code &amp; opens PR)</li>
+                            <li>✓ <strong>🕵️ Shadow &amp; Zombie API Discovery</strong> (Spec Drift detection)</li>
+                            <li>✓ <strong>🤖 LLM &amp; AI Agent API Security</strong> (Prompt injection &amp; MCP fuzzer)</li>
+                            <li>✓ 15 Active Repositories</li>
+                            <li>✓ Parallel scan workers (16 threads)</li>
+                            <li>✓ Priority engineering SLA support</li>
                         </ul>
 
                         <button class="btn btn-primary pricing-cta-btn" onclick="triggerStripeCheckout('Pro', 39)">
-                            ⚡ 14 Gün Pulsuz Yoxla
+                            ⚡ Start 14-Day Free Trial
                         </button>
                     </div>
 
@@ -589,40 +589,40 @@
                     <div class="pricing-card">
                         <div class="pricing-header">
                             <div class="pricing-tier-name">Enterprise</div>
-                            <span class="tier-badge" style="background: rgba(99, 102, 241, 0.2); color: #818cf8;">SOC2 & Banklar</span>
+                            <span class="tier-badge" style="background: rgba(99, 102, 241, 0.2); color: #818cf8;">SOC2 &amp; Regulated</span>
                         </div>
-                        <p class="pricing-tagline">Banklar, FinTech və daxili təhlükəsizlik tələbləri sərt olan korporasiyalar üçün.</p>
+                        <p class="pricing-tagline">For banks, FinTechs, and enterprises with strict air-gap and data residency requirements.</p>
                         
                         <div class="pricing-price">
                             <span class="price-val" id="priceEnterprise">$239</span>
-                            <span class="price-period" id="periodEnterprise">/ay</span>
+                            <span class="price-period" id="periodEnterprise">/mo</span>
                             <span class="price-original" id="origEnterprise" style="display:none;">$299</span>
                         </div>
 
                         <ul class="pricing-features">
-                            <li>✓ Pro paketinin bütün funksiyaları</li>
-                            <li>✓ <strong>🔒 100% Air-Gapped Mode</strong> (Xaricə 0 bayt ötürülmə)</li>
-                            <li>✓ <strong>📜 SOC2 Type II & GDPR Attestation</strong></li>
-                            <li>✓ Determinik SHA-256 Audit Bütövlük Həşi</li>
-                            <li>✓ Self-Hosted On-Prem runner & K8s dəstəyi</li>
-                            <li>✓ Limitsiz Repozitoriya və Limitsiz Skanlar</li>
-                            <li>✓ Fərdi Təhlükəsizlik Memarı və 99.99% SLA</li>
+                            <li>✓ Everything in Pro plan</li>
+                            <li>✓ <strong>🔒 100% Air-Gapped Mode</strong> (0 bytes outbound telemetry)</li>
+                            <li>✓ <strong>📜 SOC2 Type II &amp; GDPR Attestation</strong></li>
+                            <li>✓ Deterministic SHA-256 Audit Integrity Hash</li>
+                            <li>✓ Self-Hosted On-Prem runner &amp; Kubernetes support</li>
+                            <li>✓ Unlimited Repositories &amp; Unlimited Scans</li>
+                            <li>✓ Dedicated Security Architect &amp; 99.99% SLA</li>
                         </ul>
 
                         <button class="btn btn-secondary pricing-cta-btn" onclick="triggerStripeCheckout('Enterprise', 239)">
-                            Enterprise Əlaqə
+                            Contact Enterprise
                         </button>
                     </div>
                 </div>
 
                 <div class="stripe-trust-footer">
-                    <span>🔒 256-bit SSL Şifrələnmiş Stripe Checkout</span>
+                    <span>🔒 256-bit SSL Encrypted Checkout</span>
                     <span>&bull;</span>
-                    <span>⚡ 1 Kliklə Ani İnteqrasiya</span>
+                    <span>⚡ 1-Click Instant CI/CD Integration</span>
                     <span>&bull;</span>
-                    <span>🛡️ 14 Gün Geri Qaytarma Zəmanəti</span>
+                    <span>🛡️ 14-Day Money-Back Guarantee</span>
                     <span>&bull;</span>
-                    <span>🏢 SOC2 Type II & GDPR Uyğunluğu</span>
+                    <span>🏢 SOC2 Type II &amp; GDPR Compliant</span>
                 </div>
             </div>
         </section>
@@ -772,44 +772,44 @@
             <button class="modal-close-btn" onclick="closeCheckoutModal()">&times;</button>
             <div class="modal-header">
                 <div class="modal-title">
-                    <span style="font-size: 1.5rem;">💳</span> Təhlükəsiz Qlobal Ödəniş
+                    <span style="font-size: 1.5rem;">💳</span> Secure Global Checkout
                 </div>
-                <div class="modal-desc" id="modalPlanDesc">API Security Scanner abunəliyi və ani lisenziya aktivasiyası.</div>
+                <div class="modal-desc" id="modalPlanDesc">API Security Scanner subscription &amp; instant license activation.</div>
             </div>
 
             <div class="checkout-summary-box">
                 <div class="checkout-row">
-                    <span style="color: var(--text-muted);">Seçilən Plan:</span>
+                    <span style="color: var(--text-muted);">Selected Plan:</span>
                     <strong id="modalPlanName">Pro Plan</strong>
                 </div>
                 <div class="checkout-row">
-                    <span style="color: var(--text-muted);">Faktura Dövrü:</span>
-                    <span id="modalCycleName">Aylıq</span>
+                    <span style="color: var(--text-muted);">Billing Cycle:</span>
+                    <span id="modalCycleName">Monthly</span>
                 </div>
                 <div class="checkout-row" id="modalCouponRow" style="display: none;">
-                    <span style="color: #10b981;">Endirim Kuponu:</span>
+                    <span style="color: #10b981;">Discount Coupon:</span>
                     <span class="badge badge-high" style="background: rgba(16, 185, 129, 0.2); color: #34d399;">EARLYBIRD10 (-50%)</span>
                 </div>
                 <div class="checkout-row total-row">
-                    <span>Yekun Məbləğ:</span>
+                    <span>Total Amount:</span>
                     <span style="color: #10b981;" id="modalTotalPrice">$24.50</span>
                 </div>
             </div>
 
             <div class="modal-input-group">
-                <label class="modal-label" for="checkoutEmailInput">İş E-poçt ünvanınız (Lisenziya açarı buraya göndəriləcək):</label>
-                <input type="email" id="checkoutEmailInput" class="modal-input" placeholder="məs: dev@company.com" value="cto@startup.io">
+                <label class="modal-label" for="checkoutEmailInput">Work Email (License key will be delivered here):</label>
+                <input type="email" id="checkoutEmailInput" class="modal-input" placeholder="e.g. dev@company.com" value="cto@startup.io">
             </div>
 
             <div style="display: flex; gap: 12px; margin-top: 24px;">
-                <button class="btn btn-secondary" style="flex: 1;" onclick="closeCheckoutModal()">Ləğv et</button>
+                <button class="btn btn-secondary" style="flex: 1;" onclick="closeCheckoutModal()">Cancel</button>
                 <button class="btn btn-primary" style="flex: 2;" id="proceedStripeBtn" onclick="submitStripeCheckout()">
-                    <span>Təhlükəsiz Ödəniş Et</span> &rarr;
+                    <span>Proceed to Checkout</span> &rarr;
                 </button>
             </div>
             
             <div style="margin-top: 16px; font-size: 0.8rem; color: var(--text-dim); text-align: center;">
-                🔒 Lemon Squeezy MoR ilə qorunur &bull; Visa, Mastercard, Apple Pay, Google Pay, PayPal &bull; 256-bit SSL
+                🔒 Powered by Lemon Squeezy MoR &bull; Visa, Mastercard, Apple Pay, Google Pay, PayPal &bull; 256-bit SSL
             </div>
         </div>
     </div>
@@ -821,30 +821,30 @@
             <div class="modal-header" style="text-align: center;">
                 <div style="font-size: 3rem; margin-bottom: 8px;">🎉</div>
                 <div class="modal-title" style="justify-content: center;">
-                    Lisenziyanız Aktivləşdirildi!
+                    License Activated!
                 </div>
-                <div class="modal-desc" id="licenseWelcomeDesc">Təhlükəsizlik skaneriniz istifadəyə hazırdır.</div>
+                <div class="modal-desc" id="licenseWelcomeDesc">Your API security scanner is ready for production use.</div>
             </div>
 
             <div class="checkout-summary-box">
                 <div class="checkout-row">
                     <span style="color: var(--text-muted);">Status:</span>
-                    <span class="badge badge-high" style="background: rgba(16, 185, 129, 0.2); color: #34d399;">AKTİV</span>
+                    <span class="badge badge-high" style="background: rgba(16, 185, 129, 0.2); color: #34d399;">ACTIVE</span>
                 </div>
                 <div class="checkout-row">
-                    <span style="color: var(--text-muted);">Paket Səviyyəsi:</span>
-                    <strong id="licenseTierDisplay">Pro (15 Repozitori)</strong>
+                    <span style="color: var(--text-muted);">Plan Tier:</span>
+                    <strong id="licenseTierDisplay">Pro (15 Repositories)</strong>
                 </div>
                 <div class="checkout-row">
-                    <span style="color: var(--text-muted);">Müştəri:</span>
+                    <span style="color: var(--text-muted);">Customer:</span>
                     <span id="licenseEmailDisplay">cto@startup.io</span>
                 </div>
             </div>
 
-            <label class="modal-label">Lisenziya Açarı (Scanner License Key):</label>
+            <label class="modal-label">Scanner License Key:</label>
             <div class="license-key-display">
                 <div class="license-key-text" id="licenseKeyString">sec_live_loading...</div>
-                <button class="copy-key-btn" onclick="copyLicenseKey()">Kopyala</button>
+                <button class="copy-key-btn" onclick="copyLicenseKey()">Copy Key</button>
             </div>
 
             <label class="modal-label" style="margin-top: 16px;">GitHub Actions Setup (`.github/workflows/security.yml`):</label>
@@ -859,7 +859,7 @@
 
             <div style="margin-top: 24px; text-align: center;">
                 <button class="btn btn-primary" style="width: 100%;" onclick="closeLicenseModal()">
-                    İstifadəyə Başla &rarr;
+                    Get Started &rarr;
                 </button>
             </div>
         </div>
