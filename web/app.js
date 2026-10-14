@@ -4,6 +4,7 @@
 
 document.addEventListener('DOMContentLoaded', () => {
   initTheme();
+  initUserAuth();
   init3DHeroCanvas();
   initTerminalSimulation();
   initPlayground();
@@ -464,6 +465,10 @@ window.openLicenseModal = function(key, tier, email) {
   }
 
   if (modal) modal.classList.add('active');
+
+  if (window.updateActiveUserLicense) {
+    window.updateActiveUserLicense(key, tier, email);
+  }
 };
 
 window.submitStripeCheckout = async function() {
@@ -688,6 +693,9 @@ function initPlayground() {
             runBtn.innerHTML = '⚡ Run Instant Scan Simulation';
             const data = DEMO_PRESETS[currentPresetKey];
             renderPlaygroundFindings(data ? data.findings : []);
+            if (window.recordScanToActiveUser) {
+              window.recordScanToActiveUser(data);
+            }
           }, 400);
         }
       }, 120);
@@ -886,3 +894,543 @@ function escapeJsString(str) {
   if (!str) return '';
   return str.replace(/\\/g, '\\\\').replace(/`/g, '\\`').replace(/\$/g, '\\$');
 }
+
+/* -------------------------------- Multi-User Workspace & Auth Engine -------------------------------- */
+const STORAGE_ACCOUNTS_KEY = 'sec_scanner_accounts_v2';
+const STORAGE_CURRENT_USER_KEY = 'sec_scanner_current_user_v2';
+
+const DEFAULT_ACCOUNTS = {
+  'kerimovelemdar6@gmail.com': {
+    name: 'Elemdar Kerimov',
+    email: 'kerimovelemdar6@gmail.com',
+    password: 'password123',
+    company: 'Fintech SecOps',
+    tier: 'Pro',
+    licenseKey: 'sec_live_pro_2244795_7f8a1290bb24',
+    createdAt: new Date().toISOString(),
+    scans: [
+      {
+        id: 'scan-001',
+        time: 'Today, 09:15',
+        target: 'https://api.store.internal/orders/{id}',
+        finding: 'Stateful BOLA / IDOR Confirmed',
+        sev: 'CRITICAL',
+        status: 'PR #142 Merged (Auto-Patched)'
+      },
+      {
+        id: 'scan-002',
+        time: 'Yesterday, 14:20',
+        target: '/internal/admin/metrics-dump',
+        finding: 'Shadow API Route Exposed',
+        sev: 'HIGH',
+        status: 'Spec Synchronized'
+      },
+      {
+        id: 'scan-003',
+        time: '2 days ago',
+        target: '/api/v1/agent/chat',
+        finding: 'LLM Prompt Leakage & Bypass',
+        sev: 'HIGH',
+        status: 'Guardrail Filter Applied'
+      }
+    ]
+  }
+};
+
+function getStoredAccounts() {
+  try {
+    const raw = localStorage.getItem(STORAGE_ACCOUNTS_KEY);
+    if (!raw) {
+      localStorage.setItem(STORAGE_ACCOUNTS_KEY, JSON.stringify(DEFAULT_ACCOUNTS));
+      return { ...DEFAULT_ACCOUNTS };
+    }
+    return JSON.parse(raw);
+  } catch (e) {
+    return { ...DEFAULT_ACCOUNTS };
+  }
+}
+
+function saveStoredAccounts(accounts) {
+  try {
+    localStorage.setItem(STORAGE_ACCOUNTS_KEY, JSON.stringify(accounts));
+  } catch (e) {}
+}
+
+function getCurrentUserEmail() {
+  return localStorage.getItem(STORAGE_CURRENT_USER_KEY);
+}
+
+function setCurrentUserEmail(email) {
+  if (email) {
+    localStorage.setItem(STORAGE_CURRENT_USER_KEY, email);
+  } else {
+    localStorage.removeItem(STORAGE_CURRENT_USER_KEY);
+  }
+}
+
+function getActiveUser() {
+  const email = getCurrentUserEmail();
+  if (!email) return null;
+  const accounts = getStoredAccounts();
+  return accounts[email] || null;
+}
+
+function initUserAuth() {
+  getStoredAccounts();
+
+  // If initial load, activate the owner profile so workspace is immediately available
+  if (localStorage.getItem('sec_has_initialized_auth_v2') !== 'true') {
+    setCurrentUserEmail('kerimovelemdar6@gmail.com');
+    localStorage.setItem('sec_has_initialized_auth_v2', 'true');
+  }
+
+  updateNavAuthUI();
+
+  // Close dropdown on click outside
+  document.addEventListener('click', (e) => {
+    const menu = document.getElementById('userProfileMenu');
+    const dropdown = document.getElementById('userDropdownCard');
+    if (dropdown && dropdown.classList.contains('active')) {
+      if (!menu || !menu.contains(e.target)) {
+        dropdown.classList.remove('active');
+      }
+    }
+  });
+}
+
+function updateNavAuthUI() {
+  const user = getActiveUser();
+  const triggerBtn = document.getElementById('authTriggerBtn');
+  const profileMenu = document.getElementById('userProfileMenu');
+
+  if (!user) {
+    if (triggerBtn) triggerBtn.style.display = 'inline-flex';
+    if (profileMenu) profileMenu.style.display = 'none';
+    return;
+  }
+
+  if (triggerBtn) triggerBtn.style.display = 'none';
+  if (profileMenu) profileMenu.style.display = 'inline-block';
+
+  // Initials
+  const initialsElem = document.getElementById('userAvatarInitials');
+  const initials = user.name
+    ? user.name.split(' ').map(n => n[0]).join('').substring(0, 2).toUpperCase()
+    : 'US';
+  if (initialsElem) initialsElem.textContent = initials;
+
+  // Name & Plan Tag
+  const nameElem = document.getElementById('userMetaName');
+  const tierElem = document.getElementById('userMetaTier');
+  if (nameElem) nameElem.textContent = user.name.split(' ')[0];
+  if (tierElem) tierElem.textContent = (user.tier || 'Community') + ' Plan';
+
+  // Dropdown card elements
+  const ddName = document.getElementById('dropdownHeaderName');
+  const ddEmail = document.getElementById('dropdownHeaderEmail');
+  const ddTier = document.getElementById('dropdownHeaderTier');
+  if (ddName) ddName.textContent = user.name;
+  if (ddEmail) ddEmail.textContent = user.email;
+  if (ddTier) ddTier.textContent = `${user.tier || 'Community'} Plan (Active)`;
+}
+
+window.openAuthModal = function(tab = 'signin') {
+  const modal = document.getElementById('authModal');
+  const alertBox = document.getElementById('authAlertBox');
+  if (alertBox) alertBox.style.display = 'none';
+  window.switchAuthTab(tab);
+  if (modal) modal.classList.add('active');
+};
+
+window.closeAuthModal = function() {
+  const modal = document.getElementById('authModal');
+  if (modal) modal.classList.remove('active');
+};
+
+window.switchAuthTab = function(tab) {
+  const tabSignInBtn = document.getElementById('tabSignInBtn');
+  const tabSignUpBtn = document.getElementById('tabSignUpBtn');
+  const signInForm = document.getElementById('signInForm');
+  const signUpForm = document.getElementById('signUpForm');
+  const title = document.getElementById('authModalTitle');
+  const desc = document.getElementById('authModalDesc');
+
+  if (tab === 'signup') {
+    if (tabSignInBtn) tabSignInBtn.classList.remove('active');
+    if (tabSignUpBtn) tabSignUpBtn.classList.add('active');
+    if (signInForm) signInForm.style.display = 'none';
+    if (signUpForm) signUpForm.style.display = 'block';
+    if (title) title.textContent = 'Create Security Workspace';
+    if (desc) desc.textContent = 'Get an isolated environment with instant Community license, private audit logs, and API tokens.';
+  } else {
+    if (tabSignInBtn) tabSignInBtn.classList.add('active');
+    if (tabSignUpBtn) tabSignUpBtn.classList.remove('active');
+    if (signInForm) signInForm.style.display = 'block';
+    if (signUpForm) signUpForm.style.display = 'none';
+    if (title) title.textContent = 'Sign In to Workspace';
+    if (desc) desc.textContent = 'Log in to access your personal scans, license keys, and enterprise CI/CD gates.';
+  }
+};
+
+window.handleSignInSubmit = function(e) {
+  e.preventDefault();
+  const emailInput = document.getElementById('signInEmail');
+  const passwordInput = document.getElementById('signInPassword');
+  const alertBox = document.getElementById('authAlertBox');
+
+  const email = emailInput ? emailInput.value.trim().toLowerCase() : '';
+  const password = passwordInput ? passwordInput.value : '';
+
+  const accounts = getStoredAccounts();
+  const account = accounts[email];
+
+  if (!account) {
+    if (alertBox) {
+      alertBox.className = 'auth-alert-box error';
+      alertBox.textContent = 'Account not found. Please register or click Demo Login below.';
+      alertBox.style.display = 'block';
+    }
+    return;
+  }
+
+  if (account.password && account.password !== password) {
+    if (alertBox) {
+      alertBox.className = 'auth-alert-box error';
+      alertBox.textContent = 'Incorrect password. Please try again.';
+      alertBox.style.display = 'block';
+    }
+    return;
+  }
+
+  setCurrentUserEmail(email);
+  updateNavAuthUI();
+  window.closeAuthModal();
+  setTimeout(() => {
+    window.openWorkspaceModal();
+  }, 200);
+};
+
+window.handleSignUpSubmit = function(e) {
+  e.preventDefault();
+  const nameInput = document.getElementById('signUpName');
+  const emailInput = document.getElementById('signUpEmail');
+  const companyInput = document.getElementById('signUpCompany');
+  const passwordInput = document.getElementById('signUpPassword');
+  const alertBox = document.getElementById('authAlertBox');
+
+  const name = nameInput ? nameInput.value.trim() : '';
+  const email = emailInput ? emailInput.value.trim().toLowerCase() : '';
+  const company = companyInput ? companyInput.value.trim() : 'Personal Security Ops';
+  const password = passwordInput ? passwordInput.value : '';
+
+  if (!email || !name || !password) return;
+
+  const accounts = getStoredAccounts();
+  if (accounts[email]) {
+    if (alertBox) {
+      alertBox.className = 'auth-alert-box error';
+      alertBox.textContent = 'An account with this email already exists. Please Sign In.';
+      alertBox.style.display = 'block';
+    }
+    return;
+  }
+
+  const randomSuffix = Math.random().toString(36).substring(2, 10);
+  const newAccount = {
+    name,
+    email,
+    password,
+    company: company || 'DevSecOps Team',
+    tier: 'Community',
+    licenseKey: `sec_live_free_${randomSuffix}`,
+    createdAt: new Date().toISOString(),
+    scans: [
+      {
+        id: `scan-${Date.now().toString().slice(-4)}`,
+        time: 'Just now',
+        target: 'https://api.gateway.internal/v1/health',
+        finding: 'Initial Workspace Verification',
+        sev: 'LOW',
+        status: 'Workspace Initialized & Clean'
+      }
+    ]
+  };
+
+  accounts[email] = newAccount;
+  saveStoredAccounts(accounts);
+  setCurrentUserEmail(email);
+  updateNavAuthUI();
+
+  if (alertBox) {
+    alertBox.className = 'auth-alert-box success';
+    alertBox.textContent = '✓ Account created successfully! Launching your personal workspace...';
+    alertBox.style.display = 'block';
+  }
+
+  setTimeout(() => {
+    window.closeAuthModal();
+    window.openWorkspaceModal();
+  }, 500);
+};
+
+window.handleDemoQuickLogin = function(name, email, tier) {
+  const accounts = getStoredAccounts();
+  if (!accounts[email]) {
+    const randomSuffix = Math.random().toString(36).substring(2, 10);
+    accounts[email] = {
+      name,
+      email,
+      password: 'password123',
+      company: tier === 'Enterprise' ? 'Enterprise Bank Corp' : 'Fintech Startup',
+      tier: tier || 'Pro',
+      licenseKey: `sec_live_${(tier || 'pro').toLowerCase()}_${randomSuffix}`,
+      createdAt: new Date().toISOString(),
+      scans: [
+        {
+          id: 'demo-scan-1',
+          time: '10 mins ago',
+          target: 'https://api.prod.enterprise.internal/admin/debug-dump',
+          finding: 'Shadow API Exposed [AdminController.java:42]',
+          sev: 'HIGH',
+          status: 'Remediation Verified'
+        }
+      ]
+    };
+    saveStoredAccounts(accounts);
+  }
+  setCurrentUserEmail(email);
+  updateNavAuthUI();
+  window.closeAuthModal();
+  setTimeout(() => {
+    window.openWorkspaceModal();
+  }, 200);
+};
+
+window.handleUserSignOut = function() {
+  setCurrentUserEmail(null);
+  updateNavAuthUI();
+  const dropdown = document.getElementById('userDropdownCard');
+  if (dropdown) dropdown.classList.remove('active');
+  window.closeWorkspaceModal();
+};
+
+window.toggleUserDropdown = function(e) {
+  if (e) e.stopPropagation();
+  const dropdown = document.getElementById('userDropdownCard');
+  if (dropdown) {
+    dropdown.classList.toggle('active');
+  }
+};
+
+window.openWorkspaceModal = function() {
+  const user = getActiveUser();
+  if (!user) {
+    window.openAuthModal('signin');
+    return;
+  }
+
+  const dropdown = document.getElementById('userDropdownCard');
+  if (dropdown) dropdown.classList.remove('active');
+
+  const modal = document.getElementById('workspaceModal');
+  const avatarElem = document.getElementById('wsUserAvatar');
+  const nameElem = document.getElementById('wsUserName');
+  const emailElem = document.getElementById('wsUserEmail');
+  const companyElem = document.getElementById('wsUserCompany');
+  const planBadge = document.getElementById('wsPlanBadge');
+  const keyElem = document.getElementById('wsLicenseKey');
+
+  const statScans = document.getElementById('wsStatScans');
+  const statVulns = document.getElementById('wsStatVulns');
+  const statPRs = document.getElementById('wsStatPRs');
+  const statQuota = document.getElementById('wsStatQuota');
+  const statQuotaSub = document.getElementById('wsStatQuotaSub');
+
+  const initials = user.name
+    ? user.name.split(' ').map(n => n[0]).join('').substring(0, 2).toUpperCase()
+    : 'US';
+  if (avatarElem) avatarElem.textContent = initials;
+  if (nameElem) nameElem.textContent = user.name;
+  if (emailElem) emailElem.textContent = user.email;
+  if (companyElem) companyElem.textContent = user.company || 'Personal Security Workspace';
+  if (planBadge) planBadge.textContent = `${user.tier || 'Community'} Plan`;
+  if (keyElem) keyElem.textContent = user.licenseKey || 'sec_live_demo_key';
+
+  const scans = user.scans || [];
+  const scansCount = scans.length;
+  let vulnCount = 0;
+  let prCount = 0;
+  scans.forEach(s => {
+    if (s.sev === 'CRITICAL' || s.sev === 'HIGH') vulnCount++;
+    if (s.status && (s.status.includes('PR') || s.status.includes('Patched') || s.status.includes('Auto'))) prCount++;
+  });
+
+  if (statScans) statScans.textContent = scansCount;
+  if (statVulns) statVulns.textContent = vulnCount;
+  if (statPRs) statPRs.textContent = prCount;
+
+  if (statQuota) {
+    if (user.tier === 'Enterprise') statQuota.textContent = 'Unlimited Repos';
+    else if (user.tier === 'Pro') statQuota.textContent = '15 Repos';
+    else if (user.tier === 'Starter') statQuota.textContent = '3 Repos';
+    else statQuota.textContent = '1 Repo (Free)';
+  }
+
+  if (statQuotaSub) {
+    statQuotaSub.textContent = user.tier === 'Enterprise' ? 'Full Dedicated CI/CD' : 'Air-Gapped • CI/CD Gate';
+  }
+
+  renderWorkspaceScanHistory(scans);
+
+  if (modal) modal.classList.add('active');
+};
+
+window.closeWorkspaceModal = function() {
+  const modal = document.getElementById('workspaceModal');
+  if (modal) modal.classList.remove('active');
+};
+
+function renderWorkspaceScanHistory(scans) {
+  const tbody = document.getElementById('wsHistoryTableBody');
+  if (!tbody) return;
+
+  if (!scans || scans.length === 0) {
+    tbody.innerHTML = `<tr><td colspan="5" style="text-align:center; padding: 24px; color: var(--text-dim);">No scans recorded yet. Click '+ Run New Scan' to test your APIs.</td></tr>`;
+    return;
+  }
+
+  tbody.innerHTML = scans.map(s => `
+    <tr>
+      <td style="color: var(--text-dim); white-space: nowrap;">${escapeHtml(s.time)}</td>
+      <td style="font-family: 'JetBrains Mono', monospace; font-size: 0.78rem;"><code>${escapeHtml(s.target)}</code></td>
+      <td style="font-weight: 600; color: #f8fafc;">${escapeHtml(s.finding)}</td>
+      <td>
+        <span class="badge ${s.sev === 'CRITICAL' ? 'badge-crit' : (s.sev === 'HIGH' ? 'badge-high' : 'badge-low')}">
+          ${escapeHtml(s.sev)}
+        </span>
+      </td>
+      <td style="color: #34d399; font-weight: 600;">${escapeHtml(s.status)}</td>
+    </tr>
+  `).join('');
+}
+
+window.copyWorkspaceLicenseKey = function() {
+  const user = getActiveUser();
+  const key = user ? user.licenseKey : '';
+  const btn = document.getElementById('wsCopyKeyBtn');
+  if (key && navigator.clipboard) {
+    navigator.clipboard.writeText(key).then(() => {
+      if (btn) {
+        const orig = btn.textContent;
+        btn.textContent = 'Copied! ✓';
+        setTimeout(() => { btn.textContent = orig; }, 2000);
+      }
+    });
+  }
+};
+
+window.clearUserScanHistory = function() {
+  const user = getActiveUser();
+  if (!user) return;
+  if (!confirm('Clear all scan history in your workspace?')) return;
+  user.scans = [];
+  const accounts = getStoredAccounts();
+  accounts[user.email] = user;
+  saveStoredAccounts(accounts);
+  renderWorkspaceScanHistory([]);
+  const statScans = document.getElementById('wsStatScans');
+  const statVulns = document.getElementById('wsStatVulns');
+  const statPRs = document.getElementById('wsStatPRs');
+  if (statScans) statScans.textContent = '0';
+  if (statVulns) statVulns.textContent = '0';
+  if (statPRs) statPRs.textContent = '0';
+};
+
+window.runWorkspacePlaygroundScan = function() {
+  window.closeWorkspaceModal();
+  window.scrollToPlaygroundSection();
+  const runBtn = document.getElementById('pgRunBtn');
+  if (runBtn) {
+    setTimeout(() => {
+      runBtn.click();
+    }, 400);
+  }
+};
+
+window.scrollToPlaygroundSection = function() {
+  const dropdown = document.getElementById('userDropdownCard');
+  if (dropdown) dropdown.classList.remove('active');
+  const el = document.getElementById('playground');
+  if (el) el.scrollIntoView({ behavior: 'smooth' });
+};
+
+window.openUserLicenseModal = function() {
+  const user = getActiveUser();
+  const dropdown = document.getElementById('userDropdownCard');
+  if (dropdown) dropdown.classList.remove('active');
+  if (user) {
+    window.openLicenseModal(user.licenseKey, user.tier, user.email);
+  } else {
+    window.openAuthModal('signin');
+  }
+};
+
+window.triggerWorkspaceUpgrade = function() {
+  window.closeWorkspaceModal();
+  const pricing = document.getElementById('pricing');
+  if (pricing) pricing.scrollIntoView({ behavior: 'smooth' });
+};
+
+window.recordScanToActiveUser = function(presetData) {
+  const user = getActiveUser();
+  if (!user || !presetData) return;
+  const finding = (presetData.findings && presetData.findings[0]) || {
+    id: 'HYBRID_INSPECTION_PASSED',
+    sev: 'LOW',
+    path: presetData.spec || '/api'
+  };
+  const scanRecord = {
+    id: `scan-${Date.now().toString().slice(-4)}`,
+    time: 'Just now',
+    target: finding.path || presetData.spec || '/api',
+    finding: finding.id || 'API Security Scan',
+    sev: finding.sev || 'INFO',
+    status: 'Automated PR Created'
+  };
+
+  user.scans = user.scans || [];
+  user.scans.unshift(scanRecord);
+  if (user.scans.length > 20) user.scans.pop();
+  const accounts = getStoredAccounts();
+  accounts[user.email] = user;
+  saveStoredAccounts(accounts);
+};
+
+window.updateActiveUserLicense = function(licenseKey, tier, customerEmail) {
+  const accounts = getStoredAccounts();
+  let email = getCurrentUserEmail();
+  if (!email && customerEmail) {
+    email = customerEmail.toLowerCase();
+    setCurrentUserEmail(email);
+  }
+  if (!email) return;
+
+  if (!accounts[email]) {
+    accounts[email] = {
+      name: email.split('@')[0],
+      email: email,
+      password: 'password123',
+      company: 'Enterprise Team',
+      tier: tier || 'Pro',
+      licenseKey: licenseKey,
+      createdAt: new Date().toISOString(),
+      scans: []
+    };
+  } else {
+    accounts[email].tier = tier || 'Pro';
+    accounts[email].licenseKey = licenseKey;
+  }
+  saveStoredAccounts(accounts);
+  updateNavAuthUI();
+};
+

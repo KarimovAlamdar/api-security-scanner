@@ -44,17 +44,64 @@
             <div class="nav-actions">
                 <button class="theme-toggle-btn" id="themeToggleBtn" aria-label="Toggle Dark/Light Mode">☀️</button>
                 
-                <!-- Glowing GitHub Sign In Button -->
-                <button class="github-auth-btn" id="githubAuthBtn" onclick="triggerGithubAuth()">
-                    <span class="github-auth-glow"></span>
-                    <span class="github-auth-inner">
-                        <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor">
-                            <path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0024 12c0-6.63-5.37-12-12-12z"/>
-                        </svg>
-                        <span>Sign in with GitHub</span>
-                        <span style="font-size: 11px; opacity: 0.7;">→</span>
-                    </span>
+                <!-- Star on GitHub Button -->
+                <a href="https://github.com/KarimovAlamdar/api-security-scanner" target="_blank" rel="noopener noreferrer" class="github-star-btn" id="githubStarBtn" title="Star on GitHub">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
+                        <path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0024 12c0-6.63-5.37-12-12-12z"/>
+                    </svg>
+                    <span>GitHub</span>
+                    <span class="star-badge">★ Star</span>
+                </a>
+
+                <!-- Auth Trigger (When Logged Out) -->
+                <button class="auth-trigger-btn" id="authTriggerBtn" onclick="openAuthModal('signin')">
+                    <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
+                        <circle cx="12" cy="7" r="4"></circle>
+                    </svg>
+                    <span>Log In / Sign Up</span>
                 </button>
+
+                <!-- User Profile Menu (When Logged In) -->
+                <div class="user-profile-menu" id="userProfileMenu" style="display: none;">
+                    <button class="user-avatar-btn" id="userAvatarBtn" onclick="toggleUserDropdown(event)" aria-haspopup="true">
+                        <span class="user-avatar-initials" id="userAvatarInitials">EK</span>
+                        <div class="user-meta-info">
+                            <span class="user-meta-name" id="userMetaName">Elemdar</span>
+                            <span class="user-meta-tier" id="userMetaTier">Pro Plan</span>
+                        </div>
+                        <span class="dropdown-caret">▾</span>
+                    </button>
+                    <div class="user-dropdown-card" id="userDropdownCard">
+                        <div class="dropdown-header-card">
+                            <div class="dropdown-header-name" id="dropdownHeaderName">Elemdar Kerimov</div>
+                            <div class="dropdown-header-email" id="dropdownHeaderEmail">kerimovelemdar6@gmail.com</div>
+                            <div class="dropdown-header-status">
+                                <span class="status-dot-pulse"></span>
+                                <span id="dropdownHeaderTier">Pro Plan (Active)</span>
+                            </div>
+                        </div>
+                        <div class="dropdown-menu-list">
+                            <button class="dropdown-menu-item" onclick="openWorkspaceModal()">
+                                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7"></rect><rect x="14" y="3" width="7" height="7"></rect><rect x="14" y="14" width="7" height="7"></rect><rect x="3" y="14" width="7" height="7"></rect></svg>
+                                <span>My Security Workspace</span>
+                            </button>
+                            <button class="dropdown-menu-item" onclick="openUserLicenseModal()">
+                                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect><path d="M7 11V7a5 5 0 0 1 10 0v4"></path></svg>
+                                <span>My License &amp; Keys</span>
+                            </button>
+                            <button class="dropdown-menu-item" onclick="scrollToPlaygroundSection()">
+                                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="5 3 19 12 5 21 5 3"/></svg>
+                                <span>Run Security Scan</span>
+                            </button>
+                            <div class="dropdown-menu-divider"></div>
+                            <button class="dropdown-menu-item text-danger" onclick="handleUserSignOut()">
+                                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"></path><polyline points="16 17 21 12 16 7"></polyline><line x1="21" y1="12" x2="9" y2="12"></line></svg>
+                                <span>Sign Out</span>
+                            </button>
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
     </header>
@@ -860,6 +907,181 @@
             <div style="margin-top: 24px; text-align: center;">
                 <button class="btn btn-primary" style="width: 100%;" onclick="closeLicenseModal()">
                     Get Started &rarr;
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- User Authentication Modal (Sign In / Register) -->
+    <div class="modal-backdrop" id="authModal">
+        <div class="modal-card auth-modal-card">
+            <button class="modal-close-btn" onclick="closeAuthModal()">&times;</button>
+            <div class="modal-header" style="text-align: center; margin-bottom: 20px;">
+                <div class="auth-icon-badge">🛡️</div>
+                <div class="modal-title" style="justify-content: center;" id="authModalTitle">
+                    Personal Security Workspace
+                </div>
+                <div class="modal-desc" id="authModalDesc">Register to keep your private scan history, unique license keys, and API tokens isolated to your account.</div>
+            </div>
+
+            <!-- Auth Tabs -->
+            <div class="auth-tab-switch">
+                <button type="button" class="auth-tab-btn active" id="tabSignInBtn" onclick="switchAuthTab('signin')">Sign In</button>
+                <button type="button" class="auth-tab-btn" id="tabSignUpBtn" onclick="switchAuthTab('signup')">Create Account</button>
+            </div>
+
+            <div id="authAlertBox" class="auth-alert-box" style="display: none;"></div>
+
+            <!-- Form: Sign In -->
+            <form id="signInForm" onsubmit="handleSignInSubmit(event)">
+                <div class="modal-input-group">
+                    <label class="modal-label" for="signInEmail">Work Email:</label>
+                    <input type="email" id="signInEmail" class="modal-input" placeholder="e.g. dev@company.com" required autocomplete="email">
+                </div>
+                <div class="modal-input-group">
+                    <label class="modal-label" for="signInPassword">Password:</label>
+                    <input type="password" id="signInPassword" class="modal-input" placeholder="••••••••" required autocomplete="current-password">
+                </div>
+                <button type="submit" class="btn btn-primary" style="width: 100%; margin-top: 10px;" id="signInSubmitBtn">
+                    <span>Sign In to My Workspace</span> &rarr;
+                </button>
+            </form>
+
+            <!-- Form: Sign Up (Register) -->
+            <form id="signUpForm" onsubmit="handleSignUpSubmit(event)" style="display: none;">
+                <div class="modal-input-group">
+                    <label class="modal-label" for="signUpName">Full Name:</label>
+                    <input type="text" id="signUpName" class="modal-input" placeholder="e.g. Elemdar Kerimov" required autocomplete="name">
+                </div>
+                <div class="modal-input-group">
+                    <label class="modal-label" for="signUpEmail">Work Email:</label>
+                    <input type="email" id="signUpEmail" class="modal-input" placeholder="e.g. kerimovelemdar6@gmail.com" required autocomplete="email">
+                </div>
+                <div class="modal-input-group">
+                    <label class="modal-label" for="signUpCompany">Company / Organization:</label>
+                    <input type="text" id="signUpCompany" class="modal-input" placeholder="e.g. Enterprise SecOps (Optional)">
+                </div>
+                <div class="modal-input-group">
+                    <label class="modal-label" for="signUpPassword">Password:</label>
+                    <input type="password" id="signUpPassword" class="modal-input" placeholder="At least 6 characters" minlength="6" required autocomplete="new-password">
+                </div>
+                <button type="submit" class="btn btn-primary" style="width: 100%; margin-top: 10px;" id="signUpSubmitBtn">
+                    <span>Create Account &amp; Activate Workspace</span> &rarr;
+                </button>
+            </form>
+
+            <div class="auth-divider">
+                <span>or quick 1-click test login</span>
+            </div>
+
+            <!-- Quick Demo Login Helpers -->
+            <div class="demo-login-actions">
+                <button type="button" class="btn-demo-quick" onclick="handleDemoQuickLogin('Elemdar Kerimov', 'kerimovelemdar6@gmail.com', 'Pro')">
+                    <span>👤 Quick Demo: Elemdar (Pro Workspace)</span>
+                </button>
+                <button type="button" class="btn-demo-quick" onclick="handleDemoQuickLogin('DevOps Engineer', 'devops@enterprise.io', 'Enterprise')">
+                    <span>🏢 Quick Demo: Enterprise Auditor</span>
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Personal Security Workspace Modal (Dedicated User Dashboard) -->
+    <div class="modal-backdrop" id="workspaceModal">
+        <div class="modal-card workspace-modal-card">
+            <button class="modal-close-btn" onclick="closeWorkspaceModal()">&times;</button>
+            
+            <div class="workspace-header">
+                <div class="workspace-user-info">
+                    <div class="workspace-avatar" id="wsUserAvatar">EK</div>
+                    <div>
+                        <div class="workspace-title-row">
+                            <h2 class="workspace-title" id="wsUserName">Elemdar Kerimov</h2>
+                            <span class="badge badge-high" id="wsPlanBadge" style="background: rgba(16, 185, 129, 0.2); color: #34d399;">Pro Plan</span>
+                        </div>
+                        <div class="workspace-subtitle">
+                            <span id="wsUserEmail">kerimovelemdar6@gmail.com</span> &bull; 
+                            <span id="wsUserCompany">Personal Security Workspace</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="workspace-header-actions">
+                    <button class="btn btn-secondary btn-sm" onclick="handleUserSignOut()">Sign Out</button>
+                </div>
+            </div>
+
+            <!-- Workspace Stats Grid (Isolated per user) -->
+            <div class="ws-stats-grid">
+                <div class="ws-stat-card">
+                    <div class="ws-stat-label">Scans Performed</div>
+                    <div class="ws-stat-value" id="wsStatScans">12</div>
+                    <div class="ws-stat-sub">Isolated to this account</div>
+                </div>
+                <div class="ws-stat-card">
+                    <div class="ws-stat-label">Vulnerabilities Blocked</div>
+                    <div class="ws-stat-value accent-green" id="wsStatVulns">7</div>
+                    <div class="ws-stat-sub">BOLA, Shadow APIs &amp; Injections</div>
+                </div>
+                <div class="ws-stat-card">
+                    <div class="ws-stat-label">Auto-Fix PRs Dispatched</div>
+                    <div class="ws-stat-value accent-cyan" id="wsStatPRs">4</div>
+                    <div class="ws-stat-sub">Direct GitHub Pull Requests</div>
+                </div>
+                <div class="ws-stat-card">
+                    <div class="ws-stat-label">Active License Quota</div>
+                    <div class="ws-stat-value" id="wsStatQuota">15 Repos</div>
+                    <div class="ws-stat-sub" id="wsStatQuotaSub">Air-Gapped &bull; CI/CD Gate</div>
+                </div>
+            </div>
+
+            <!-- Dedicated License Key Card -->
+            <div class="ws-license-card">
+                <div class="ws-license-top">
+                    <div>
+                        <span class="modal-label" style="margin: 0;">Your Assigned Scanner License Key:</span>
+                        <div class="license-key-text" id="wsLicenseKey" style="margin-top: 4px;">sec_live_loading...</div>
+                    </div>
+                    <button class="copy-key-btn" id="wsCopyKeyBtn" onclick="copyWorkspaceLicenseKey()">Copy Key</button>
+                </div>
+                <div class="ws-license-hint">
+                    💡 Add this key to your GitHub Secrets as <code>SCANNER_LICENSE_KEY</code> to enable automated CI/CD scans.
+                </div>
+            </div>
+
+            <!-- Private Scan History Table -->
+            <div class="ws-section-header">
+                <h3 style="margin: 0; font-size: 1.1rem; font-weight: 700;">Private Scan History &amp; Audit Logs</h3>
+                <div style="display: flex; gap: 8px;">
+                    <button class="btn btn-primary btn-sm" onclick="runWorkspacePlaygroundScan()">
+                        <span>+ Run New Scan</span>
+                    </button>
+                    <button class="btn btn-secondary btn-sm" onclick="clearUserScanHistory()">Clear History</button>
+                </div>
+            </div>
+
+            <div class="ws-table-container">
+                <table class="ws-history-table">
+                    <thead>
+                        <tr>
+                            <th>Time</th>
+                            <th>Target API Endpoint</th>
+                            <th>Engine Finding</th>
+                            <th>Severity</th>
+                            <th>Remediation Status</th>
+                        </tr>
+                    </thead>
+                    <tbody id="wsHistoryTableBody">
+                        <!-- Populated dynamically per user -->
+                    </tbody>
+                </table>
+            </div>
+
+            <div class="ws-footer-actions">
+                <button class="btn btn-primary" onclick="triggerWorkspaceUpgrade()">
+                    <span>Upgrade Plan / Increase Repositories</span> &rarr;
+                </button>
+                <button class="btn btn-secondary" onclick="closeWorkspaceModal()">
+                    Close Workspace
                 </button>
             </div>
         </div>
