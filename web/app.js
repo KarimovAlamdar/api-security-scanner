@@ -309,7 +309,8 @@ const PRICING_BASE = {
   enterprise: { monthly: 299, annual: 239 }
 };
 
-const STORAGE_CLAIMED_COUPON_USERS_KEY = 'scanner_claimed_coupon_users';
+const STORAGE_CLAIMED_COUPON_USERS_KEY = 'scanner_claimed_coupon_users_v4';
+const STORAGE_COUPON_CLAIMS_COUNT_KEY = 'scanner_coupon_claims_count_v4';
 let pendingCouponClaim = false;
 
 function getClaimedEarlyBirdUsers() {
@@ -328,12 +329,12 @@ function saveClaimedEarlyBirdUsers(map) {
 }
 
 function getEarlyBirdCount() {
-  const val = localStorage.getItem('scanner_coupon_claims_count');
+  const val = localStorage.getItem(STORAGE_COUPON_CLAIMS_COUNT_KEY);
   if (val !== null) {
     const num = parseInt(val, 10);
-    return isNaN(num) ? 3 : Math.min(10, Math.max(0, num));
+    return isNaN(num) ? 1 : Math.min(10, Math.max(1, num));
   }
-  return 3;
+  return 1;
 }
 
 function updateEarlyBirdUI() {
@@ -522,7 +523,7 @@ window.copyAndApplyEarlyBirdCoupon = function() {
 
   // 4. Yeni istifadəçi üçün sayğacı 1 vahid artırırıq və hesabı qeydə alırıq
   count += 1;
-  localStorage.setItem('scanner_coupon_claims_count', count);
+  localStorage.setItem(STORAGE_COUPON_CLAIMS_COUNT_KEY, count);
 
   claimedMap[user.email] = true;
   saveClaimedEarlyBirdUsers(claimedMap);
@@ -544,10 +545,14 @@ window.copyAndApplyEarlyBirdCoupon = function() {
 
 window.applyEarlyBirdDiscount = window.copyAndApplyEarlyBirdCoupon;
 
-// Test üçün sayğacı sıfırlamaq və ya istənilən rəqəmə qoymaq funksiyası
-window.resetCouponCount = function(val = 3) {
-  localStorage.setItem('scanner_coupon_claims_count', val);
+// Test üçün sayğacı sıfırlamaq və ya istənilən rəqəmə qoymaq funksiyası (default: 1)
+window.resetCouponCount = function(val = 1) {
+  localStorage.setItem(STORAGE_COUPON_CLAIMS_COUNT_KEY, val);
   localStorage.removeItem(STORAGE_CLAIMED_COUPON_USERS_KEY);
+  localStorage.removeItem('scanner_coupon_claims_count');
+  localStorage.removeItem('scanner_claimed_coupon_users');
+  localStorage.removeItem('scanner_coupon_claims_count_v3');
+  localStorage.removeItem('scanner_claimed_coupon_users_v3');
   const accounts = getStoredAccounts();
   for (let k in accounts) {
     if (accounts[k]) delete accounts[k].claimedEarlyBird;
