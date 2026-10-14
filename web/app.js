@@ -1131,7 +1131,8 @@ window.handleSignUpSubmit = function(e) {
 
   const name = nameInput ? nameInput.value.trim() : '';
   const email = emailInput ? emailInput.value.trim().toLowerCase() : '';
-  const company = (companyInput && companyInput.value.trim()) ? companyInput.value.trim() : 'Personal Security Ops';
+  const firstName = name ? name.split(' ')[0] : 'Personal';
+  const company = (companyInput && companyInput.value.trim()) ? companyInput.value.trim() : `${firstName}'s Workspace`;
   const password = passwordInput ? passwordInput.value : '';
 
   if (!email || !name || !password) return;
