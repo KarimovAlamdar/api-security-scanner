@@ -598,16 +598,16 @@
                             </div>
                             <div class="early-bird-sub">
                                 The first 10 customers receive an unconditional 50% lifetime discount across all plans.
-                                Coupon code: <code id="couponCodeBadge" style="cursor: pointer; text-decoration: underline;" title="Click to copy coupon" onclick="copyAndApplyEarlyBirdCoupon()">EARLYBIRD10</code>
+                                Coupon code: <code id="couponCodeBadge" style="cursor: pointer; text-decoration: underline; user-select: none; -webkit-user-select: none; -moz-user-select: none; -ms-user-select: none;" title="Click to claim coupon" onclick="copyAndApplyEarlyBirdCoupon()">E*****D10</code>
                             </div>
                         </div>
                     </div>
 
                     <div class="early-bird-action">
-                        <input type="text" id="couponInput" class="coupon-field" placeholder="Coupon: EARLYBIRD10"
-                            value="EARLYBIRD10" readonly style="cursor: pointer;" onclick="copyAndApplyEarlyBirdCoupon()" title="Click to copy coupon">
+                        <input type="text" id="couponInput" class="coupon-field" placeholder="Claim your 50% discount"
+                            value="🔒 Click 'Claim' to reveal" readonly style="cursor: pointer; user-select: none; -webkit-user-select: none; -moz-user-select: none;" onclick="copyAndApplyEarlyBirdCoupon()" title="Click Claim to reveal and apply coupon">
                         <button class="btn btn-sm btn-primary" id="applyCouponBtn"
-                            onclick="copyAndApplyEarlyBirdCoupon()">Copy & Apply</button>
+                            onclick="copyAndApplyEarlyBirdCoupon()">🎟️ Claim Discount</button>
                     </div>
                 </div>
 
@@ -1325,7 +1325,7 @@ java -jar api-security-scanner.jar --spec openapi.json --license="YOUR_LICENSE_K
         </div>
     </div>
 
-    <script src="app.js?v=2.9"></script>
+    <script src="app.js?v=3.0"></script>
 </body>
 
 </html>

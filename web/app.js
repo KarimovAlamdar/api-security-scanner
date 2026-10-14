@@ -391,10 +391,12 @@ function updateEarlyBirdUI() {
         input.style.cursor = 'not-allowed';
       }
       if (codeBadge) {
+        codeBadge.textContent = 'E*****D10';
         codeBadge.style.textDecoration = 'line-through';
         codeBadge.style.color = '#94a3b8';
         codeBadge.style.cursor = 'not-allowed';
         codeBadge.title = 'Limit dolmuşdur';
+        codeBadge.style.userSelect = 'none';
       }
     }
   } else {
@@ -408,16 +410,19 @@ function updateEarlyBirdUI() {
     }
     if (input) {
       input.disabled = false;
-      input.value = 'EARLYBIRD10';
+      input.value = userHasClaimed ? '✅ Claimed — discount active' : '🔒 Click Claim to reveal';
       input.style.textDecoration = 'none';
-      input.style.color = '';
+      input.style.color = userHasClaimed ? '#10b981' : '';
       input.style.cursor = 'pointer';
+      input.style.userSelect = 'none';
     }
     if (codeBadge) {
+      codeBadge.textContent = 'E*****D10';
       codeBadge.style.textDecoration = 'underline';
       codeBadge.style.color = '';
       codeBadge.style.cursor = 'pointer';
-      codeBadge.title = 'Click to copy coupon';
+      codeBadge.title = 'Click to claim coupon';
+      codeBadge.style.userSelect = 'none';
     }
 
     if (userHasClaimed) {
@@ -713,10 +718,14 @@ window.submitStripeCheckout = async function() {
     btn.innerHTML = '<span>Redirecting to checkout...</span>';
   }
 
+  // Only include coupon if this specific user has legitimately claimed it
+  const claimedMapForCheckout = getClaimedEarlyBirdUsers();
+  const userVerifiedClaim = Boolean(claimedMapForCheckout[email]);
+
   const payload = {
     tier: currentCheckoutTier,
     billingCycle: isAnnualBilling ? 'annual' : 'monthly',
-    couponCode: (isEarlyBirdApplied && getEarlyBirdCount() < 10) ? 'EARLYBIRD10' : '',
+    couponCode: (userVerifiedClaim && isEarlyBirdApplied && getEarlyBirdCount() < 10) ? 'EARLYBIRD10' : '',
     customerEmail: email,
     successUrl: `${window.location.origin}/index.html?session_id={CHECKOUT_SESSION_ID}&status=success`,
     cancelUrl: `${window.location.origin}/index.html?status=cancelled`
@@ -768,7 +777,10 @@ window.submitStripeCheckout = async function() {
     const buyUrl = tierUrls[cycleKey] || tierUrls.monthly;
 
     let lemonCheckoutUrl = `${buyUrl}?checkout[email]=${encodeURIComponent(email)}`;
-    if (isEarlyBirdApplied && getEarlyBirdCount() < 10) {
+    // Only add discount code if user has a verified claim record
+    const lemonClaimedMap = getClaimedEarlyBirdUsers();
+    const lemonUserVerified = Boolean(lemonClaimedMap[email]);
+    if (lemonUserVerified && isEarlyBirdApplied && getEarlyBirdCount() < 10) {
       lemonCheckoutUrl += `&checkout[discount_code]=EARLYBIRD10`;
     }
     window.location.href = lemonCheckoutUrl;
