@@ -545,7 +545,7 @@ window.submitStripeCheckout = async function() {
       },
       pro: {
         monthly: 'https://api-security-scanner.lemonsqueezy.com/checkout/buy/2bab4a54-79b4-4cda-84c4-d3a144df2d9c',
-        annual: 'https://api-security-scanner.lemonsqueezy.com/checkout/buy/2bab4a54-79b4-4cda-84c4-d3a144df2d9c'
+        annual: 'https://api-security-scanner.lemonsqueezy.com/checkout/buy/771f8f15-d4fd-40ea-951a-bb5435b2a598'
       },
       enterprise: {
         monthly: 'https://api-security-scanner.lemonsqueezy.com/checkout/buy/3d925ec4-8791-4f6e-87dd-2907e2e778d8',

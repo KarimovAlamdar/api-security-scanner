@@ -262,6 +262,9 @@ public class LemonSqueezyService {
                 if (productName.toLowerCase().contains("starter")) tier = "Starter";
                 else if (productName.toLowerCase().contains("enterprise")) tier = "Enterprise";
                 else tier = "Pro";
+                if (productName.toLowerCase().contains("anual") || productName.toLowerCase().contains("annual") || productName.toLowerCase().contains("year")) {
+                    cycle = "annual";
+                }
             }
 
             LicenseInfo license = licenseManager.issueLicense(customerEmail, tier, cycle, orderId, "ls_cust_" + customerId);
