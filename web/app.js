@@ -559,7 +559,7 @@ window.submitStripeCheckout = async function() {
 
     let lemonCheckoutUrl = `${buyUrl}?checkout[email]=${encodeURIComponent(email)}`;
     if (isEarlyBirdApplied) {
-      lemonCheckoutUrl += `&checkout[discount_code]=EARLYBIRD10&discount=EARLYBIRD10`;
+      lemonCheckoutUrl += `&checkout[discount_code]=EARLYBIRD10`;
     }
     window.location.href = lemonCheckoutUrl;
   } finally {
