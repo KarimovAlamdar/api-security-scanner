@@ -1023,7 +1023,7 @@ function updateNavAuthUI() {
   const nameElem = document.getElementById('userMetaName');
   const tierElem = document.getElementById('userMetaTier');
   if (nameElem) nameElem.textContent = user.name.split(' ')[0];
-  if (tierElem) tierElem.textContent = (user.tier || 'Community') + ' Plan';
+  if (tierElem) tierElem.textContent = (user.tier || 'Community').toUpperCase();
 
   // Dropdown card elements
   const ddName = document.getElementById('dropdownHeaderName');

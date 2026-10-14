@@ -25,28 +25,32 @@
         <div class="container nav-container">
             <a href="#" class="brand-logo" id="brandLogoLink">
                 <div class="shield-icon">
-                    <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                    <svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
                         <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
                     </svg>
                 </div>
-                <span>API Security Scanner</span>
-                <span class="brand-badge">v1.2.0 Hybrid</span>
+                <div class="brand-name-group">
+                    <span class="brand-title">API Security Scanner</span>
+                    <span class="brand-badge">HYBRID</span>
+                </div>
             </a>
 
-            <ul class="nav-links">
-                <li><a href="#features" class="nav-link">Killer Features</a></li>
-                <li><a href="#comparison" class="nav-link">vs StackHawk</a></li>
-                <li><a href="#playground" class="nav-link">Live Playground</a></li>
-                <li><a href="#pricing" class="nav-link">Pricing & Early Bird</a></li>
-                <li><a href="#roi" class="nav-link">ROI Calculator</a></li>
-            </ul>
+            <nav class="nav-links-wrap" aria-label="Main Navigation">
+                <ul class="nav-links">
+                    <li><a href="#features" class="nav-link">Features</a></li>
+                    <li><a href="#comparison" class="nav-link">vs StackHawk</a></li>
+                    <li><a href="#playground" class="nav-link">Playground</a></li>
+                    <li><a href="#pricing" class="nav-link">Pricing</a></li>
+                    <li><a href="#roi" class="nav-link">ROI Calculator</a></li>
+                </ul>
+            </nav>
 
             <div class="nav-actions">
-                <button class="theme-toggle-btn" id="themeToggleBtn" aria-label="Toggle Dark/Light Mode">☀️</button>
+                <button class="theme-toggle-btn" id="themeToggleBtn" aria-label="Toggle Dark/Light Mode" title="Toggle Theme">☀️</button>
                 
                 <!-- Star on GitHub Button -->
                 <a href="https://github.com/KarimovAlamdar/api-security-scanner" target="_blank" rel="noopener noreferrer" class="github-star-btn" id="githubStarBtn" title="Star on GitHub">
-                    <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
+                    <svg width="15" height="15" viewBox="0 0 24 24" fill="currentColor">
                         <path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0024 12c0-6.63-5.37-12-12-12z"/>
                     </svg>
                     <span>GitHub</span>
@@ -59,18 +63,18 @@
                         <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
                         <circle cx="12" cy="7" r="4"></circle>
                     </svg>
-                    <span>Log In / Sign Up</span>
+                    <span>Log In</span>
                 </button>
 
                 <!-- User Profile Menu (When Logged In) -->
                 <div class="user-profile-menu" id="userProfileMenu" style="display: none;">
                     <button class="user-avatar-btn" id="userAvatarBtn" onclick="toggleUserDropdown(event)" aria-haspopup="true">
-                        <span class="user-avatar-initials" id="userAvatarInitials">EK</span>
-                        <div class="user-meta-info">
-                            <span class="user-meta-name" id="userMetaName">Elemdar</span>
-                            <span class="user-meta-tier" id="userMetaTier">Pro Plan</span>
-                        </div>
-                        <span class="dropdown-caret">▾</span>
+                        <div class="user-avatar-initials" id="userAvatarInitials">EK</div>
+                        <span class="user-meta-name" id="userMetaName">Elemdar</span>
+                        <span class="user-meta-tier" id="userMetaTier">PRO</span>
+                        <svg class="dropdown-caret-svg" width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+                            <polyline points="6 9 12 15 18 9"></polyline>
+                        </svg>
                     </button>
                     <div class="user-dropdown-card" id="userDropdownCard">
                         <div class="dropdown-header-card">
