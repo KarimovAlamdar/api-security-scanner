@@ -899,54 +899,18 @@ function escapeJsString(str) {
 const STORAGE_ACCOUNTS_KEY = 'sec_scanner_accounts_v2';
 const STORAGE_CURRENT_USER_KEY = 'sec_scanner_current_user_v2';
 
-const DEFAULT_ACCOUNTS = {
-  'kerimovelemdar6@gmail.com': {
-    name: 'Elemdar Kerimov',
-    email: 'kerimovelemdar6@gmail.com',
-    password: 'password123',
-    company: 'Fintech SecOps',
-    tier: 'Pro',
-    licenseKey: 'sec_live_pro_2244795_7f8a1290bb24',
-    createdAt: new Date().toISOString(),
-    scans: [
-      {
-        id: 'scan-001',
-        time: 'Today, 09:15',
-        target: 'https://api.store.internal/orders/{id}',
-        finding: 'Stateful BOLA / IDOR Confirmed',
-        sev: 'CRITICAL',
-        status: 'PR #142 Merged (Auto-Patched)'
-      },
-      {
-        id: 'scan-002',
-        time: 'Yesterday, 14:20',
-        target: '/internal/admin/metrics-dump',
-        finding: 'Shadow API Route Exposed',
-        sev: 'HIGH',
-        status: 'Spec Synchronized'
-      },
-      {
-        id: 'scan-003',
-        time: '2 days ago',
-        target: '/api/v1/agent/chat',
-        finding: 'LLM Prompt Leakage & Bypass',
-        sev: 'HIGH',
-        status: 'Guardrail Filter Applied'
-      }
-    ]
-  }
-};
+const DEFAULT_ACCOUNTS = {};
 
 function getStoredAccounts() {
   try {
     const raw = localStorage.getItem(STORAGE_ACCOUNTS_KEY);
     if (!raw) {
-      localStorage.setItem(STORAGE_ACCOUNTS_KEY, JSON.stringify(DEFAULT_ACCOUNTS));
-      return { ...DEFAULT_ACCOUNTS };
+      localStorage.setItem(STORAGE_ACCOUNTS_KEY, JSON.stringify({}));
+      return {};
     }
     return JSON.parse(raw);
   } catch (e) {
-    return { ...DEFAULT_ACCOUNTS };
+    return {};
   }
 }
 
@@ -978,10 +942,10 @@ function getActiveUser() {
 function initUserAuth() {
   getStoredAccounts();
 
-  // If initial load, activate the owner profile so workspace is immediately available
-  if (localStorage.getItem('sec_has_initialized_auth_v2') !== 'true') {
-    setCurrentUserEmail('kerimovelemdar6@gmail.com');
-    localStorage.setItem('sec_has_initialized_auth_v2', 'true');
+  // Reset any legacy hardcoded session so visitors always start logged out
+  const currentEmail = getCurrentUserEmail();
+  if (currentEmail === 'kerimovelemdar6@gmail.com') {
+    setCurrentUserEmail(null);
   }
 
   updateNavAuthUI();
@@ -1171,39 +1135,6 @@ window.handleSignUpSubmit = function(e) {
     window.closeAuthModal();
     window.openWorkspaceModal();
   }, 500);
-};
-
-window.handleDemoQuickLogin = function(name, email, tier) {
-  const accounts = getStoredAccounts();
-  if (!accounts[email]) {
-    const randomSuffix = Math.random().toString(36).substring(2, 10);
-    accounts[email] = {
-      name,
-      email,
-      password: 'password123',
-      company: tier === 'Enterprise' ? 'Enterprise Bank Corp' : 'Fintech Startup',
-      tier: tier || 'Pro',
-      licenseKey: `sec_live_${(tier || 'pro').toLowerCase()}_${randomSuffix}`,
-      createdAt: new Date().toISOString(),
-      scans: [
-        {
-          id: 'demo-scan-1',
-          time: '10 mins ago',
-          target: 'https://api.prod.enterprise.internal/admin/debug-dump',
-          finding: 'Shadow API Exposed [AdminController.java:42]',
-          sev: 'HIGH',
-          status: 'Remediation Verified'
-        }
-      ]
-    };
-    saveStoredAccounts(accounts);
-  }
-  setCurrentUserEmail(email);
-  updateNavAuthUI();
-  window.closeAuthModal();
-  setTimeout(() => {
-    window.openWorkspaceModal();
-  }, 200);
 };
 
 window.handleUserSignOut = function() {

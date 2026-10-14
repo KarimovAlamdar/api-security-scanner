@@ -2512,70 +2512,7 @@ input:checked + .slider:before {
   color: #f87171;
 }
 
-.auth-divider {
-  position: relative;
-  text-align: center;
-  margin: 22px 0 16px;
-  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
-}
 
-[data-theme="light"] .auth-divider {
-  border-bottom-color: #e2e8f0;
-}
-
-.auth-divider span {
-  position: relative;
-  top: 9px;
-  background: #0f172a;
-  padding: 0 12px;
-  font-size: 0.72rem;
-  color: var(--text-dim);
-  text-transform: uppercase;
-  letter-spacing: 0.5px;
-}
-
-[data-theme="light"] .auth-divider span {
-  background: #ffffff;
-  color: #64748b;
-}
-
-.demo-login-actions {
-  display: flex;
-  flex-direction: column;
-  gap: 8px;
-  margin-top: 14px;
-}
-
-.btn-demo-quick {
-  width: 100%;
-  padding: 10px 14px;
-  border-radius: 8px;
-  background: rgba(255, 255, 255, 0.04);
-  border: 1px solid rgba(255, 255, 255, 0.1);
-  color: #94a3b8;
-  font-size: 0.82rem;
-  font-weight: 600;
-  cursor: pointer;
-  transition: var(--transition);
-  text-align: left;
-}
-
-.btn-demo-quick:hover {
-  background: rgba(255, 255, 255, 0.09);
-  border-color: #6366f1;
-  color: #ffffff;
-}
-
-[data-theme="light"] .btn-demo-quick {
-  background: #f8fafc;
-  border-color: #cbd5e1;
-  color: #475569;
-}
-
-[data-theme="light"] .btn-demo-quick:hover {
-  background: #f1f5f9;
-  color: #0f172a;
-}
 
 /* -------------------------------- Personal Workspace Dashboard Modal -------------------------------- */
 .workspace-modal-card {
