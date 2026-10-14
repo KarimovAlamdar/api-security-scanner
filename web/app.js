@@ -1267,6 +1267,17 @@ window.openWorkspaceModal = function() {
 
   renderWorkspaceScanHistory(scans);
 
+  // Dynamically inject user's real license key into Quickstart snippets
+  const userKey = user.licenseKey || 'sec_live_your_key_here';
+  const qsDockerCode = document.getElementById('qsDockerCode');
+  const qsCliCode = document.getElementById('qsCliCode');
+  if (qsDockerCode) {
+    qsDockerCode.textContent = `docker run --rm -v $(pwd):/app -w /app \\\n  -e SCANNER_LICENSE_KEY="${userKey}" \\\n  ghcr.io/karimovalamdar/api-security-scanner:latest \\\n  --spec openapi.json --auto-fix`;
+  }
+  if (qsCliCode) {
+    qsCliCode.textContent = `# 1. Run interactive wizard setup:\njava -jar api-security-scanner.jar --init\n\n# 2. Or execute a direct scan:\njava -jar api-security-scanner.jar --spec openapi.json --license="${userKey}" --auto-fix`;
+  }
+
   if (modal) modal.classList.add('active');
 };
 
@@ -1418,4 +1429,113 @@ window.updateActiveUserLicense = function(licenseKey, tier, customerEmail) {
   saveStoredAccounts(accounts);
   updateNavAuthUI();
 };
+
+/* -------------------------------- Quickstart & Onboarding Engine -------------------------------- */
+window.switchQuickstartTab = function(tab) {
+  const ghBtn = document.getElementById('qsTabGhBtn');
+  const dockerBtn = document.getElementById('qsTabDockerBtn');
+  const cliBtn = document.getElementById('qsTabCliBtn');
+
+  const ghView = document.getElementById('qsViewGithub');
+  const dockerView = document.getElementById('qsViewDocker');
+  const cliView = document.getElementById('qsViewCli');
+
+  if (ghBtn) ghBtn.classList.toggle('active', tab === 'github');
+  if (dockerBtn) dockerBtn.classList.toggle('active', tab === 'docker');
+  if (cliBtn) cliBtn.classList.toggle('active', tab === 'cli');
+
+  if (ghView) ghView.style.display = tab === 'github' ? 'block' : 'none';
+  if (dockerView) dockerView.style.display = tab === 'docker' ? 'block' : 'none';
+  if (cliView) cliView.style.display = tab === 'cli' ? 'block' : 'none';
+};
+
+window.downloadWorkflowFile = function() {
+  const user = getActiveUser();
+  const key = (user && user.licenseKey) ? user.licenseKey : 'YOUR_SCANNER_LICENSE_KEY';
+  const yamlContent = `name: API Security Scanner CI/CD
+on:
+  push:
+    branches: [ main, master ]
+  pull_request:
+    branches: [ main, master ]
+
+jobs:
+  api-security-scan:
+    name: API Security & Auto-PR Gate
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Source Code
+        uses: actions/checkout@v4
+
+      - name: Run API Security Engine
+        uses: KarimovAlamdar/api-security-scanner@v1
+        with:
+          license-key: \${{ secrets.SCANNER_LICENSE_KEY }} # Set in Repo Settings > Secrets: ${key}
+          spec-path: openapi.json
+          auto-pr: true
+`;
+  const blob = new Blob([yamlContent], { type: 'text/yaml;charset=utf-8;' });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url;
+  a.download = 'security.yml';
+  document.body.appendChild(a);
+  a.click();
+  document.body.removeChild(a);
+  URL.revokeObjectURL(url);
+};
+
+window.copyWorkflowSnippet = function(btn) {
+  const codeElem = document.getElementById('qsWorkflowCode');
+  if (!codeElem) return;
+  navigator.clipboard.writeText(codeElem.textContent).then(() => {
+    if (btn) {
+      const orig = btn.textContent;
+      btn.textContent = 'Copied! ✓';
+      setTimeout(() => { btn.textContent = orig; }, 2000);
+    }
+  });
+};
+
+window.copyDockerSnippet = function(btn) {
+  const codeElem = document.getElementById('qsDockerCode');
+  if (!codeElem) return;
+  navigator.clipboard.writeText(codeElem.textContent).then(() => {
+    if (btn) {
+      const orig = btn.textContent;
+      btn.textContent = 'Copied! ✓';
+      setTimeout(() => { btn.textContent = orig; }, 2000);
+    }
+  });
+};
+
+window.copyCliSnippet = function(btn) {
+  const codeElem = document.getElementById('qsCliCode');
+  if (!codeElem) return;
+  navigator.clipboard.writeText(codeElem.textContent).then(() => {
+    if (btn) {
+      const orig = btn.textContent;
+      btn.textContent = 'Copied! ✓';
+      setTimeout(() => { btn.textContent = orig; }, 2000);
+    }
+  });
+};
+
+window.openQuickstartGuide = function() {
+  window.openWorkspaceModal();
+  setTimeout(() => {
+    const card = document.getElementById('wsQuickstartCard');
+    if (card) {
+      card.scrollIntoView({ behavior: 'smooth', block: 'center' });
+    }
+  }, 250);
+};
+
+window.openWorkspaceFromLicenseModal = function() {
+  window.closeLicenseModal();
+  setTimeout(() => {
+    window.openWorkspaceModal();
+  }, 150);
+};
+
 

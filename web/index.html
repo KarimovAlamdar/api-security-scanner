@@ -90,6 +90,10 @@
                                 <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7"></rect><rect x="14" y="3" width="7" height="7"></rect><rect x="14" y="14" width="7" height="7"></rect><rect x="3" y="14" width="7" height="7"></rect></svg>
                                 <span>My Security Workspace</span>
                             </button>
+                            <button class="dropdown-menu-item" onclick="openQuickstartGuide()">
+                                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg>
+                                <span>Quickstart (60s Setup)</span>
+                            </button>
                             <button class="dropdown-menu-item" onclick="openUserLicenseModal()">
                                 <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect><path d="M7 11V7a5 5 0 0 1 10 0v4"></path></svg>
                                 <span>My License &amp; Keys</span>
@@ -734,7 +738,10 @@
                             <span style="font-family: var(--font-mono); font-size: 0.85rem; color: var(--brand-green);">
                                 .github/workflows/api-security.yml
                             </span>
-                            <button class="btn btn-sm btn-secondary" id="copyYamlBtn">Copy YAML</button>
+                            <div style="display: flex; gap: 8px;">
+                                <button class="btn btn-sm btn-secondary" onclick="downloadWorkflowFile()">⬇ Download .yml</button>
+                                <button class="btn btn-sm btn-secondary" id="copyYamlBtn">Copy YAML</button>
+                            </div>
                         </div>
                         <pre class="cicd-preview-body"><code id="cicdYamlPreview"># Loading configuration...</code></pre>
                     </div>
@@ -898,19 +905,25 @@
                 <button class="copy-key-btn" onclick="copyLicenseKey()">Copy Key</button>
             </div>
 
-            <label class="modal-label" style="margin-top: 16px;">GitHub Actions Setup (`.github/workflows/security.yml`):</label>
+            <div style="margin-top: 16px; display: flex; justify-content: space-between; align-items: center;">
+                <label class="modal-label" style="margin: 0;">GitHub Actions Setup (`.github/workflows/security.yml`):</label>
+                <button class="btn btn-secondary btn-xs" onclick="downloadWorkflowFile()">⬇ Download .yml File</button>
+            </div>
             <div class="workflow-preview-snippet" id="licenseWorkflowSnippet">
 - name: Run API Security Scanner
-  uses: security-scanner/action@v1
+  uses: KarimovAlamdar/api-security-scanner@v1
   with:
     license-key: ${{ secrets.SCANNER_LICENSE_KEY }}
     auto-pr: true
     spec-path: openapi.json
             </div>
 
-            <div style="margin-top: 24px; text-align: center;">
-                <button class="btn btn-primary" style="width: 100%;" onclick="closeLicenseModal()">
-                    Get Started &rarr;
+            <div style="margin-top: 20px; display: flex; gap: 10px;">
+                <button class="btn btn-primary" style="flex: 1;" onclick="openWorkspaceFromLicenseModal()">
+                    Open Workspace &amp; Quickstart &rarr;
+                </button>
+                <button class="btn btn-secondary" onclick="closeLicenseModal()">
+                    Close
                 </button>
             </div>
         </div>
@@ -1029,6 +1042,115 @@
                 </div>
                 <div class="ws-license-hint">
                     💡 Add this key to your GitHub Secrets as <code>SCANNER_LICENSE_KEY</code> to enable automated CI/CD scans.
+                </div>
+            </div>
+
+            <!-- Interactive Quickstart Guide (Connect in 60s) -->
+            <div class="ws-quickstart-card" id="wsQuickstartCard">
+                <div class="ws-quickstart-header">
+                    <div class="ws-quickstart-badge">⚡ Quickstart in 60s</div>
+                    <h3 class="ws-quickstart-title">How to Run Your First API Security Scan</h3>
+                    <p class="ws-quickstart-subtitle">Choose your setup method. Your license key is already configured below.</p>
+                </div>
+
+                <!-- Integration Selector Tabs -->
+                <div class="ws-quickstart-tabs">
+                    <button type="button" class="ws-tab-btn active" id="qsTabGhBtn" onclick="switchQuickstartTab('github')">
+                        <svg width="15" height="15" viewBox="0 0 24 24" fill="currentColor"><path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0024 12c0-6.63-5.37-12-12-12z"/></svg>
+                        GitHub Actions (Automated)
+                    </button>
+                    <button type="button" class="ws-tab-btn" id="qsTabDockerBtn" onclick="switchQuickstartTab('docker')">
+                        <svg width="15" height="15" viewBox="0 0 24 24" fill="currentColor"><path d="M13.983 11.078h2.119a.186.186 0 00.186-.185V9.006a.186.186 0 00-.186-.186h-2.119a.185.185 0 00-.185.185v1.888c0 .102.083.185.185.185m-2.954-5.43h2.118a.186.186 0 00.186-.186V3.574a.186.186 0 00-.186-.185h-2.118a.185.185 0 00-.185.185v1.888c0 .102.082.185.185.185m0 2.716h2.118a.187.187 0 00.186-.186V6.29a.186.186 0 00-.186-.185h-2.118a.185.185 0 00-.185.185v1.887c0 .102.082.186.185.186m-2.93 0h2.12a.186.186 0 00.184-.186V6.29a.185.185 0 00-.185-.185H8.1a.185.185 0 00-.185.185v1.887c0 .102.083.186.185.186m-2.964 0h2.119a.186.186 0 00.185-.186V6.29a.185.185 0 00-.185-.185H5.136a.186.186 0 00-.186.185v1.887c0 .102.084.186.186.186m5.893 2.715h2.119a.186.186 0 00.186-.185V9.006a.186.186 0 00-.186-.186h-2.119a.186.186 0 00-.186.185v1.888c0 .102.083.185.186.185m-2.93 0h2.12a.185.185 0 00.184-.185V9.006a.185.185 0 00-.184-.186H8.1a.185.185 0 00-.185.185v1.888c0 .102.083.185.185.185m-2.964 0h2.119a.185.185 0 00.185-.185V9.006a.185.185 0 00-.185-.186H5.136a.186.186 0 00-.186.185v1.888c0 .102.084.185.186.185m-2.928 0h2.119a.185.185 0 00.185-.185V9.006a.185.185 0 00-.185-.186H2.208a.186.186 0 00-.186.185v1.888c0 .102.084.185.186.185M23.79 10.96c-.328-.204-.962-.317-1.841-.317-.184 0-.387.005-.6.015a4.67 4.67 0 00-.77-1.636c-.463-.642-1.077-1.066-1.825-1.261l-.234-.061-.137.202c-.522.77-.735 1.635-.632 2.57-.406.13-.807.29-1.2.482-.162-.224-.34-.43-.532-.619-.74-.727-1.67-1.12-2.766-1.168l-.248-.011-.082.235c-.32.915-.17 1.84.444 2.748-.48.24-.945.518-1.39.83-.243-.16-.502-.29-.773-.39-.757-.279-1.572-.258-2.42.062l-.245.093-.016.262c-.066 1.05.342 1.954 1.213 2.686-.34.25-.66.52-.96.81-1.39 1.34-2.12 3.01-2.17 4.96v.12c.03.62.15 1.23.36 1.82.72 2.02 2.37 3.55 4.54 4.19 1.22.36 2.51.54 3.84.54 1.34 0 2.67-.18 3.96-.54 2.87-.8 5.06-2.92 5.67-5.49.25-1.06.31-2.16.18-3.28 1.4-.41 2.22-1.4 2.35-2.84.05-.59-.07-1.13-.37-1.57"/></svg>
+                        Docker Container
+                    </button>
+                    <button type="button" class="ws-tab-btn" id="qsTabCliBtn" onclick="switchQuickstartTab('cli')">
+                        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="4 17 10 11 4 5"></polyline><line x1="12" y1="19" x2="20" y2="19"></line></svg>
+                        CLI / Java JAR
+                    </button>
+                </div>
+
+                <!-- Tab 1: GitHub Actions -->
+                <div id="qsViewGithub" class="ws-quickstart-content">
+                    <div class="qs-steps-row">
+                        <div class="qs-step-item">
+                            <div class="qs-step-num">1</div>
+                            <div class="qs-step-body">
+                                <strong>Add Secret in GitHub:</strong>
+                                <span>Go to <code>Settings &gt; Secrets &gt; Actions</code> and add <code>SCANNER_LICENSE_KEY</code> with your key above.</span>
+                            </div>
+                        </div>
+                        <div class="qs-step-item">
+                            <div class="qs-step-num">2</div>
+                            <div class="qs-step-body">
+                                <strong>Save Workflow File:</strong>
+                                <span>Download or place in <code>.github/workflows/security.yml</code> in your repository.</span>
+                            </div>
+                        </div>
+                        <div class="qs-step-item">
+                            <div class="qs-step-num">3</div>
+                            <div class="qs-step-body">
+                                <strong>Push &amp; Auto-Fix:</strong>
+                                <span>Every git push scans OpenAPI endpoints, blocks BOLA vulnerabilities, and opens Auto-PRs.</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="qs-code-box">
+                        <div class="qs-code-header">
+                            <span>.github/workflows/security.yml</span>
+                            <div style="display: flex; gap: 8px;">
+                                <button class="btn btn-secondary btn-xs" onclick="downloadWorkflowFile()">⬇ Download .yml</button>
+                                <button class="btn btn-secondary btn-xs" onclick="copyWorkflowSnippet(this)">Copy Code</button>
+                            </div>
+                        </div>
+                        <pre class="qs-code-pre" id="qsWorkflowCode">name: API Security Scanner
+on: [push, pull_request]
+
+jobs:
+  api-security:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v4
+
+      - name: Run API Security Engine
+        uses: KarimovAlamdar/api-security-scanner@v1
+        with:
+          license-key: ${{ secrets.SCANNER_LICENSE_KEY }}
+          spec-path: openapi.json
+          auto-pr: true</pre>
+                    </div>
+                </div>
+
+                <!-- Tab 2: Docker -->
+                <div id="qsViewDocker" class="ws-quickstart-content" style="display: none;">
+                    <p style="font-size: 0.85rem; color: var(--text-muted); margin: 0 0 10px 0;">Run the scanner instantly on any machine or custom CI agent without installing Java:</p>
+                    <div class="qs-code-box">
+                        <div class="qs-code-header">
+                            <span>Terminal / Bash (Docker)</span>
+                            <button class="btn btn-secondary btn-xs" onclick="copyDockerSnippet(this)">Copy Command</button>
+                        </div>
+                        <pre class="qs-code-pre" id="qsDockerCode">docker run --rm -v $(pwd):/app -w /app \
+  -e SCANNER_LICENSE_KEY="YOUR_LICENSE_KEY" \
+  ghcr.io/karimovalamdar/api-security-scanner:latest \
+  --spec openapi.json --auto-fix</pre>
+                    </div>
+                </div>
+
+                <!-- Tab 3: CLI / JAR -->
+                <div id="qsViewCli" class="ws-quickstart-content" style="display: none;">
+                    <p style="font-size: 0.85rem; color: var(--text-muted); margin: 0 0 10px 0;">Run standalone executable on Java 17+ with automated wizard setup:</p>
+                    <div class="qs-code-box">
+                        <div class="qs-code-header">
+                            <span>Interactive Setup &amp; Scan</span>
+                            <button class="btn btn-secondary btn-xs" onclick="copyCliSnippet(this)">Copy Command</button>
+                        </div>
+                        <pre class="qs-code-pre" id="qsCliCode"># 1. Run interactive wizard setup:
+java -jar api-security-scanner.jar --init
+
+# 2. Or execute a direct scan:
+java -jar api-security-scanner.jar --spec openapi.json --license="YOUR_LICENSE_KEY" --auto-fix</pre>
+                    </div>
                 </div>
             </div>
 
