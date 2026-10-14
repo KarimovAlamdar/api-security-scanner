@@ -514,7 +514,7 @@ window.submitStripeCheckout = async function() {
     const LEMON_CHECKOUT_URLS = {
       starter: 'https://api-security-scanner.lemonsqueezy.com/checkout/buy/91cc270e-652d-4acf-94e5-3d6a8617bb9f',
       pro: 'https://api-security-scanner.lemonsqueezy.com/checkout/buy/2bab4a54-79b4-4cda-84c4-d3a144df2d9c',
-      enterprise: 'https://api-security-scanner.lemonsqueezy.com/checkout/buy/2bab4a54-79b4-4cda-84c4-d3a144df2d9c'
+      enterprise: 'https://api-security-scanner.lemonsqueezy.com/checkout/buy/03d12fea-4791-445e-804c-beb348e270c1'
     };
     const tierKey = (currentCheckoutTier || 'pro').toLowerCase();
     const buyUrl = LEMON_CHECKOUT_URLS[tierKey] || LEMON_CHECKOUT_URLS.pro;
