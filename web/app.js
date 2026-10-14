@@ -1062,15 +1062,15 @@ window.switchAuthTab = function(tab) {
     if (tabSignUpBtn) tabSignUpBtn.classList.add('active');
     if (signInForm) signInForm.style.display = 'none';
     if (signUpForm) signUpForm.style.display = 'block';
-    if (title) title.textContent = 'Create Security Workspace';
-    if (desc) desc.textContent = 'Get an isolated environment with instant Community license, private audit logs, and API tokens.';
+    if (title) title.textContent = 'Create Account';
+    if (desc) desc.textContent = 'Create a secure workspace to save scans, licenses, and API keys.';
   } else {
     if (tabSignInBtn) tabSignInBtn.classList.add('active');
     if (tabSignUpBtn) tabSignUpBtn.classList.remove('active');
     if (signInForm) signInForm.style.display = 'block';
     if (signUpForm) signUpForm.style.display = 'none';
-    if (title) title.textContent = 'Sign In to Workspace';
-    if (desc) desc.textContent = 'Log in to access your personal scans, license keys, and enterprise CI/CD gates.';
+    if (title) title.textContent = 'Sign In';
+    if (desc) desc.textContent = 'Access your personal security workspace and private scan history.';
   }
 };
 
@@ -1131,7 +1131,7 @@ window.handleSignUpSubmit = function(e) {
 
   const name = nameInput ? nameInput.value.trim() : '';
   const email = emailInput ? emailInput.value.trim().toLowerCase() : '';
-  const company = companyInput ? companyInput.value.trim() : 'Personal Security Ops';
+  const company = (companyInput && companyInput.value.trim()) ? companyInput.value.trim() : 'Personal Security Ops';
   const password = passwordInput ? passwordInput.value : '';
 
   if (!email || !name || !password) return;

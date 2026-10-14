@@ -919,13 +919,11 @@
     <!-- User Authentication Modal (Sign In / Register) -->
     <div class="modal-backdrop" id="authModal">
         <div class="modal-card auth-modal-card">
-            <button class="modal-close-btn" onclick="closeAuthModal()">&times;</button>
-            <div class="modal-header" style="text-align: center; margin-bottom: 20px;">
+            <button class="modal-close-btn" onclick="closeAuthModal()" aria-label="Close modal" title="Close modal">&times;</button>
+            <div class="modal-header auth-modal-header">
                 <div class="auth-icon-badge">🛡️</div>
-                <div class="modal-title" style="justify-content: center;" id="authModalTitle">
-                    Personal Security Workspace
-                </div>
-                <div class="modal-desc" id="authModalDesc">Register to keep your private scan history, unique license keys, and API tokens isolated to your account.</div>
+                <div class="modal-title" id="authModalTitle">Sign In</div>
+                <div class="modal-desc" id="authModalDesc">Access your personal security workspace and private scan history.</div>
             </div>
 
             <!-- Auth Tabs -->
@@ -946,8 +944,8 @@
                     <label class="modal-label" for="signInPassword">Password:</label>
                     <input type="password" id="signInPassword" class="modal-input" placeholder="••••••••" required autocomplete="current-password">
                 </div>
-                <button type="submit" class="btn btn-primary" style="width: 100%; margin-top: 10px;" id="signInSubmitBtn">
-                    <span>Sign In to My Workspace</span> &rarr;
+                <button type="submit" class="btn btn-primary auth-submit-btn" id="signInSubmitBtn">
+                    <span>Sign In to Workspace</span> &rarr;
                 </button>
             </form>
 
@@ -962,15 +960,11 @@
                     <input type="email" id="signUpEmail" class="modal-input" placeholder="e.g. alex@company.com" required autocomplete="email">
                 </div>
                 <div class="modal-input-group">
-                    <label class="modal-label" for="signUpCompany">Company / Organization:</label>
-                    <input type="text" id="signUpCompany" class="modal-input" placeholder="e.g. Enterprise SecOps (Optional)">
-                </div>
-                <div class="modal-input-group">
                     <label class="modal-label" for="signUpPassword">Password:</label>
                     <input type="password" id="signUpPassword" class="modal-input" placeholder="At least 6 characters" minlength="6" required autocomplete="new-password">
                 </div>
-                <button type="submit" class="btn btn-primary" style="width: 100%; margin-top: 10px;" id="signUpSubmitBtn">
-                    <span>Create Account &amp; Activate Workspace</span> &rarr;
+                <button type="submit" class="btn btn-primary auth-submit-btn" id="signUpSubmitBtn">
+                    <span>Create Account &amp; Continue</span> &rarr;
                 </button>
             </form>
         </div>
