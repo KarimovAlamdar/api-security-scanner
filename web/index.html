@@ -19,7 +19,7 @@
     <!-- Three.js for 3D WebGL Hero Canvas -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
 
-    <link rel="stylesheet" href="styles.css?v=2.6">
+    <link rel="stylesheet" href="styles.css?v=2.7">
 </head>
 
 <body>
@@ -594,20 +594,20 @@
                         <div>
                             <div class="early-bird-title">
                                 <strong>Exclusive Founder Deal: 50% LIFETIME DISCOUNT!</strong>
-                                <span class="early-bird-pill">Only 3 / 10 Spots Left</span>
+                                <span class="early-bird-pill" id="earlyBirdPill">3 / 10 Claimed (7 Left)</span>
                             </div>
                             <div class="early-bird-sub">
                                 The first 10 customers receive an unconditional 50% lifetime discount across all plans.
-                                Coupon code: <code>EARLYBIRD10</code>
+                                Coupon code: <code id="couponCodeBadge" style="cursor: pointer; text-decoration: underline;" title="Click to copy coupon" onclick="copyAndApplyEarlyBirdCoupon()">EARLYBIRD10</code>
                             </div>
                         </div>
                     </div>
 
                     <div class="early-bird-action">
                         <input type="text" id="couponInput" class="coupon-field" placeholder="Coupon: EARLYBIRD10"
-                            value="EARLYBIRD10">
+                            value="EARLYBIRD10" readonly style="cursor: pointer;" onclick="copyAndApplyEarlyBirdCoupon()" title="Click to copy coupon">
                         <button class="btn btn-sm btn-primary" id="applyCouponBtn"
-                            onclick="applyEarlyBirdDiscount()">Apply</button>
+                            onclick="copyAndApplyEarlyBirdCoupon()">Copy & Apply</button>
                     </div>
                 </div>
 
@@ -1325,7 +1325,7 @@ java -jar api-security-scanner.jar --spec openapi.json --license="YOUR_LICENSE_K
         </div>
     </div>
 
-    <script src="app.js?v=2.6"></script>
+    <script src="app.js?v=2.7"></script>
 </body>
 
 </html>

@@ -309,7 +309,109 @@ const PRICING_BASE = {
   enterprise: { monthly: 299, annual: 239 }
 };
 
+function getEarlyBirdCount() {
+  const val = localStorage.getItem('scanner_coupon_claims_count');
+  if (val !== null) {
+    const num = parseInt(val, 10);
+    return isNaN(num) ? 3 : Math.min(10, Math.max(0, num));
+  }
+  return 3;
+}
+
+function updateEarlyBirdUI() {
+  const count = getEarlyBirdCount();
+  const pill = document.getElementById('earlyBirdPill');
+  const btn = document.getElementById('applyCouponBtn');
+  const input = document.getElementById('couponInput');
+  const codeBadge = document.getElementById('couponCodeBadge');
+  const banner = document.getElementById('earlyBirdBanner');
+
+  if (count >= 10) {
+    // 10 / 10 limit dolub - bitdi
+    isEarlyBirdApplied = false;
+    if (pill) {
+      pill.textContent = '10 / 10 Spots Claimed (SOLD OUT)';
+      pill.style.background = 'rgba(239, 68, 68, 0.25)';
+      pill.style.borderColor = '#ef4444';
+      pill.style.color = '#f87171';
+    }
+    if (btn) {
+      btn.disabled = true;
+      btn.textContent = 'Sold Out (10/10)';
+      btn.style.background = '#334155';
+      btn.style.borderColor = '#475569';
+      btn.style.color = '#94a3b8';
+      btn.style.cursor = 'not-allowed';
+    }
+    if (input) {
+      input.disabled = true;
+      input.value = 'LIMIT DOLDU (10/10)';
+      input.style.textDecoration = 'line-through';
+      input.style.color = '#ef4444';
+      input.style.cursor = 'not-allowed';
+    }
+    if (codeBadge) {
+      codeBadge.style.textDecoration = 'line-through';
+      codeBadge.style.color = '#94a3b8';
+      codeBadge.style.cursor = 'not-allowed';
+      codeBadge.title = 'Limit dolmuşdur';
+    }
+    if (banner) {
+      banner.style.border = '1px solid rgba(239, 68, 68, 0.4)';
+      banner.style.boxShadow = 'none';
+    }
+  } else {
+    // Hələ yer var
+    const spotsLeft = 10 - count;
+    if (pill) {
+      pill.textContent = `${count} / 10 Claimed (${spotsLeft} Left)`;
+      pill.style.background = 'rgba(244, 63, 94, 0.25)';
+      pill.style.borderColor = '#f43f5e';
+      pill.style.color = '#ff4d6d';
+    }
+    if (input) {
+      input.disabled = false;
+      input.value = 'EARLYBIRD10';
+      input.style.textDecoration = 'none';
+      input.style.color = '';
+      input.style.cursor = 'pointer';
+    }
+    if (codeBadge) {
+      codeBadge.style.textDecoration = 'underline';
+      codeBadge.style.color = '';
+      codeBadge.style.cursor = 'pointer';
+      codeBadge.title = 'Click to copy coupon';
+    }
+    if (isEarlyBirdApplied) {
+      if (btn) {
+        btn.disabled = false;
+        btn.textContent = 'Applied ✓';
+        btn.style.background = '#10b981';
+        btn.style.borderColor = '#10b981';
+        btn.style.color = '#000';
+      }
+      if (banner) {
+        banner.style.border = '2px solid #10b981';
+        banner.style.boxShadow = '0 0 25px rgba(16, 185, 129, 0.3)';
+      }
+    } else {
+      if (btn) {
+        btn.disabled = false;
+        btn.textContent = 'Copy & Apply';
+        btn.style.background = '';
+        btn.style.borderColor = '';
+        btn.style.color = '';
+      }
+      if (banner) {
+        banner.style.border = '1px solid rgba(245, 158, 11, 0.4)';
+        banner.style.boxShadow = 'none';
+      }
+    }
+  }
+}
+
 function initPricingAndDiscount() {
+  updateEarlyBirdUI();
   updatePricingDisplay();
 }
 
@@ -332,32 +434,59 @@ window.toggleBillingCycle = function() {
   updatePricingDisplay();
 };
 
-window.applyEarlyBirdDiscount = function() {
-  const input = document.getElementById('couponInput');
-  const code = input ? input.value.trim().toUpperCase() : '';
-
-  if (code === 'EARLYBIRD10') {
-    isEarlyBirdApplied = true;
-    const banner = document.getElementById('earlyBirdBanner');
-    if (banner) {
-      banner.style.border = '2px solid #10b981';
-      banner.style.boxShadow = '0 0 25px rgba(16, 185, 129, 0.3)';
-    }
-    const btn = document.getElementById('applyCouponBtn');
-    if (btn) {
-      btn.textContent = 'Applied ✓';
-      btn.style.background = '#10b981';
-      btn.style.color = '#000';
-    }
-    alert('Congratulations! "EARLYBIRD10" coupon accepted. 50% lifetime discount applied across all plans!');
+window.copyAndApplyEarlyBirdCoupon = function() {
+  let count = getEarlyBirdCount();
+  if (count >= 10) {
+    alert('⚠️ "EARLYBIRD10" endirim kuponu üçün nəzərdə tutulmuş 10 nəfərlik limit artıq dolmuşdur (10/10). Endirim kampaniyası başa çatmışdır.');
+    updateEarlyBirdUI();
     updatePricingDisplay();
-  } else {
-    alert('Please enter a valid coupon code: EARLYBIRD10');
+    return;
   }
+
+  // Hər kopyalamada sayğac artır
+  count += 1;
+  localStorage.setItem('scanner_coupon_claims_count', count);
+
+  // Koda kopyalayır
+  navigator.clipboard.writeText('EARLYBIRD10').catch(() => {});
+
+  if (count >= 10) {
+    isEarlyBirdApplied = false;
+    updateEarlyBirdUI();
+    updatePricingDisplay();
+    alert('⚠️ "EARLYBIRD10" kuponunun sonuncu (10-cu) yeri kopyalandı! Artıq 10/10 limit doldu və kupon bağlandı.');
+    return;
+  }
+
+  isEarlyBirdApplied = true;
+  updateEarlyBirdUI();
+  updatePricingDisplay();
+
+  const btn = document.getElementById('applyCouponBtn');
+  if (btn) {
+    btn.textContent = 'Copied & Applied ✓';
+    btn.style.background = '#10b981';
+    btn.style.color = '#000';
+  }
+
+  const spotsLeft = 10 - count;
+  alert(`🎉 "EARLYBIRD10" kuponu kopyalandı və 50% ömürlük endirim tətbiq edildi!\nStatus: ${count} / 10 istifadə edildi (Qalan: ${spotsLeft} yer)`);
+};
+
+window.applyEarlyBirdDiscount = window.copyAndApplyEarlyBirdCoupon;
+
+// Test üçün sayğacı sıfırlamaq və ya istənilən rəqəmə qoymaq funksiyası
+window.resetCouponCount = function(val = 3) {
+  localStorage.setItem('scanner_coupon_claims_count', val);
+  isEarlyBirdApplied = false;
+  updateEarlyBirdUI();
+  updatePricingDisplay();
+  console.log('Coupon count set to:', val);
 };
 
 function updatePricingDisplay() {
-  const mult = isEarlyBirdApplied ? 0.5 : 1.0;
+  const isCouponActive = isEarlyBirdApplied && (getEarlyBirdCount() < 10);
+  const mult = isCouponActive ? 0.5 : 1.0;
 
   const starterVal = Math.round((isAnnualBilling ? PRICING_BASE.starter.annual : PRICING_BASE.starter.monthly) * mult);
   const proVal = Math.round((isAnnualBilling ? PRICING_BASE.pro.annual : PRICING_BASE.pro.monthly) * mult);
@@ -375,7 +504,7 @@ function updatePricingDisplay() {
   const origPro = document.getElementById('origPro');
   const origEnt = document.getElementById('origEnterprise');
 
-  if (isEarlyBirdApplied) {
+  if (isCouponActive) {
     if (origStarter) { origStarter.style.display = 'inline'; origStarter.textContent = '$' + (isAnnualBilling ? PRICING_BASE.starter.annual : PRICING_BASE.starter.monthly); }
     if (origPro) { origPro.style.display = 'inline'; origPro.textContent = '$' + (isAnnualBilling ? PRICING_BASE.pro.annual : PRICING_BASE.pro.monthly); }
     if (origEnt) { origEnt.style.display = 'inline'; origEnt.textContent = '$' + (isAnnualBilling ? PRICING_BASE.enterprise.annual : PRICING_BASE.enterprise.monthly); }
@@ -422,12 +551,13 @@ window.triggerStripeCheckout = function(tierName, price) {
     return;
   }
 
+  const isCouponActive = isEarlyBirdApplied && (getEarlyBirdCount() < 10);
   const basePrice = isAnnualBilling ? PRICING_BASE[tierName.toLowerCase()].annual : PRICING_BASE[tierName.toLowerCase()].monthly;
-  const finalPrice = isEarlyBirdApplied ? Math.round(basePrice * 0.5) : basePrice;
+  const finalPrice = isCouponActive ? Math.round(basePrice * 0.5) : basePrice;
 
   if (planNameElem) planNameElem.textContent = `${tierName} Plan`;
   if (cycleNameElem) cycleNameElem.textContent = isAnnualBilling ? 'Annual (Billed monthly)' : 'Monthly';
-  if (couponRowElem) couponRowElem.style.display = isEarlyBirdApplied ? 'flex' : 'none';
+  if (couponRowElem) couponRowElem.style.display = isCouponActive ? 'flex' : 'none';
   if (totalPriceElem) totalPriceElem.textContent = `$${finalPrice} / mo`;
   if (planDescElem) planDescElem.textContent = `${tierName} Plan subscription and instant license activation for ${user.email}.`;
 
@@ -506,7 +636,7 @@ window.submitStripeCheckout = async function() {
   const payload = {
     tier: currentCheckoutTier,
     billingCycle: isAnnualBilling ? 'annual' : 'monthly',
-    couponCode: isEarlyBirdApplied ? 'EARLYBIRD10' : '',
+    couponCode: (isEarlyBirdApplied && getEarlyBirdCount() < 10) ? 'EARLYBIRD10' : '',
     customerEmail: email,
     successUrl: `${window.location.origin}/index.html?session_id={CHECKOUT_SESSION_ID}&status=success`,
     cancelUrl: `${window.location.origin}/index.html?status=cancelled`
@@ -558,7 +688,7 @@ window.submitStripeCheckout = async function() {
     const buyUrl = tierUrls[cycleKey] || tierUrls.monthly;
 
     let lemonCheckoutUrl = `${buyUrl}?checkout[email]=${encodeURIComponent(email)}`;
-    if (isEarlyBirdApplied) {
+    if (isEarlyBirdApplied && getEarlyBirdCount() < 10) {
       lemonCheckoutUrl += `&checkout[discount_code]=EARLYBIRD10`;
     }
     window.location.href = lemonCheckoutUrl;
