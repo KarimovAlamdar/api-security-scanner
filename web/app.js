@@ -541,7 +541,7 @@ window.submitStripeCheckout = async function() {
     const LEMON_CHECKOUT_URLS = {
       starter: {
         monthly: 'https://api-security-scanner.lemonsqueezy.com/checkout/buy/91cc270e-652d-4acf-94e5-3d6a8617bb9f',
-        annual: 'https://api-security-scanner.lemonsqueezy.com/checkout/buy/91cc270e-652d-4acf-94e5-3d6a8617bb9f'
+        annual: 'https://api-security-scanner.lemonsqueezy.com/checkout/buy/ea7f71db-99c8-47ba-aa52-6bae2022de1f'
       },
       pro: {
         monthly: 'https://api-security-scanner.lemonsqueezy.com/checkout/buy/2bab4a54-79b4-4cda-84c4-d3a144df2d9c',
