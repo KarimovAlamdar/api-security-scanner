@@ -309,6 +309,24 @@ const PRICING_BASE = {
   enterprise: { monthly: 299, annual: 239 }
 };
 
+const STORAGE_CLAIMED_COUPON_USERS_KEY = 'scanner_claimed_coupon_users';
+let pendingCouponClaim = false;
+
+function getClaimedEarlyBirdUsers() {
+  try {
+    const raw = localStorage.getItem(STORAGE_CLAIMED_COUPON_USERS_KEY);
+    return raw ? JSON.parse(raw) : {};
+  } catch (e) {
+    return {};
+  }
+}
+
+function saveClaimedEarlyBirdUsers(map) {
+  try {
+    localStorage.setItem(STORAGE_CLAIMED_COUPON_USERS_KEY, JSON.stringify(map));
+  } catch (e) {}
+}
+
 function getEarlyBirdCount() {
   const val = localStorage.getItem('scanner_coupon_claims_count');
   if (val !== null) {
@@ -319,6 +337,7 @@ function getEarlyBirdCount() {
 }
 
 function updateEarlyBirdUI() {
+  const user = getActiveUser();
   const count = getEarlyBirdCount();
   const pill = document.getElementById('earlyBirdPill');
   const btn = document.getElementById('applyCouponBtn');
@@ -326,42 +345,59 @@ function updateEarlyBirdUI() {
   const codeBadge = document.getElementById('couponCodeBadge');
   const banner = document.getElementById('earlyBirdBanner');
 
+  const claimedMap = getClaimedEarlyBirdUsers();
+  const userHasClaimed = user && Boolean(claimedMap[user.email] || user.claimedEarlyBird);
+
   if (count >= 10) {
     // 10 / 10 limit dolub - bitdi
-    isEarlyBirdApplied = false;
-    if (pill) {
-      pill.textContent = '10 / 10 Spots Claimed (SOLD OUT)';
-      pill.style.background = 'rgba(239, 68, 68, 0.25)';
-      pill.style.borderColor = '#ef4444';
-      pill.style.color = '#f87171';
-    }
-    if (btn) {
-      btn.disabled = true;
-      btn.textContent = 'Sold Out (10/10)';
-      btn.style.background = '#334155';
-      btn.style.borderColor = '#475569';
-      btn.style.color = '#94a3b8';
-      btn.style.cursor = 'not-allowed';
-    }
-    if (input) {
-      input.disabled = true;
-      input.value = 'LIMIT DOLDU (10/10)';
-      input.style.textDecoration = 'line-through';
-      input.style.color = '#ef4444';
-      input.style.cursor = 'not-allowed';
-    }
-    if (codeBadge) {
-      codeBadge.style.textDecoration = 'line-through';
-      codeBadge.style.color = '#94a3b8';
-      codeBadge.style.cursor = 'not-allowed';
-      codeBadge.title = 'Limit dolmuşdur';
-    }
-    if (banner) {
-      banner.style.border = '1px solid rgba(239, 68, 68, 0.4)';
-      banner.style.boxShadow = 'none';
+    if (userHasClaimed) {
+      // Əvvəl əldə etmiş istifadəçi öz endirimindən yararlana bilər
+      isEarlyBirdApplied = true;
+      if (pill) {
+        pill.textContent = '10 / 10 Spots Claimed (SOLD OUT)';
+        pill.style.background = 'rgba(239, 68, 68, 0.25)';
+        pill.style.borderColor = '#ef4444';
+        pill.style.color = '#f87171';
+      }
+      if (btn) {
+        btn.disabled = false;
+        btn.textContent = 'Your Claim Active ✓';
+        btn.style.background = '#10b981';
+        btn.style.borderColor = '#10b981';
+        btn.style.color = '#000';
+      }
+    } else {
+      isEarlyBirdApplied = false;
+      if (pill) {
+        pill.textContent = '10 / 10 Spots Claimed (SOLD OUT)';
+        pill.style.background = 'rgba(239, 68, 68, 0.25)';
+        pill.style.borderColor = '#ef4444';
+        pill.style.color = '#f87171';
+      }
+      if (btn) {
+        btn.disabled = true;
+        btn.textContent = 'Sold Out (10/10)';
+        btn.style.background = '#334155';
+        btn.style.borderColor = '#475569';
+        btn.style.color = '#94a3b8';
+        btn.style.cursor = 'not-allowed';
+      }
+      if (input) {
+        input.disabled = true;
+        input.value = 'LIMIT DOLDU (10/10)';
+        input.style.textDecoration = 'line-through';
+        input.style.color = '#ef4444';
+        input.style.cursor = 'not-allowed';
+      }
+      if (codeBadge) {
+        codeBadge.style.textDecoration = 'line-through';
+        codeBadge.style.color = '#94a3b8';
+        codeBadge.style.cursor = 'not-allowed';
+        codeBadge.title = 'Limit dolmuşdur';
+      }
     }
   } else {
-    // Hələ yer var
+    // Hələ yer var (< 10)
     const spotsLeft = 10 - count;
     if (pill) {
       pill.textContent = `${count} / 10 Claimed (${spotsLeft} Left)`;
@@ -382,10 +418,13 @@ function updateEarlyBirdUI() {
       codeBadge.style.cursor = 'pointer';
       codeBadge.title = 'Click to copy coupon';
     }
-    if (isEarlyBirdApplied) {
+
+    if (userHasClaimed) {
+      // İstifadəçi artıq öz payını götürüb
+      isEarlyBirdApplied = true;
       if (btn) {
         btn.disabled = false;
-        btn.textContent = 'Applied ✓';
+        btn.textContent = 'Claimed ✓';
         btn.style.background = '#10b981';
         btn.style.borderColor = '#10b981';
         btn.style.color = '#000';
@@ -394,10 +433,25 @@ function updateEarlyBirdUI() {
         banner.style.border = '2px solid #10b981';
         banner.style.boxShadow = '0 0 25px rgba(16, 185, 129, 0.3)';
       }
-    } else {
+    } else if (!user) {
+      // Qonaq istifadəçi - qeydiyyat tələb olunur
+      isEarlyBirdApplied = false;
       if (btn) {
         btn.disabled = false;
-        btn.textContent = 'Copy & Apply';
+        btn.textContent = 'Sign in to Claim';
+        btn.style.background = '';
+        btn.style.borderColor = '';
+        btn.style.color = '';
+      }
+      if (banner) {
+        banner.style.border = '1px solid rgba(245, 158, 11, 0.4)';
+        banner.style.boxShadow = 'none';
+      }
+    } else {
+      // Daxil olmuş, lakin hələ kupon götürməmiş istifadəçi
+      if (btn) {
+        btn.disabled = false;
+        btn.textContent = 'Claim 50% Off';
         btn.style.background = '';
         btn.style.borderColor = '';
         btn.style.color = '';
@@ -435,42 +489,57 @@ window.toggleBillingCycle = function() {
 };
 
 window.copyAndApplyEarlyBirdCoupon = function() {
+  const user = getActiveUser();
+
+  // 1. Qeydiyyat tələb olunur
+  if (!user) {
+    pendingCouponClaim = true;
+    window.openAuthModal('signup', '🔒 50% ömürlük endirim kuponunu əldə etmək üçün zəhmət olmasa daxil olun və ya qeydiyyatdan keçin. Hər hesab yalnız 1 dəfə istifadə edə bilər.');
+    return;
+  }
+
+  const claimedMap = getClaimedEarlyBirdUsers();
+  const userHasClaimed = Boolean(claimedMap[user.email] || user.claimedEarlyBird);
+
+  // 2. Bu hesab artıq kuponu əldə edibsə, sayğacı ARTIRMIRIQ
+  if (userHasClaimed) {
+    navigator.clipboard.writeText('EARLYBIRD10').catch(() => {});
+    isEarlyBirdApplied = true;
+    updateEarlyBirdUI();
+    updatePricingDisplay();
+    alert(`ℹ️ Hörmətli ${user.name || user.email}, siz bu hesabınız üçün artıq "EARLYBIRD10" 50% endirimini əldə etmisiniz və endiriminiz aktivdir!\n(Hər hesab limiti qorumaq üçün yalnız 1 dəfə qeydə alınır)`);
+    return;
+  }
+
+  // 3. Ümumi 10/10 limitini yoxlayırıq
   let count = getEarlyBirdCount();
   if (count >= 10) {
-    alert('⚠️ "EARLYBIRD10" endirim kuponu üçün nəzərdə tutulmuş 10 nəfərlik limit artıq dolmuşdur (10/10). Endirim kampaniyası başa çatmışdır.');
+    alert('⚠️ Təəssüf ki, "EARLYBIRD10" endirim kuponunun 10 nəfərlik limiti artıq dolmuşdur (10/10). Endirim kampaniyası başa çatmışdır.');
     updateEarlyBirdUI();
     updatePricingDisplay();
     return;
   }
 
-  // Hər kopyalamada sayğac artır
+  // 4. Yeni istifadəçi üçün sayğacı 1 vahid artırırıq və hesabı qeydə alırıq
   count += 1;
   localStorage.setItem('scanner_coupon_claims_count', count);
 
-  // Koda kopyalayır
-  navigator.clipboard.writeText('EARLYBIRD10').catch(() => {});
+  claimedMap[user.email] = true;
+  saveClaimedEarlyBirdUsers(claimedMap);
 
-  if (count >= 10) {
-    isEarlyBirdApplied = false;
-    updateEarlyBirdUI();
-    updatePricingDisplay();
-    alert('⚠️ "EARLYBIRD10" kuponunun sonuncu (10-cu) yeri kopyalandı! Artıq 10/10 limit doldu və kupon bağlandı.');
-    return;
+  const accounts = getStoredAccounts();
+  if (accounts[user.email]) {
+    accounts[user.email].claimedEarlyBird = true;
+    saveStoredAccounts(accounts);
   }
 
+  navigator.clipboard.writeText('EARLYBIRD10').catch(() => {});
   isEarlyBirdApplied = true;
   updateEarlyBirdUI();
   updatePricingDisplay();
 
-  const btn = document.getElementById('applyCouponBtn');
-  if (btn) {
-    btn.textContent = 'Copied & Applied ✓';
-    btn.style.background = '#10b981';
-    btn.style.color = '#000';
-  }
-
   const spotsLeft = 10 - count;
-  alert(`🎉 "EARLYBIRD10" kuponu kopyalandı və 50% ömürlük endirim tətbiq edildi!\nStatus: ${count} / 10 istifadə edildi (Qalan: ${spotsLeft} yer)`);
+  alert(`🎉 Təbriklər, ${user.name || user.email}! "EARLYBIRD10" kuponu hesabınıza bağlandı və 50% ömürlük endirim aktivləşdirildi!\nStatus: ${count} / 10 istifadə edildi (Qalan: ${spotsLeft} yer)`);
 };
 
 window.applyEarlyBirdDiscount = window.copyAndApplyEarlyBirdCoupon;
@@ -478,10 +547,16 @@ window.applyEarlyBirdDiscount = window.copyAndApplyEarlyBirdCoupon;
 // Test üçün sayğacı sıfırlamaq və ya istənilən rəqəmə qoymaq funksiyası
 window.resetCouponCount = function(val = 3) {
   localStorage.setItem('scanner_coupon_claims_count', val);
+  localStorage.removeItem(STORAGE_CLAIMED_COUPON_USERS_KEY);
+  const accounts = getStoredAccounts();
+  for (let k in accounts) {
+    if (accounts[k]) delete accounts[k].claimedEarlyBird;
+  }
+  saveStoredAccounts(accounts);
   isEarlyBirdApplied = false;
   updateEarlyBirdUI();
   updatePricingDisplay();
-  console.log('Coupon count set to:', val);
+  console.log('Coupon count and claimed users reset. New count:', val);
 };
 
 function updatePricingDisplay() {
@@ -1124,6 +1199,8 @@ function initUserAuth() {
   }
 
   updateNavAuthUI();
+  updateEarlyBirdUI();
+  updatePricingDisplay();
 
   // Close dropdown on click outside
   document.addEventListener('click', (e) => {
@@ -1253,7 +1330,12 @@ window.handleSignInSubmit = function(e) {
   updateNavAuthUI();
   window.closeAuthModal();
 
-  if (pendingCheckoutPlan) {
+  if (pendingCouponClaim) {
+    pendingCouponClaim = false;
+    setTimeout(() => {
+      window.copyAndApplyEarlyBirdCoupon();
+    }, 400);
+  } else if (pendingCheckoutPlan) {
     const plan = pendingCheckoutPlan;
     pendingCheckoutPlan = null;
     setTimeout(() => {
@@ -1317,6 +1399,8 @@ window.handleSignUpSubmit = function(e) {
   saveStoredAccounts(accounts);
   setCurrentUserEmail(email);
   updateNavAuthUI();
+  updateEarlyBirdUI();
+  updatePricingDisplay();
 
   if (alertBox) {
     alertBox.className = 'auth-alert-box success';
@@ -1326,7 +1410,12 @@ window.handleSignUpSubmit = function(e) {
 
   setTimeout(() => {
     window.closeAuthModal();
-    if (pendingCheckoutPlan) {
+    if (pendingCouponClaim) {
+      pendingCouponClaim = false;
+      setTimeout(() => {
+        window.copyAndApplyEarlyBirdCoupon();
+      }, 400);
+    } else if (pendingCheckoutPlan) {
       const plan = pendingCheckoutPlan;
       pendingCheckoutPlan = null;
       window.triggerStripeCheckout(plan.tierName, plan.price);
@@ -1338,7 +1427,10 @@ window.handleSignUpSubmit = function(e) {
 
 window.handleUserSignOut = function() {
   setCurrentUserEmail(null);
+  isEarlyBirdApplied = false;
   updateNavAuthUI();
+  updateEarlyBirdUI();
+  updatePricingDisplay();
   const dropdown = document.getElementById('userDropdownCard');
   if (dropdown) dropdown.classList.remove('active');
   window.closeWorkspaceModal();
