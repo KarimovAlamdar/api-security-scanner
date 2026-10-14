@@ -510,8 +510,15 @@ window.submitStripeCheckout = async function() {
   } catch (err) {
     console.log('Connecting to official Lemon Squeezy checkout:', err);
     window.closeCheckoutModal();
-    // Redirect directly to the verified Lemon Squeezy store checkout
-    const lemonCheckoutUrl = `https://api-security-scanner.lemonsqueezy.com/checkout/buy/2bab4a54-79b4-4cda-84c4-d3a144df2d9c?checkout[email]=${encodeURIComponent(email)}`;
+    // Map tier to the correct Lemon Squeezy product buy URL:
+    const LEMON_CHECKOUT_URLS = {
+      starter: 'https://api-security-scanner.lemonsqueezy.com/checkout/buy/91cc270e-652d-4acf-94e5-3d6a8617bb9f',
+      pro: 'https://api-security-scanner.lemonsqueezy.com/checkout/buy/2bab4a54-79b4-4cda-84c4-d3a144df2d9c',
+      enterprise: 'https://api-security-scanner.lemonsqueezy.com/checkout/buy/2bab4a54-79b4-4cda-84c4-d3a144df2d9c'
+    };
+    const tierKey = (currentCheckoutTier || 'pro').toLowerCase();
+    const buyUrl = LEMON_CHECKOUT_URLS[tierKey] || LEMON_CHECKOUT_URLS.pro;
+    const lemonCheckoutUrl = `${buyUrl}?checkout[email]=${encodeURIComponent(email)}`;
     window.location.href = lemonCheckoutUrl;
   } finally {
     if (btn) {
