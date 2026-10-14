@@ -388,8 +388,17 @@ function updatePricingDisplay() {
 
 let currentCheckoutTier = 'Pro';
 let currentCheckoutPrice = 39;
+let pendingCheckoutPlan = null;
 
 window.triggerStripeCheckout = function(tierName, price) {
+  // Enforce authentication: Guest users CANNOT purchase without an account!
+  const user = getActiveUser();
+  if (!user) {
+    pendingCheckoutPlan = { tierName, price };
+    window.openAuthModal('signup', '🔒 Please create an account or sign in before purchasing a plan. Your subscription and license key must be attached to your secure account.');
+    return;
+  }
+
   currentCheckoutTier = tierName || 'Pro';
   currentCheckoutPrice = price || 0;
 
@@ -399,9 +408,16 @@ window.triggerStripeCheckout = function(tierName, price) {
   const totalPriceElem = document.getElementById('modalTotalPrice');
   const couponRowElem = document.getElementById('modalCouponRow');
   const planDescElem = document.getElementById('modalPlanDesc');
+  const emailInput = document.getElementById('checkoutEmailInput');
+
+  // Pre-fill and lock email with verified logged-in user's email
+  if (emailInput && user.email) {
+    emailInput.value = user.email;
+    emailInput.readOnly = true;
+  }
 
   if (tierName === 'Community') {
-    // Free plan activation
+    // Free plan activation for authenticated user
     submitStripeCheckoutForCommunity();
     return;
   }
@@ -413,7 +429,7 @@ window.triggerStripeCheckout = function(tierName, price) {
   if (cycleNameElem) cycleNameElem.textContent = isAnnualBilling ? 'Annual (Billed monthly)' : 'Monthly';
   if (couponRowElem) couponRowElem.style.display = isEarlyBirdApplied ? 'flex' : 'none';
   if (totalPriceElem) totalPriceElem.textContent = `$${finalPrice} / mo`;
-  if (planDescElem) planDescElem.textContent = `${tierName} Plan subscription and instant license activation.`;
+  if (planDescElem) planDescElem.textContent = `${tierName} Plan subscription and instant license activation for ${user.email}.`;
 
   if (modal) {
     modal.classList.add('active');
@@ -472,9 +488,15 @@ window.openLicenseModal = function(key, tier, email) {
 };
 
 window.submitStripeCheckout = async function() {
+  const user = getActiveUser();
+  if (!user) {
+    window.closeCheckoutModal();
+    window.openAuthModal('signup', '🔒 Please create an account or sign in before completing checkout.');
+    return;
+  }
+
   const btn = document.getElementById('proceedStripeBtn');
-  const emailInput = document.getElementById('checkoutEmailInput');
-  const email = (emailInput && emailInput.value) ? emailInput.value.trim() : 'customer@company.com';
+  const email = user.email;
   
   if (btn) {
     btn.disabled = true;
@@ -534,23 +556,31 @@ window.submitStripeCheckout = async function() {
 };
 
 async function submitStripeCheckoutForCommunity() {
+  const user = getActiveUser();
+  if (!user) {
+    pendingCheckoutPlan = { tierName: 'Community', price: 0 };
+    window.openAuthModal('signup', '🔒 Please create an account or sign in to activate the Community Free plan.');
+    return;
+  }
+
+  const email = user.email;
   try {
     const response = await fetch('http://localhost:4242/api/checkout/create-session', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
         tier: 'Community',
-        customerEmail: 'community@developer.internal'
+        customerEmail: email
       })
     });
     if (response.ok) {
       const data = await response.json();
-      window.openLicenseModal(data.simulatedLicenseKey, 'Community', 'community@developer.internal');
+      window.openLicenseModal(data.simulatedLicenseKey, 'Community', email);
       return;
     }
   } catch (e) {}
 
-  window.openLicenseModal('sec_live_community_free_edition_001', 'Community', 'community@developer.internal');
+  window.openLicenseModal('sec_live_community_free_edition_001', 'Community', email);
 }
 
 window.triggerGithubAuth = function() {
@@ -998,10 +1028,18 @@ function updateNavAuthUI() {
   if (ddTier) ddTier.textContent = `${user.tier || 'Community'} Plan (Active)`;
 }
 
-window.openAuthModal = function(tab = 'signin') {
+window.openAuthModal = function(tab = 'signin', customAlert = null) {
   const modal = document.getElementById('authModal');
   const alertBox = document.getElementById('authAlertBox');
-  if (alertBox) alertBox.style.display = 'none';
+  if (alertBox) {
+    if (customAlert) {
+      alertBox.className = 'auth-alert-box error';
+      alertBox.textContent = customAlert;
+      alertBox.style.display = 'block';
+    } else {
+      alertBox.style.display = 'none';
+    }
+  }
   window.switchAuthTab(tab);
   if (modal) modal.classList.add('active');
 };
@@ -1051,7 +1089,7 @@ window.handleSignInSubmit = function(e) {
   if (!account) {
     if (alertBox) {
       alertBox.className = 'auth-alert-box error';
-      alertBox.textContent = 'Account not found. Please register or click Demo Login below.';
+      alertBox.textContent = 'Account not found. Please create an account first.';
       alertBox.style.display = 'block';
     }
     return;
@@ -1069,9 +1107,18 @@ window.handleSignInSubmit = function(e) {
   setCurrentUserEmail(email);
   updateNavAuthUI();
   window.closeAuthModal();
-  setTimeout(() => {
-    window.openWorkspaceModal();
-  }, 200);
+
+  if (pendingCheckoutPlan) {
+    const plan = pendingCheckoutPlan;
+    pendingCheckoutPlan = null;
+    setTimeout(() => {
+      window.triggerStripeCheckout(plan.tierName, plan.price);
+    }, 300);
+  } else {
+    setTimeout(() => {
+      window.openWorkspaceModal();
+    }, 200);
+  }
 };
 
 window.handleSignUpSubmit = function(e) {
@@ -1133,7 +1180,13 @@ window.handleSignUpSubmit = function(e) {
 
   setTimeout(() => {
     window.closeAuthModal();
-    window.openWorkspaceModal();
+    if (pendingCheckoutPlan) {
+      const plan = pendingCheckoutPlan;
+      pendingCheckoutPlan = null;
+      window.triggerStripeCheckout(plan.tierName, plan.price);
+    } else {
+      window.openWorkspaceModal();
+    }
   }, 500);
 };
 
