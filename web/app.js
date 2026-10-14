@@ -548,8 +548,8 @@ window.submitStripeCheckout = async function() {
         annual: 'https://api-security-scanner.lemonsqueezy.com/checkout/buy/2bab4a54-79b4-4cda-84c4-d3a144df2d9c'
       },
       enterprise: {
-        monthly: 'https://api-security-scanner.lemonsqueezy.com/checkout/buy/03d12fea-4791-445e-804c-beb348e270c1',
-        annual: 'https://api-security-scanner.lemonsqueezy.com/checkout/buy/03d12fea-4791-445e-804c-beb348e270c1'
+        monthly: 'https://api-security-scanner.lemonsqueezy.com/checkout/buy/59ecebd2-59e6-46c7-bedc-e18e22cecde5',
+        annual: 'https://api-security-scanner.lemonsqueezy.com/checkout/buy/59ecebd2-59e6-46c7-bedc-e18e22cecde5'
       }
     };
     const tierKey = (currentCheckoutTier || 'pro').toLowerCase();
