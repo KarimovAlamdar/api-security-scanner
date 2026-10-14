@@ -549,7 +549,7 @@ async function submitStripeCheckoutForCommunity() {
 }
 
 window.triggerGithubAuth = function() {
-  alert('Redirecting to GitHub OAuth authorization (https://github.com/login/oauth/authorize)...');
+  window.open('https://github.com/KarimovAlamdar/api-security-scanner', '_blank');
 };
 
 /* -------------------------------- Live Interactive Playground -------------------------------- */

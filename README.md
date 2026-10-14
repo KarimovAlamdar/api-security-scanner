@@ -1,5 +1,6 @@
 # 🛡️ API Security Scanner — Next-Gen DAST + SAST Hybrid Engine
 
+[![Live Portal](https://img.shields.io/badge/Live_Portal-Active_Demo-10B981?style=for-the-badge&logo=googlechrome&logoColor=white)](https://karimovalamdar.github.io/api-security-scanner/)
 [![Java 17+](https://img.shields.io/badge/Java-17%2B-ED8B00?style=for-the-badge&logo=openjdk&logoColor=white)](https://openjdk.org/)
 [![GitHub Action](https://img.shields.io/badge/GitHub_Action-v1.2.0-2088FF?style=for-the-badge&logo=githubactions&logoColor=white)](https://github.com/features/actions)
 [![SARIF 2.1.0](https://img.shields.io/badge/SARIF-2.1.0_Compatible-0A84FF?style=for-the-badge)](https://sarifweb.azurewebsites.net/)
