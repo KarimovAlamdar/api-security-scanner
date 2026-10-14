@@ -723,7 +723,7 @@ function renderPlaygroundFindings(findings) {
       <div class="remediation-box">
         <div class="remediation-box-header">
           <span>🛡️ Zero-Click PR Auto-Fix Remediation Patch</span>
-          <button class="btn btn-sm btn-secondary" onclick="copySnippet(\`${escapeJsString(f.patch)}\`, this)">Copy Patch</button>
+          <button class="btn btn-sm btn-secondary" onclick="copyPatchSnippet(this)">Copy Patch</button>
         </div>
         <pre><code style="color: #34d399;">${escapeHtml(f.patch)}</code></pre>
       </div>
@@ -862,6 +862,15 @@ window.copySnippet = function(text, btn) {
     btn.textContent = 'Copied! ✓';
     setTimeout(() => { btn.textContent = original; }, 2000);
   });
+};
+
+window.copyPatchSnippet = function(btn) {
+  const box = btn.closest('.remediation-box');
+  if (!box) return;
+  const code = box.querySelector('code');
+  if (code) {
+    window.copySnippet(code.textContent, btn);
+  }
 };
 
 function escapeHtml(str) {
