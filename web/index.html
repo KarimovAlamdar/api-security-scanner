@@ -1,15 +1,19 @@
 <!DOCTYPE html>
 <html lang="en" data-theme="dark">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>API Security Scanner | Next-Gen DAST + SAST Hybrid Engine</title>
-    <meta name="description" content="Stop reading vulnerability reports. Automatically discover Shadow APIs, exploit stateful BOLA/IDOR, secure LLM agents, and auto-generate ready-to-merge Pull Requests in CI/CD.">
-    <meta name="keywords" content="API Security, DAST, SAST, BOLA, IDOR, Shadow API, LLM Security, GitHub Action, Auto-Fix, DevSecOps">
-    
+    <meta name="description"
+        content="Stop reading vulnerability reports. Automatically discover Shadow APIs, exploit stateful BOLA/IDOR, secure LLM agents, and auto-generate ready-to-merge Pull Requests in CI/CD.">
+    <meta name="keywords"
+        content="API Security, DAST, SAST, BOLA, IDOR, Shadow API, LLM Security, GitHub Action, Auto-Fix, DevSecOps">
+
     <!-- Open Graph -->
     <meta property="og:title" content="API Security Scanner - Zero-Click AI PR Auto-Fix & DAST+SAST Hybrid">
-    <meta property="og:description" content="Next-Gen API Security Scanner that maps runtime vulnerabilities directly to Java source code lines and creates ready-to-merge GitHub Pull Requests.">
+    <meta property="og:description"
+        content="Next-Gen API Security Scanner that maps runtime vulnerabilities directly to Java source code lines and creates ready-to-merge GitHub Pull Requests.">
     <meta property="og:type" content="website">
 
     <!-- Three.js for 3D WebGL Hero Canvas -->
@@ -17,6 +21,7 @@
 
     <link rel="stylesheet" href="styles.css">
 </head>
+
 <body>
     <div class="ambient-grid"></div>
 
@@ -25,8 +30,9 @@
         <div class="container nav-container">
             <a href="#" class="brand-logo" id="brandLogoLink">
                 <div class="shield-icon">
-                    <svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
-                        <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
+                    <svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"
+                        stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" />
                     </svg>
                 </div>
                 <div class="brand-name-group">
@@ -46,12 +52,15 @@
             </nav>
 
             <div class="nav-actions">
-                <button class="theme-toggle-btn" id="themeToggleBtn" aria-label="Toggle Dark/Light Mode" title="Toggle Theme">☀️</button>
-                
+                <button class="theme-toggle-btn" id="themeToggleBtn" aria-label="Toggle Dark/Light Mode"
+                    title="Toggle Theme">☀️</button>
+
                 <!-- Star on GitHub Button -->
-                <a href="https://github.com/KarimovAlamdar/api-security-scanner" target="_blank" rel="noopener noreferrer" class="github-star-btn" id="githubStarBtn" title="Star on GitHub">
+                <a href="https://github.com/KarimovAlamdar/api-security-scanner" target="_blank"
+                    rel="noopener noreferrer" class="github-star-btn" id="githubStarBtn" title="Star on GitHub">
                     <svg width="15" height="15" viewBox="0 0 24 24" fill="currentColor">
-                        <path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0024 12c0-6.63-5.37-12-12-12z"/>
+                        <path
+                            d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0024 12c0-6.63-5.37-12-12-12z" />
                     </svg>
                     <span>GitHub</span>
                     <span class="star-badge">★ Star</span>
@@ -68,11 +77,13 @@
 
                 <!-- User Profile Menu (When Logged In) -->
                 <div class="user-profile-menu" id="userProfileMenu" style="display: none;">
-                    <button class="user-avatar-btn" id="userAvatarBtn" onclick="toggleUserDropdown(event)" aria-haspopup="true">
+                    <button class="user-avatar-btn" id="userAvatarBtn" onclick="toggleUserDropdown(event)"
+                        aria-haspopup="true">
                         <div class="user-avatar-initials" id="userAvatarInitials">EK</div>
                         <span class="user-meta-name" id="userMetaName">Elemdar</span>
                         <span class="user-meta-tier" id="userMetaTier">PRO</span>
-                        <svg class="dropdown-caret-svg" width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+                        <svg class="dropdown-caret-svg" width="11" height="11" viewBox="0 0 24 24" fill="none"
+                            stroke="currentColor" stroke-width="2.5">
                             <polyline points="6 9 12 15 18 9"></polyline>
                         </svg>
                     </button>
@@ -87,24 +98,45 @@
                         </div>
                         <div class="dropdown-menu-list">
                             <button class="dropdown-menu-item" onclick="openWorkspaceModal()">
-                                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7"></rect><rect x="14" y="3" width="7" height="7"></rect><rect x="14" y="14" width="7" height="7"></rect><rect x="3" y="14" width="7" height="7"></rect></svg>
+                                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                    stroke-width="2">
+                                    <rect x="3" y="3" width="7" height="7"></rect>
+                                    <rect x="14" y="3" width="7" height="7"></rect>
+                                    <rect x="14" y="14" width="7" height="7"></rect>
+                                    <rect x="3" y="14" width="7" height="7"></rect>
+                                </svg>
                                 <span>My Security Workspace</span>
                             </button>
                             <button class="dropdown-menu-item" onclick="openQuickstartGuide()">
-                                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg>
+                                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                    stroke-width="2">
+                                    <polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2" />
+                                </svg>
                                 <span>Quickstart (60s Setup)</span>
                             </button>
                             <button class="dropdown-menu-item" onclick="openUserLicenseModal()">
-                                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect><path d="M7 11V7a5 5 0 0 1 10 0v4"></path></svg>
+                                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                    stroke-width="2">
+                                    <rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect>
+                                    <path d="M7 11V7a5 5 0 0 1 10 0v4"></path>
+                                </svg>
                                 <span>My License &amp; Keys</span>
                             </button>
                             <button class="dropdown-menu-item" onclick="scrollToPlaygroundSection()">
-                                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="5 3 19 12 5 21 5 3"/></svg>
+                                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                    stroke-width="2">
+                                    <polygon points="5 3 19 12 5 21 5 3" />
+                                </svg>
                                 <span>Run Security Scan</span>
                             </button>
                             <div class="dropdown-menu-divider"></div>
                             <button class="dropdown-menu-item text-danger" onclick="handleUserSignOut()">
-                                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"></path><polyline points="16 17 21 12 16 7"></polyline><line x1="21" y1="12" x2="9" y2="12"></line></svg>
+                                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                    stroke-width="2">
+                                    <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"></path>
+                                    <polyline points="16 17 21 12 16 7"></polyline>
+                                    <line x1="21" y1="12" x2="9" y2="12"></line>
+                                </svg>
                                 <span>Sign Out</span>
                             </button>
                         </div>
@@ -136,16 +168,19 @@
                 </h1>
 
                 <p class="hero-lead">
-                    Traditional scanners like StackHawk and ZAP stop at vague alert notifications. 
-                    Our hybrid engine maps runtime DAST findings to the <strong>exact Java controller line number</strong>, 
-                    discovers undocumented <strong>Shadow APIs</strong>, exploits multi-step <strong>Stateful BOLA</strong>, 
+                    Traditional scanners like StackHawk and ZAP stop at vague alert notifications.
+                    Our hybrid engine maps runtime DAST findings to the <strong>exact Java controller line
+                        number</strong>,
+                    discovers undocumented <strong>Shadow APIs</strong>, exploits multi-step <strong>Stateful
+                        BOLA</strong>,
                     and opens <strong>instant GitHub Pull Requests</strong> with verified code patches.
                 </p>
 
                 <div class="hero-actions">
                     <a href="#playground" class="btn btn-primary" id="heroTryDemoBtn">
-                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                            <polygon points="5 3 19 12 5 21 5 3"/>
+                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                            stroke-width="2">
+                            <polygon points="5 3 19 12 5 21 5 3" />
                         </svg>
                         Launch Interactive Playground
                     </a>
@@ -153,9 +188,10 @@
                         ⚡ Claim Early Bird 50% Off
                     </a>
                     <a href="#cicd" class="btn btn-secondary" id="heroGetYamlBtn">
-                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                            <polyline points="16 18 22 12 16 6"/>
-                            <polyline points="8 6 2 12 8 18"/>
+                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                            stroke-width="2">
+                            <polyline points="16 18 22 12 16 6" />
+                            <polyline points="8 6 2 12 8 18" />
                         </svg>
                         1-Min GitHub Action YAML
                     </a>
@@ -189,9 +225,10 @@
                             <span class="dot green"></span>
                         </div>
                         <div class="terminal-title">
-                            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                                <polyline points="4 17 10 11 4 5"/>
-                                <line x1="12" y1="19" x2="20" y2="19"/>
+                            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                stroke-width="2">
+                                <polyline points="4 17 10 11 4 5" />
+                                <line x1="12" y1="19" x2="20" y2="19" />
                             </svg>
                             api-security-scanner --auto-pr --air-gapped (Live Runner)
                         </div>
@@ -247,7 +284,9 @@
                     <div class="testimonial-card">
                         <div class="test-stars">★★★★★</div>
                         <p class="test-body">
-                            "We spent 15 hours every sprint arguing over StackHawk false positives. This scanner maps the exact Java controller line and creates the pull request with <code>@PreAuthorize</code> already written. Our triage time dropped by 78%."
+                            "We spent 15 hours every sprint arguing over StackHawk false positives. This scanner maps
+                            the exact Java controller line and creates the pull request with <code>@PreAuthorize</code>
+                            already written. Our triage time dropped by 78%."
                         </p>
                         <div class="test-author">
                             <div class="test-avatar">MV</div>
@@ -261,10 +300,13 @@
                     <div class="testimonial-card">
                         <div class="test-stars">★★★★★</div>
                         <p class="test-body">
-                            "The <code>--air-gapped</code> mode was the game-changer for our SOC2 audit. No code leaves our VPC. Plus, the Multi-Step BOLA engine caught a critical tenant-isolation flaw that passed our external penetration test."
+                            "The <code>--air-gapped</code> mode was the game-changer for our SOC2 audit. No code leaves
+                            our VPC. Plus, the Multi-Step BOLA engine caught a critical tenant-isolation flaw that
+                            passed our external penetration test."
                         </p>
                         <div class="test-author">
-                            <div class="test-avatar" style="background: linear-gradient(135deg, #06b6d4, #6366f1);">SC</div>
+                            <div class="test-avatar" style="background: linear-gradient(135deg, #06b6d4, #6366f1);">SC
+                            </div>
                             <div>
                                 <div class="test-name">Sarah Chen</div>
                                 <div class="test-role">VP of Platform Engineering &bull; AeroPay Global</div>
@@ -275,10 +317,13 @@
                     <div class="testimonial-card">
                         <div class="test-stars">★★★★★</div>
                         <p class="test-body">
-                            "We are deploying GenAI agent endpoints rapidly. This is the first DAST scanner that natively tests LLM system prompt leakage and prompt injection alongside traditional OWASP API Top 10 vulnerabilities."
+                            "We are deploying GenAI agent endpoints rapidly. This is the first DAST scanner that
+                            natively tests LLM system prompt leakage and prompt injection alongside traditional OWASP
+                            API Top 10 vulnerabilities."
                         </p>
                         <div class="test-author">
-                            <div class="test-avatar" style="background: linear-gradient(135deg, #ec4899, #8b5cf6);">DL</div>
+                            <div class="test-avatar" style="background: linear-gradient(135deg, #ec4899, #8b5cf6);">DL
+                            </div>
                             <div>
                                 <div class="test-name">David Lindqvist</div>
                                 <div class="test-role">Lead Security Engineer &bull; Nordic AI Systems</div>
@@ -295,7 +340,7 @@
                 <span class="section-tag">Game-Changing Capabilities</span>
                 <h2 class="section-title">5 "Killer" Features StackHawk & Snyk Lack</h2>
                 <p class="section-desc">
-                    Engineered to solve the fundamental pain points of security teams: eliminating developer fatigue, 
+                    Engineered to solve the fundamental pain points of security teams: eliminating developer fatigue,
                     detecting undocumented APIs, and enforcing zero-leakage enterprise governance.
                 </p>
 
@@ -303,17 +348,22 @@
                     <!-- Featured Card: Zero-Click AI PR Auto-Fix -->
                     <div class="killer-card featured-card" id="cardZeroClickPr">
                         <div class="killer-icon-box icon-indigo">🏆</div>
-                        <span class="killer-tag" style="background: rgba(99, 102, 241, 0.2); color: #818cf8;">Feature #1 &bull; Highest Engineering Value</span>
+                        <span class="killer-tag" style="background: rgba(99, 102, 241, 0.2); color: #818cf8;">Feature #1
+                            &bull; Highest Engineering Value</span>
                         <h3 class="killer-title">Zero-Click AI PR Auto-Fix (Automated Bot)</h3>
                         <p class="killer-desc">
-                            Developers hate reading PDF and HTML vulnerability reports. When our scanner detects a vulnerability, 
-                            it connects the runtime fault to the exact Java file and line number, creates a <code>security/auto-fix-...</code> branch, 
-                            applies a verified remediation patch, and opens a ready-to-merge Pull Request with test reproducers.
+                            Developers hate reading PDF and HTML vulnerability reports. When our scanner detects a
+                            vulnerability,
+                            it connects the runtime fault to the exact Java file and line number, creates a
+                            <code>security/auto-fix-...</code> branch,
+                            applies a verified remediation patch, and opens a ready-to-merge Pull Request with test
+                            reproducers.
                         </p>
                         <div class="killer-code-snippet">
                             <span class="diff-del">- @GetMapping("/orders/{id}")</span>
                             <span class="diff-add">+ // [AUTO-FIX: STATEFUL_BOLA_CONFIRMED]</span>
-                            <span class="diff-add">+ @PreAuthorize("@securityService.isResourceOwner(authentication, #id)")</span>
+                            <span class="diff-add">+ @PreAuthorize("@securityService.isResourceOwner(authentication,
+                                #id)")</span>
                             <span class="diff-add">+ @GetMapping("/orders/{id}")</span>
                         </div>
                     </div>
@@ -321,11 +371,12 @@
                     <!-- Feature 2: Shadow & Zombie API Discovery -->
                     <div class="killer-card" id="cardShadowApi">
                         <div class="killer-icon-box icon-amber">🕵️</div>
-                        <span class="killer-tag" style="background: rgba(251, 146, 60, 0.2); color: #fb923c;">Feature #2 &bull; Spec Drift</span>
+                        <span class="killer-tag" style="background: rgba(251, 146, 60, 0.2); color: #fb923c;">Feature #2
+                            &bull; Spec Drift</span>
                         <h3 class="killer-title">Shadow & Zombie API Discovery</h3>
                         <p class="killer-desc">
-                            Compares Java Spring/JAX-RS controller route mappings with your OpenAPI spec. 
-                            Instantly catches hidden internal routes forgotten in code (<code>SHADOW_API_EXPOSED</code>) 
+                            Compares Java Spring/JAX-RS controller route mappings with your OpenAPI spec.
+                            Instantly catches hidden internal routes forgotten in code (<code>SHADOW_API_EXPOSED</code>)
                             and deprecated endpoints lingering in API gateways (<code>ZOMBIE_API_ENDPOINT</code>).
                         </p>
                     </div>
@@ -333,11 +384,12 @@
                     <!-- Feature 3: 100% Air-Gapped / Zero Data Leakage -->
                     <div class="killer-card" id="cardAirGapped">
                         <div class="killer-icon-box icon-green">🔒</div>
-                        <span class="killer-tag" style="background: rgba(16, 185, 129, 0.2); color: #34d399;">Feature #3 &bull; SOC2 & GDPR</span>
+                        <span class="killer-tag" style="background: rgba(16, 185, 129, 0.2); color: #34d399;">Feature #3
+                            &bull; SOC2 & GDPR</span>
                         <h3 class="killer-title">100% Air-Gapped & Zero Data Egress</h3>
                         <p class="killer-desc">
-                            Unlike competitors who send your code or OpenAPI schemas to third-party clouds, 
-                            <code>--air-gapped</code> runs completely offline on self-hosted runners. 
+                            Unlike competitors who send your code or OpenAPI schemas to third-party clouds,
+                            <code>--air-gapped</code> runs completely offline on self-hosted runners.
                             Generates cryptographic SHA-256 audit attestations with zero telemetry transmission.
                         </p>
                     </div>
@@ -345,21 +397,26 @@
                     <!-- Feature 4: Stateful BOLA / IDOR Exploiter -->
                     <div class="killer-card" id="cardStatefulBola">
                         <div class="killer-icon-box icon-rose">🔄</div>
-                        <span class="killer-tag" style="background: rgba(244, 63, 94, 0.2); color: #f43f5e;">Feature #4 &bull; Real Exploiter</span>
+                        <span class="killer-tag" style="background: rgba(244, 63, 94, 0.2); color: #f43f5e;">Feature #4
+                            &bull; Real Exploiter</span>
                         <h3 class="killer-title">Stateful BOLA / IDOR Verification</h3>
                         <p class="killer-desc">
-                            Simulates authentic attacks: User A creates a dynamic object via POST, extracts the returned ID, 
-                            and User B immediately tries to read/delete it. Zero false positives; confirms horizontal privilege escalation.
+                            Simulates authentic attacks: User A creates a dynamic object via POST, extracts the returned
+                            ID,
+                            and User B immediately tries to read/delete it. Zero false positives; confirms horizontal
+                            privilege escalation.
                         </p>
                     </div>
 
                     <!-- Feature 5: LLM & AI Agent API Security -->
                     <div class="killer-card" id="cardLlmSecurity">
                         <div class="killer-icon-box icon-cyan">🤖</div>
-                        <span class="killer-tag" style="background: rgba(6, 182, 212, 0.2); color: #22d3ee;">Feature #5 &bull; OWASP GenAI Top 10</span>
+                        <span class="killer-tag" style="background: rgba(6, 182, 212, 0.2); color: #22d3ee;">Feature #5
+                            &bull; OWASP GenAI Top 10</span>
                         <h3 class="killer-title">LLM & AI Agent API Gateways</h3>
                         <p class="killer-desc">
-                            Specialized security scanner for <code>/chat</code>, <code>/completions</code>, and agent endpoints. 
+                            Specialized security scanner for <code>/chat</code>, <code>/completions</code>, and agent
+                            endpoints.
                             Fuzzes for prompt injection escapes, system prompt leaks, and guardrail bypass attempts.
                         </p>
                     </div>
@@ -373,7 +430,8 @@
                 <span class="section-tag">Competitive Benchmark</span>
                 <h2 class="section-title">Head-to-Head: Why We Win Every RFP</h2>
                 <p class="section-desc">
-                    A direct comparison against StackHawk, Snyk API, and Salt Security across essential enterprise criteria.
+                    A direct comparison against StackHawk, Snyk API, and Salt Security across essential enterprise
+                    criteria.
                 </p>
 
                 <div class="matrix-table-wrapper">
@@ -401,7 +459,8 @@
                             <tr>
                                 <td>
                                     <span class="feature-name">Hybrid DAST + SAST Line Mapping</span>
-                                    <span class="feature-sub">Pins runtime HTTP vulnerabilities to exact controller lines</span>
+                                    <span class="feature-sub">Pins runtime HTTP vulnerabilities to exact controller
+                                        lines</span>
                                 </td>
                                 <td class="col-highlight"><span class="check-yes">✅ Yes (Built-in)</span></td>
                                 <td><span class="check-no">❌ No (Black-box DAST)</span></td>
@@ -453,7 +512,8 @@
                                     <span class="feature-name">Standard SARIF 2.1.0 & Dashboard</span>
                                     <span class="feature-sub">Native GitHub Security tab integration</span>
                                 </td>
-                                <td class="col-highlight"><span class="check-yes">✅ Yes (Zero extra dependencies)</span></td>
+                                <td class="col-highlight"><span class="check-yes">✅ Yes (Zero extra dependencies)</span>
+                                </td>
                                 <td><span class="check-yes">✅ Yes</span></td>
                                 <td><span class="check-yes">✅ Yes</span></td>
                                 <td><span class="check-no">❌ Custom portal</span></td>
@@ -470,21 +530,28 @@
                 <span class="section-tag">Interactive Demonstration</span>
                 <h2 class="section-title">Test the Hybrid Scanner Live</h2>
                 <p class="section-desc">
-                    Pick a demo API scenario or test with custom endpoints to see the DAST+SAST scanner and auto-fix in action.
+                    Pick a demo API scenario or test with custom endpoints to see the DAST+SAST scanner and auto-fix in
+                    action.
                 </p>
 
                 <div class="playground-box">
                     <div class="pg-presets-bar">
-                        <span style="font-size: 0.9rem; color: var(--text-dim); margin-right: 8px; align-self: center;">Preset Architectures:</span>
-                        <button class="preset-btn active" data-preset="ecommerce" id="presetEcomBtn">🛒 E-Commerce Microservices</button>
-                        <button class="preset-btn" data-preset="fintech" id="presetFintechBtn">🏦 Banking & FinTech Core</button>
-                        <button class="preset-btn" data-preset="ai_agent" id="presetAiBtn">🤖 GenAI & LLM Assistant</button>
+                        <span
+                            style="font-size: 0.9rem; color: var(--text-dim); margin-right: 8px; align-self: center;">Preset
+                            Architectures:</span>
+                        <button class="preset-btn active" data-preset="ecommerce" id="presetEcomBtn">🛒 E-Commerce
+                            Microservices</button>
+                        <button class="preset-btn" data-preset="fintech" id="presetFintechBtn">🏦 Banking & FinTech
+                            Core</button>
+                        <button class="preset-btn" data-preset="ai_agent" id="presetAiBtn">🤖 GenAI & LLM
+                            Assistant</button>
                     </div>
 
                     <div class="pg-inputs-row">
                         <div>
                             <label class="control-label" for="pgSpecInput">OpenAPI 3.0 / Swagger Spec URL</label>
-                            <input type="text" class="pg-input" id="pgSpecInput" value="https://api.store.internal/openapi.json">
+                            <input type="text" class="pg-input" id="pgSpecInput"
+                                value="https://api.store.internal/openapi.json">
                         </div>
                         <div>
                             <label class="control-label" for="pgSourceInput">Source Code Directory</label>
@@ -515,7 +582,8 @@
                     <span class="section-tag">Stripe-Powered Billing</span>
                     <h2 class="section-title">Transparent Pricing for High-Velocity Teams</h2>
                     <p class="section-desc" style="margin-bottom: 20px;">
-                        Stop paying for shelfware. Pick the tier that fits your engineering footprint or start 100% free.
+                        Stop paying for shelfware. Pick the tier that fits your engineering footprint or start 100%
+                        free.
                     </p>
                 </div>
 
@@ -529,14 +597,17 @@
                                 <span class="early-bird-pill">Only 3 / 10 Spots Left</span>
                             </div>
                             <div class="early-bird-sub">
-                                The first 10 customers receive an unconditional 50% lifetime discount across all plans. Coupon code: <code>EARLYBIRD10</code>
+                                The first 10 customers receive an unconditional 50% lifetime discount across all plans.
+                                Coupon code: <code>EARLYBIRD10</code>
                             </div>
                         </div>
                     </div>
 
                     <div class="early-bird-action">
-                        <input type="text" id="couponInput" class="coupon-field" placeholder="Coupon: EARLYBIRD10" value="EARLYBIRD10">
-                        <button class="btn btn-sm btn-primary" id="applyCouponBtn" onclick="applyEarlyBirdDiscount()">Apply</button>
+                        <input type="text" id="couponInput" class="coupon-field" placeholder="Coupon: EARLYBIRD10"
+                            value="EARLYBIRD10">
+                        <button class="btn btn-sm btn-primary" id="applyCouponBtn"
+                            onclick="applyEarlyBirdDiscount()">Apply</button>
                     </div>
                 </div>
 
@@ -561,8 +632,9 @@
                             <div class="pricing-tier-name">Community</div>
                             <span class="tier-badge">Free Forever</span>
                         </div>
-                        <p class="pricing-tagline">For individual developers running fast local API vulnerability checks via CLI.</p>
-                        
+                        <p class="pricing-tagline">For individual developers running fast local API vulnerability checks
+                            via CLI.</p>
+
                         <div class="pricing-price">
                             <span class="price-val">$0</span>
                             <span class="price-period">/free forever</span>
@@ -577,7 +649,8 @@
                             <li>✓ Public Community Discord support</li>
                         </ul>
 
-                        <button class="btn btn-secondary pricing-cta-btn" onclick="triggerStripeCheckout('Community', 0)">
+                        <button class="btn btn-secondary pricing-cta-btn"
+                            onclick="triggerStripeCheckout('Community', 0)">
                             Start Free
                         </button>
                     </div>
@@ -588,8 +661,9 @@
                             <div class="pricing-tier-name">Starter</div>
                             <span class="tier-badge">For Startups</span>
                         </div>
-                        <p class="pricing-tagline">For agile engineering teams needing CI/CD automation &amp; security gate.</p>
-                        
+                        <p class="pricing-tagline">For agile engineering teams needing CI/CD automation &amp; security
+                            gate.</p>
+
                         <div class="pricing-price">
                             <span class="price-val" id="priceStarter">$15</span>
                             <span class="price-period" id="periodStarter">/mo</span>
@@ -605,7 +679,8 @@
                             <li>✓ Slack &amp; Microsoft Teams Webhook alerts</li>
                         </ul>
 
-                        <button class="btn btn-secondary pricing-cta-btn" onclick="triggerStripeCheckout('Starter', 15)">
+                        <button class="btn btn-secondary pricing-cta-btn"
+                            onclick="triggerStripeCheckout('Starter', 15)">
                             Choose Starter
                         </button>
                     </div>
@@ -615,10 +690,13 @@
                         <div class="popular-ribbon">⭐ MOST POPULAR / PRO</div>
                         <div class="pricing-header">
                             <div class="pricing-tier-name" style="color: var(--brand-green);">Pro (Auto-Fix Bot)</div>
-                            <span class="tier-badge" style="background: rgba(16, 185, 129, 0.2); color: var(--brand-green);">Engineering Choice</span>
+                            <span class="tier-badge"
+                                style="background: rgba(16, 185, 129, 0.2); color: var(--brand-green);">Engineering
+                                Choice</span>
                         </div>
-                        <p class="pricing-tagline">For teams that refuse to waste engineering hours reading reports and want automated PR patches.</p>
-                        
+                        <p class="pricing-tagline">For teams that refuse to waste engineering hours reading reports and
+                            want automated PR patches.</p>
+
                         <div class="pricing-price">
                             <span class="price-val" id="pricePro" style="color: var(--brand-green);">$39</span>
                             <span class="price-period" id="periodPro">/mo</span>
@@ -629,7 +707,8 @@
                             <li>✓ Everything in Starter plan</li>
                             <li>✓ <strong>🏆 Zero-Click AI PR Auto-Fix Bot</strong> (Patches code &amp; opens PR)</li>
                             <li>✓ <strong>🕵️ Shadow &amp; Zombie API Discovery</strong> (Spec Drift detection)</li>
-                            <li>✓ <strong>🤖 LLM &amp; AI Agent API Security</strong> (Prompt injection &amp; MCP fuzzer)</li>
+                            <li>✓ <strong>🤖 LLM &amp; AI Agent API Security</strong> (Prompt injection &amp; MCP
+                                fuzzer)</li>
                             <li>✓ 15 Active Repositories</li>
                             <li>✓ Parallel scan workers (16 threads)</li>
                             <li>✓ Priority engineering SLA support</li>
@@ -644,10 +723,12 @@
                     <div class="pricing-card">
                         <div class="pricing-header">
                             <div class="pricing-tier-name">Enterprise</div>
-                            <span class="tier-badge" style="background: rgba(99, 102, 241, 0.2); color: #818cf8;">SOC2 &amp; Regulated</span>
+                            <span class="tier-badge" style="background: rgba(99, 102, 241, 0.2); color: #818cf8;">SOC2
+                                &amp; Regulated</span>
                         </div>
-                        <p class="pricing-tagline">For banks, FinTechs, and enterprises with strict air-gap and data residency requirements.</p>
-                        
+                        <p class="pricing-tagline">For banks, FinTechs, and enterprises with strict air-gap and data
+                            residency requirements.</p>
+
                         <div class="pricing-price">
                             <span class="price-val" id="priceEnterprise">$239</span>
                             <span class="price-period" id="periodEnterprise">/mo</span>
@@ -664,7 +745,8 @@
                             <li>✓ Dedicated Security Architect &amp; 99.99% SLA</li>
                         </ul>
 
-                        <button class="btn btn-secondary pricing-cta-btn" onclick="triggerStripeCheckout('Enterprise', 239)">
+                        <button class="btn btn-secondary pricing-cta-btn"
+                            onclick="triggerStripeCheckout('Enterprise', 239)">
                             Contact Enterprise
                         </button>
                     </div>
@@ -688,7 +770,8 @@
                 <span class="section-tag">Instant Integration</span>
                 <h2 class="section-title">1-Minute GitHub Actions Setup</h2>
                 <p class="section-desc">
-                    Generate a production-ready CI/CD security workflow customized with your preferred enterprise controls.
+                    Generate a production-ready CI/CD security workflow customized with your preferred enterprise
+                    controls.
                 </p>
 
                 <div class="cicd-layout">
@@ -698,7 +781,8 @@
                         <div class="control-group">
                             <label class="checkbox-label">
                                 <input type="checkbox" id="cfgAutoPr" checked>
-                                <span><strong>Enable Zero-Click AI PR Auto-Fix</strong> (Creates PR with code patch)</span>
+                                <span><strong>Enable Zero-Click AI PR Auto-Fix</strong> (Creates PR with code
+                                    patch)</span>
                             </label>
                         </div>
 
@@ -739,11 +823,13 @@
                                 .github/workflows/api-security.yml
                             </span>
                             <div style="display: flex; gap: 8px;">
-                                <button class="btn btn-sm btn-secondary" onclick="downloadWorkflowFile()">⬇ Download .yml</button>
+                                <button class="btn btn-sm btn-secondary" onclick="downloadWorkflowFile()">⬇ Download
+                                    .yml</button>
                                 <button class="btn btn-sm btn-secondary" id="copyYamlBtn">Copy YAML</button>
                             </div>
                         </div>
-                        <pre class="cicd-preview-body"><code id="cicdYamlPreview"># Loading configuration...</code></pre>
+                        <pre
+                            class="cicd-preview-body"><code id="cicdYamlPreview"># Loading configuration...</code></pre>
                     </div>
                 </div>
             </div>
@@ -764,7 +850,8 @@
                             <div class="roi-slider-group">
                                 <div class="slider-header">
                                     <span>Engineering Team Size</span>
-                                    <span style="color: var(--brand-green); font-family: var(--font-mono); font-weight: 700;">
+                                    <span
+                                        style="color: var(--brand-green); font-family: var(--font-mono); font-weight: 700;">
                                         <span id="roiDevsVal">30</span> Developers
                                     </span>
                                 </div>
@@ -774,7 +861,8 @@
                             <div class="roi-slider-group">
                                 <div class="slider-header">
                                     <span>Active REST / Microservice Endpoints</span>
-                                    <span style="color: var(--brand-green); font-family: var(--font-mono); font-weight: 700;">
+                                    <span
+                                        style="color: var(--brand-green); font-family: var(--font-mono); font-weight: 700;">
                                         <span id="roiApisVal">50</span> Endpoints
                                     </span>
                                 </div>
@@ -782,14 +870,16 @@
                             </div>
 
                             <p style="font-size: 0.85rem; color: var(--text-dim); line-height: 1.5;">
-                                *Based on average 4.5 hours spent per manual vulnerability triage, reproduction, patch authoring, and review cycle.
+                                *Based on average 4.5 hours spent per manual vulnerability triage, reproduction, patch
+                                authoring, and review cycle.
                             </p>
                         </div>
 
                         <div class="roi-result-box">
                             <div class="roi-savings-val" id="roiSavingsAmount">$182,400</div>
                             <div class="roi-hours-saved" id="roiHoursSaved">190 engineering hrs saved / month</div>
-                            <span class="badge badge-high" style="background: rgba(16, 185, 129, 0.2); color: #34d399; border-color: #10b981;">
+                            <span class="badge badge-high"
+                                style="background: rgba(16, 185, 129, 0.2); color: #34d399; border-color: #10b981;">
                                 Instant 14x ROI with Zero-Click PRs
                             </span>
                         </div>
@@ -832,7 +922,8 @@
                 <div class="modal-title">
                     <span style="font-size: 1.5rem;">💳</span> Secure Global Checkout
                 </div>
-                <div class="modal-desc" id="modalPlanDesc">API Security Scanner subscription &amp; instant license activation.</div>
+                <div class="modal-desc" id="modalPlanDesc">API Security Scanner subscription &amp; instant license
+                    activation.</div>
             </div>
 
             <div class="checkout-summary-box">
@@ -846,7 +937,8 @@
                 </div>
                 <div class="checkout-row" id="modalCouponRow" style="display: none;">
                     <span style="color: #10b981;">Discount Coupon:</span>
-                    <span class="badge badge-high" style="background: rgba(16, 185, 129, 0.2); color: #34d399;">EARLYBIRD10 (-50%)</span>
+                    <span class="badge badge-high"
+                        style="background: rgba(16, 185, 129, 0.2); color: #34d399;">EARLYBIRD10 (-50%)</span>
                 </div>
                 <div class="checkout-row total-row">
                     <span>Total Amount:</span>
@@ -855,8 +947,10 @@
             </div>
 
             <div class="modal-input-group">
-                <label class="modal-label" for="checkoutEmailInput">Work Email (License key will be delivered here):</label>
-                <input type="email" id="checkoutEmailInput" class="modal-input" placeholder="e.g. dev@company.com" value="cto@startup.io">
+                <label class="modal-label" for="checkoutEmailInput">Work Email (License key will be delivered
+                    here):</label>
+                <input type="email" id="checkoutEmailInput" class="modal-input" placeholder="e.g. dev@company.com"
+                    value="cto@startup.io">
             </div>
 
             <div style="display: flex; gap: 12px; margin-top: 24px;">
@@ -865,9 +959,10 @@
                     <span>Proceed to Checkout</span> &rarr;
                 </button>
             </div>
-            
+
             <div style="margin-top: 16px; font-size: 0.8rem; color: var(--text-dim); text-align: center;">
-                🔒 Powered by Lemon Squeezy MoR &bull; Visa, Mastercard, Apple Pay, Google Pay, PayPal &bull; 256-bit SSL
+                🔒 Powered by Lemon Squeezy MoR &bull; Visa, Mastercard, Apple Pay, Google Pay, PayPal &bull; 256-bit
+                SSL
             </div>
         </div>
     </div>
@@ -881,13 +976,15 @@
                 <div class="modal-title" style="justify-content: center;">
                     License Activated!
                 </div>
-                <div class="modal-desc" id="licenseWelcomeDesc">Your API security scanner is ready for production use.</div>
+                <div class="modal-desc" id="licenseWelcomeDesc">Your API security scanner is ready for production use.
+                </div>
             </div>
 
             <div class="checkout-summary-box">
                 <div class="checkout-row">
                     <span style="color: var(--text-muted);">Status:</span>
-                    <span class="badge badge-high" style="background: rgba(16, 185, 129, 0.2); color: #34d399;">ACTIVE</span>
+                    <span class="badge badge-high"
+                        style="background: rgba(16, 185, 129, 0.2); color: #34d399;">ACTIVE</span>
                 </div>
                 <div class="checkout-row">
                     <span style="color: var(--text-muted);">Plan Tier:</span>
@@ -906,16 +1003,17 @@
             </div>
 
             <div style="margin-top: 16px; display: flex; justify-content: space-between; align-items: center;">
-                <label class="modal-label" style="margin: 0;">GitHub Actions Setup (`.github/workflows/security.yml`):</label>
+                <label class="modal-label" style="margin: 0;">GitHub Actions Setup
+                    (`.github/workflows/security.yml`):</label>
                 <button class="btn btn-secondary btn-xs" onclick="downloadWorkflowFile()">⬇ Download .yml File</button>
             </div>
             <div class="workflow-preview-snippet" id="licenseWorkflowSnippet">
-- name: Run API Security Scanner
-  uses: KarimovAlamdar/api-security-scanner@v1
-  with:
-    license-key: ${{ secrets.SCANNER_LICENSE_KEY }}
-    auto-pr: true
-    spec-path: openapi.json
+                - name: Run API Security Scanner
+                uses: KarimovAlamdar/api-security-scanner@v1
+                with:
+                license-key: ${{ secrets.SCANNER_LICENSE_KEY }}
+                auto-pr: true
+                spec-path: openapi.json
             </div>
 
             <div style="margin-top: 20px; display: flex; gap: 10px;">
@@ -932,17 +1030,21 @@
     <!-- User Authentication Modal (Sign In / Register) -->
     <div class="modal-backdrop" id="authModal">
         <div class="modal-card auth-modal-card">
-            <button class="modal-close-btn" onclick="closeAuthModal()" aria-label="Close modal" title="Close modal">&times;</button>
+            <button class="modal-close-btn" onclick="closeAuthModal()" aria-label="Close modal"
+                title="Close modal">&times;</button>
             <div class="modal-header auth-modal-header">
                 <div class="auth-icon-badge">🛡️</div>
                 <div class="modal-title" id="authModalTitle">Sign In</div>
-                <div class="modal-desc" id="authModalDesc">Access your personal security workspace and private scan history.</div>
+                <div class="modal-desc" id="authModalDesc">Access your personal security workspace and private scan
+                    history.</div>
             </div>
 
             <!-- Auth Tabs -->
             <div class="auth-tab-switch">
-                <button type="button" class="auth-tab-btn active" id="tabSignInBtn" onclick="switchAuthTab('signin')">Sign In</button>
-                <button type="button" class="auth-tab-btn" id="tabSignUpBtn" onclick="switchAuthTab('signup')">Create Account</button>
+                <button type="button" class="auth-tab-btn active" id="tabSignInBtn"
+                    onclick="switchAuthTab('signin')">Sign In</button>
+                <button type="button" class="auth-tab-btn" id="tabSignUpBtn" onclick="switchAuthTab('signup')">Create
+                    Account</button>
             </div>
 
             <div id="authAlertBox" class="auth-alert-box" style="display: none;"></div>
@@ -951,11 +1053,13 @@
             <form id="signInForm" onsubmit="handleSignInSubmit(event)">
                 <div class="modal-input-group">
                     <label class="modal-label" for="signInEmail">Email Address:</label>
-                    <input type="email" id="signInEmail" class="modal-input" placeholder="e.g. dev@example.com" required autocomplete="email">
+                    <input type="email" id="signInEmail" class="modal-input" placeholder="e.g. dev@example.com" required
+                        autocomplete="email">
                 </div>
                 <div class="modal-input-group">
                     <label class="modal-label" for="signInPassword">Password:</label>
-                    <input type="password" id="signInPassword" class="modal-input" placeholder="••••••••" required autocomplete="current-password">
+                    <input type="password" id="signInPassword" class="modal-input" placeholder="••••••••" required
+                        autocomplete="current-password">
                 </div>
                 <button type="submit" class="btn btn-primary auth-submit-btn" id="signInSubmitBtn">
                     <span>Sign In to Workspace</span> &rarr;
@@ -966,15 +1070,18 @@
             <form id="signUpForm" onsubmit="handleSignUpSubmit(event)" style="display: none;">
                 <div class="modal-input-group">
                     <label class="modal-label" for="signUpName">Full Name:</label>
-                    <input type="text" id="signUpName" class="modal-input" placeholder="e.g. Alex Morgan" required autocomplete="name">
+                    <input type="text" id="signUpName" class="modal-input" placeholder="e.g. Alex Morgan" required
+                        autocomplete="name">
                 </div>
                 <div class="modal-input-group">
                     <label class="modal-label" for="signUpEmail">Email Address:</label>
-                    <input type="email" id="signUpEmail" class="modal-input" placeholder="e.g. alex@example.com" required autocomplete="email">
+                    <input type="email" id="signUpEmail" class="modal-input" placeholder="e.g. alex@example.com"
+                        required autocomplete="email">
                 </div>
                 <div class="modal-input-group">
                     <label class="modal-label" for="signUpPassword">Password:</label>
-                    <input type="password" id="signUpPassword" class="modal-input" placeholder="At least 6 characters" minlength="6" required autocomplete="new-password">
+                    <input type="password" id="signUpPassword" class="modal-input" placeholder="At least 6 characters"
+                        minlength="6" required autocomplete="new-password">
                 </div>
                 <button type="submit" class="btn btn-primary auth-submit-btn" id="signUpSubmitBtn">
                     <span>Create Account &amp; Continue</span> &rarr;
@@ -987,17 +1094,18 @@
     <div class="modal-backdrop" id="workspaceModal">
         <div class="modal-card workspace-modal-card">
             <button class="modal-close-btn" onclick="closeWorkspaceModal()">&times;</button>
-            
+
             <div class="workspace-header">
                 <div class="workspace-user-info">
                     <div class="workspace-avatar" id="wsUserAvatar">US</div>
                     <div>
                         <div class="workspace-title-row">
                             <h2 class="workspace-title" id="wsUserName">Security Workspace</h2>
-                            <span class="badge badge-high" id="wsPlanBadge" style="background: rgba(16, 185, 129, 0.2); color: #34d399;">Active Plan</span>
+                            <span class="badge badge-high" id="wsPlanBadge"
+                                style="background: rgba(16, 185, 129, 0.2); color: #34d399;">Active Plan</span>
                         </div>
                         <div class="workspace-subtitle">
-                            <span id="wsUserEmail">user@company.com</span> &bull; 
+                            <span id="wsUserEmail">user@company.com</span> &bull;
                             <span id="wsUserCompany">Personal Security Workspace</span>
                         </div>
                     </div>
@@ -1036,12 +1144,14 @@
                 <div class="ws-license-top">
                     <div>
                         <span class="modal-label" style="margin: 0;">Your Assigned Scanner License Key:</span>
-                        <div class="license-key-text" id="wsLicenseKey" style="margin-top: 4px;">sec_live_loading...</div>
+                        <div class="license-key-text" id="wsLicenseKey" style="margin-top: 4px;">sec_live_loading...
+                        </div>
                     </div>
                     <button class="copy-key-btn" id="wsCopyKeyBtn" onclick="copyWorkspaceLicenseKey()">Copy Key</button>
                 </div>
                 <div class="ws-license-hint">
-                    💡 Add this key to your GitHub Secrets as <code>SCANNER_LICENSE_KEY</code> to enable automated CI/CD scans.
+                    💡 Add this key to your GitHub Secrets as <code>SCANNER_LICENSE_KEY</code> to enable automated CI/CD
+                    scans.
                 </div>
             </div>
 
@@ -1050,21 +1160,34 @@
                 <div class="ws-quickstart-header">
                     <div class="ws-quickstart-badge">⚡ Quickstart in 60s</div>
                     <h3 class="ws-quickstart-title">How to Run Your First API Security Scan</h3>
-                    <p class="ws-quickstart-subtitle">Choose your setup method. Your license key is already configured below.</p>
+                    <p class="ws-quickstart-subtitle">Choose your setup method. Your license key is already configured
+                        below.</p>
                 </div>
 
                 <!-- Integration Selector Tabs -->
                 <div class="ws-quickstart-tabs">
-                    <button type="button" class="ws-tab-btn active" id="qsTabGhBtn" onclick="switchQuickstartTab('github')">
-                        <svg width="15" height="15" viewBox="0 0 24 24" fill="currentColor"><path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0024 12c0-6.63-5.37-12-12-12z"/></svg>
+                    <button type="button" class="ws-tab-btn active" id="qsTabGhBtn"
+                        onclick="switchQuickstartTab('github')">
+                        <svg width="15" height="15" viewBox="0 0 24 24" fill="currentColor">
+                            <path
+                                d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0024 12c0-6.63-5.37-12-12-12z" />
+                        </svg>
                         GitHub Actions (Automated)
                     </button>
-                    <button type="button" class="ws-tab-btn" id="qsTabDockerBtn" onclick="switchQuickstartTab('docker')">
-                        <svg width="15" height="15" viewBox="0 0 24 24" fill="currentColor"><path d="M13.983 11.078h2.119a.186.186 0 00.186-.185V9.006a.186.186 0 00-.186-.186h-2.119a.185.185 0 00-.185.185v1.888c0 .102.083.185.185.185m-2.954-5.43h2.118a.186.186 0 00.186-.186V3.574a.186.186 0 00-.186-.185h-2.118a.185.185 0 00-.185.185v1.888c0 .102.082.185.185.185m0 2.716h2.118a.187.187 0 00.186-.186V6.29a.186.186 0 00-.186-.185h-2.118a.185.185 0 00-.185.185v1.887c0 .102.082.186.185.186m-2.93 0h2.12a.186.186 0 00.184-.186V6.29a.185.185 0 00-.185-.185H8.1a.185.185 0 00-.185.185v1.887c0 .102.083.186.185.186m-2.964 0h2.119a.186.186 0 00.185-.186V6.29a.185.185 0 00-.185-.185H5.136a.186.186 0 00-.186.185v1.887c0 .102.084.186.186.186m5.893 2.715h2.119a.186.186 0 00.186-.185V9.006a.186.186 0 00-.186-.186h-2.119a.186.186 0 00-.186.185v1.888c0 .102.083.185.186.185m-2.93 0h2.12a.185.185 0 00.184-.185V9.006a.185.185 0 00-.184-.186H8.1a.185.185 0 00-.185.185v1.888c0 .102.083.185.185.185m-2.964 0h2.119a.185.185 0 00.185-.185V9.006a.185.185 0 00-.185-.186H5.136a.186.186 0 00-.186.185v1.888c0 .102.084.185.186.185m-2.928 0h2.119a.185.185 0 00.185-.185V9.006a.185.185 0 00-.185-.186H2.208a.186.186 0 00-.186.185v1.888c0 .102.084.185.186.185M23.79 10.96c-.328-.204-.962-.317-1.841-.317-.184 0-.387.005-.6.015a4.67 4.67 0 00-.77-1.636c-.463-.642-1.077-1.066-1.825-1.261l-.234-.061-.137.202c-.522.77-.735 1.635-.632 2.57-.406.13-.807.29-1.2.482-.162-.224-.34-.43-.532-.619-.74-.727-1.67-1.12-2.766-1.168l-.248-.011-.082.235c-.32.915-.17 1.84.444 2.748-.48.24-.945.518-1.39.83-.243-.16-.502-.29-.773-.39-.757-.279-1.572-.258-2.42.062l-.245.093-.016.262c-.066 1.05.342 1.954 1.213 2.686-.34.25-.66.52-.96.81-1.39 1.34-2.12 3.01-2.17 4.96v.12c.03.62.15 1.23.36 1.82.72 2.02 2.37 3.55 4.54 4.19 1.22.36 2.51.54 3.84.54 1.34 0 2.67-.18 3.96-.54 2.87-.8 5.06-2.92 5.67-5.49.25-1.06.31-2.16.18-3.28 1.4-.41 2.22-1.4 2.35-2.84.05-.59-.07-1.13-.37-1.57"/></svg>
+                    <button type="button" class="ws-tab-btn" id="qsTabDockerBtn"
+                        onclick="switchQuickstartTab('docker')">
+                        <svg width="15" height="15" viewBox="0 0 24 24" fill="currentColor">
+                            <path
+                                d="M13.983 11.078h2.119a.186.186 0 00.186-.185V9.006a.186.186 0 00-.186-.186h-2.119a.185.185 0 00-.185.185v1.888c0 .102.083.185.185.185m-2.954-5.43h2.118a.186.186 0 00.186-.186V3.574a.186.186 0 00-.186-.185h-2.118a.185.185 0 00-.185.185v1.888c0 .102.082.185.185.185m0 2.716h2.118a.187.187 0 00.186-.186V6.29a.186.186 0 00-.186-.185h-2.118a.185.185 0 00-.185.185v1.887c0 .102.082.186.185.186m-2.93 0h2.12a.186.186 0 00.184-.186V6.29a.185.185 0 00-.185-.185H8.1a.185.185 0 00-.185.185v1.887c0 .102.083.186.185.186m-2.964 0h2.119a.186.186 0 00.185-.186V6.29a.185.185 0 00-.185-.185H5.136a.186.186 0 00-.186.185v1.887c0 .102.084.186.186.186m5.893 2.715h2.119a.186.186 0 00.186-.185V9.006a.186.186 0 00-.186-.186h-2.119a.186.186 0 00-.186.185v1.888c0 .102.083.185.186.185m-2.93 0h2.12a.185.185 0 00.184-.185V9.006a.185.185 0 00-.184-.186H8.1a.185.185 0 00-.185.185v1.888c0 .102.083.185.185.185m-2.964 0h2.119a.185.185 0 00.185-.185V9.006a.185.185 0 00-.185-.186H5.136a.186.186 0 00-.186.185v1.888c0 .102.084.185.186.185m-2.928 0h2.119a.185.185 0 00.185-.185V9.006a.185.185 0 00-.185-.186H2.208a.186.186 0 00-.186.185v1.888c0 .102.084.185.186.185M23.79 10.96c-.328-.204-.962-.317-1.841-.317-.184 0-.387.005-.6.015a4.67 4.67 0 00-.77-1.636c-.463-.642-1.077-1.066-1.825-1.261l-.234-.061-.137.202c-.522.77-.735 1.635-.632 2.57-.406.13-.807.29-1.2.482-.162-.224-.34-.43-.532-.619-.74-.727-1.67-1.12-2.766-1.168l-.248-.011-.082.235c-.32.915-.17 1.84.444 2.748-.48.24-.945.518-1.39.83-.243-.16-.502-.29-.773-.39-.757-.279-1.572-.258-2.42.062l-.245.093-.016.262c-.066 1.05.342 1.954 1.213 2.686-.34.25-.66.52-.96.81-1.39 1.34-2.12 3.01-2.17 4.96v.12c.03.62.15 1.23.36 1.82.72 2.02 2.37 3.55 4.54 4.19 1.22.36 2.51.54 3.84.54 1.34 0 2.67-.18 3.96-.54 2.87-.8 5.06-2.92 5.67-5.49.25-1.06.31-2.16.18-3.28 1.4-.41 2.22-1.4 2.35-2.84.05-.59-.07-1.13-.37-1.57" />
+                        </svg>
                         Docker Container
                     </button>
                     <button type="button" class="ws-tab-btn" id="qsTabCliBtn" onclick="switchQuickstartTab('cli')">
-                        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="4 17 10 11 4 5"></polyline><line x1="12" y1="19" x2="20" y2="19"></line></svg>
+                        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                            stroke-width="2">
+                            <polyline points="4 17 10 11 4 5"></polyline>
+                            <line x1="12" y1="19" x2="20" y2="19"></line>
+                        </svg>
                         CLI / Java JAR
                     </button>
                 </div>
@@ -1076,21 +1199,24 @@
                             <div class="qs-step-num">1</div>
                             <div class="qs-step-body">
                                 <strong>Add Secret in GitHub:</strong>
-                                <span>Go to <code>Settings &gt; Secrets &gt; Actions</code> and add <code>SCANNER_LICENSE_KEY</code> with your key above.</span>
+                                <span>Go to <code>Settings &gt; Secrets &gt; Actions</code> and add
+                                    <code>SCANNER_LICENSE_KEY</code> with your key above.</span>
                             </div>
                         </div>
                         <div class="qs-step-item">
                             <div class="qs-step-num">2</div>
                             <div class="qs-step-body">
                                 <strong>Save Workflow File:</strong>
-                                <span>Download or place in <code>.github/workflows/security.yml</code> in your repository.</span>
+                                <span>Download or place in <code>.github/workflows/security.yml</code> in your
+                                    repository.</span>
                             </div>
                         </div>
                         <div class="qs-step-item">
                             <div class="qs-step-num">3</div>
                             <div class="qs-step-body">
                                 <strong>Push &amp; Auto-Fix:</strong>
-                                <span>Every git push scans OpenAPI endpoints, blocks BOLA vulnerabilities, and opens Auto-PRs.</span>
+                                <span>Every git push scans OpenAPI endpoints, blocks BOLA vulnerabilities, and opens
+                                    Auto-PRs.</span>
                             </div>
                         </div>
                     </div>
@@ -1099,8 +1225,10 @@
                         <div class="qs-code-header">
                             <span>.github/workflows/security.yml</span>
                             <div style="display: flex; gap: 8px;">
-                                <button class="btn btn-secondary btn-xs" onclick="downloadWorkflowFile()">⬇ Download .yml</button>
-                                <button class="btn btn-secondary btn-xs" onclick="copyWorkflowSnippet(this)">Copy Code</button>
+                                <button class="btn btn-secondary btn-xs" onclick="downloadWorkflowFile()">⬇ Download
+                                    .yml</button>
+                                <button class="btn btn-secondary btn-xs" onclick="copyWorkflowSnippet(this)">Copy
+                                    Code</button>
                             </div>
                         </div>
                         <pre class="qs-code-pre" id="qsWorkflowCode">name: API Security Scanner
@@ -1124,11 +1252,13 @@ jobs:
 
                 <!-- Tab 2: Docker -->
                 <div id="qsViewDocker" class="ws-quickstart-content" style="display: none;">
-                    <p style="font-size: 0.85rem; color: var(--text-muted); margin: 0 0 10px 0;">Run the scanner instantly on any machine or custom CI agent without installing Java:</p>
+                    <p style="font-size: 0.85rem; color: var(--text-muted); margin: 0 0 10px 0;">Run the scanner
+                        instantly on any machine or custom CI agent without installing Java:</p>
                     <div class="qs-code-box">
                         <div class="qs-code-header">
                             <span>Terminal / Bash (Docker)</span>
-                            <button class="btn btn-secondary btn-xs" onclick="copyDockerSnippet(this)">Copy Command</button>
+                            <button class="btn btn-secondary btn-xs" onclick="copyDockerSnippet(this)">Copy
+                                Command</button>
                         </div>
                         <pre class="qs-code-pre" id="qsDockerCode">docker run --rm -v $(pwd):/app -w /app \
   -e SCANNER_LICENSE_KEY="YOUR_LICENSE_KEY" \
@@ -1139,11 +1269,13 @@ jobs:
 
                 <!-- Tab 3: CLI / JAR -->
                 <div id="qsViewCli" class="ws-quickstart-content" style="display: none;">
-                    <p style="font-size: 0.85rem; color: var(--text-muted); margin: 0 0 10px 0;">Run standalone executable on Java 17+ with automated wizard setup:</p>
+                    <p style="font-size: 0.85rem; color: var(--text-muted); margin: 0 0 10px 0;">Run standalone
+                        executable on Java 17+ with automated wizard setup:</p>
                     <div class="qs-code-box">
                         <div class="qs-code-header">
                             <span>Interactive Setup &amp; Scan</span>
-                            <button class="btn btn-secondary btn-xs" onclick="copyCliSnippet(this)">Copy Command</button>
+                            <button class="btn btn-secondary btn-xs" onclick="copyCliSnippet(this)">Copy
+                                Command</button>
                         </div>
                         <pre class="qs-code-pre" id="qsCliCode"># 1. Run interactive wizard setup:
 java -jar api-security-scanner.jar --init
@@ -1195,4 +1327,5 @@ java -jar api-security-scanner.jar --spec openapi.json --license="YOUR_LICENSE_K
 
     <script src="app.js"></script>
 </body>
+
 </html>

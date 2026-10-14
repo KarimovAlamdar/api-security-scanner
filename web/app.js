@@ -537,15 +537,30 @@ window.submitStripeCheckout = async function() {
   } catch (err) {
     console.log('Connecting to official Lemon Squeezy checkout:', err);
     window.closeCheckoutModal();
-    // Map tier to the correct Lemon Squeezy product buy URL:
+    // Map tier and billing cycle to the correct Lemon Squeezy product buy URL:
     const LEMON_CHECKOUT_URLS = {
-      starter: 'https://api-security-scanner.lemonsqueezy.com/checkout/buy/91cc270e-652d-4acf-94e5-3d6a8617bb9f',
-      pro: 'https://api-security-scanner.lemonsqueezy.com/checkout/buy/2bab4a54-79b4-4cda-84c4-d3a144df2d9c',
-      enterprise: 'https://api-security-scanner.lemonsqueezy.com/checkout/buy/03d12fea-4791-445e-804c-beb348e270c1'
+      starter: {
+        monthly: 'https://api-security-scanner.lemonsqueezy.com/checkout/buy/91cc270e-652d-4acf-94e5-3d6a8617bb9f',
+        annual: 'https://api-security-scanner.lemonsqueezy.com/checkout/buy/91cc270e-652d-4acf-94e5-3d6a8617bb9f'
+      },
+      pro: {
+        monthly: 'https://api-security-scanner.lemonsqueezy.com/checkout/buy/2bab4a54-79b4-4cda-84c4-d3a144df2d9c',
+        annual: 'https://api-security-scanner.lemonsqueezy.com/checkout/buy/2bab4a54-79b4-4cda-84c4-d3a144df2d9c'
+      },
+      enterprise: {
+        monthly: 'https://api-security-scanner.lemonsqueezy.com/checkout/buy/03d12fea-4791-445e-804c-beb348e270c1',
+        annual: 'https://api-security-scanner.lemonsqueezy.com/checkout/buy/03d12fea-4791-445e-804c-beb348e270c1'
+      }
     };
     const tierKey = (currentCheckoutTier || 'pro').toLowerCase();
-    const buyUrl = LEMON_CHECKOUT_URLS[tierKey] || LEMON_CHECKOUT_URLS.pro;
-    const lemonCheckoutUrl = `${buyUrl}?checkout[email]=${encodeURIComponent(email)}`;
+    const tierUrls = LEMON_CHECKOUT_URLS[tierKey] || LEMON_CHECKOUT_URLS.pro;
+    const cycleKey = isAnnualBilling ? 'annual' : 'monthly';
+    const buyUrl = tierUrls[cycleKey] || tierUrls.monthly;
+
+    let lemonCheckoutUrl = `${buyUrl}?checkout[email]=${encodeURIComponent(email)}`;
+    if (isEarlyBirdApplied) {
+      lemonCheckoutUrl += `&checkout[discount_code]=EARLYBIRD10&discount=EARLYBIRD10`;
+    }
     window.location.href = lemonCheckoutUrl;
   } finally {
     if (btn) {
