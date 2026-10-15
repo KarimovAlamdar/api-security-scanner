@@ -1320,36 +1320,65 @@ window.switchAuthTab = function(tab) {
 };
 
 window.handleSocialAuth = function(provider) {
-  const isSignUp = document.getElementById('tabSignUpBtn') && document.getElementById('tabSignUpBtn').classList.contains('active');
-  const providerName = provider === 'google' ? 'Google' : 'GitHub';
-  const defaultUser = provider === 'google' ? 'alex.dev@gmail.com' : 'octocat-dev@github.com';
-  
-  const actionTitle = isSignUp ? `Create Account with ${providerName}` : `Sign in with ${providerName}`;
-  const actionPrompt = `${actionTitle}\n\nEnter your ${providerName} email address (or click OK to proceed with demo developer account):`;
-    
-  const entered = prompt(actionPrompt, defaultUser);
-  if (entered === null) {
-    // User cancelled
-    return;
-  }
-  
-  const email = (entered.trim() || defaultUser).toLowerCase();
-  const rawPrefix = email.split('@')[0].replace(/[._-]/g, ' ');
-  const capitalized = rawPrefix.split(' ').map(w => w.charAt(0).toUpperCase() + w.slice(1)).join(' ') || `${providerName} User`;
-  const fullName = `${capitalized} (${providerName})`;
+  const page = provider === 'github' ? 'oauth-github.html' : 'oauth-google.html';
+  const title = provider === 'github' ? 'Authorize API Security Scanner · GitHub' : 'Sign in - Google Accounts';
+  const w = 480;
+  const h = 650;
+  const left = Math.max(0, Math.floor((window.screen.width - w) / 2));
+  const top = Math.max(0, Math.floor((window.screen.height - h) / 2));
 
-  const alertBox = document.getElementById('authAlertBox');
+  let popup = null;
+  try {
+    popup = window.open(
+      page,
+      'oauth_popup',
+      `width=${w},height=${h},top=${top},left=${left},menubar=no,toolbar=no,location=yes,status=no,resizable=yes,scrollbars=yes`
+    );
+  } catch (err) {
+    console.warn('Popup blocked by browser, opening in-page modal fallback', err);
+  }
+
+  // If browser popup blocker blocked it, open seamless in-page OAuth modal
+  if (!popup || popup.closed || typeof popup.closed === 'undefined') {
+    window.openOAuthIframeModal(provider);
+  } else {
+    try { popup.focus(); } catch (e) {}
+  }
+};
+
+window.openOAuthIframeModal = function(provider) {
+  const modal = document.getElementById('oauthModal');
+  const iframe = document.getElementById('oauthIframe');
+  if (modal && iframe) {
+    iframe.src = provider === 'github' ? 'oauth-github.html' : 'oauth-google.html';
+    modal.classList.add('active');
+  }
+};
+
+window.closeOAuthIframeModal = function() {
+  const modal = document.getElementById('oauthModal');
+  const iframe = document.getElementById('oauthIframe');
+  if (modal) modal.classList.remove('active');
+  if (iframe) iframe.src = '';
+};
+
+// Process OAuth Login Payload (called from popup or iframe via postMessage)
+window.processOAuthLogin = function(data) {
+  if (!data || !data.email) return;
+
+  const email = data.email.toLowerCase().trim();
+  const name = data.name || (data.provider === 'github' ? 'GitHub Developer' : 'Google User');
+  const provider = data.provider || 'google';
+
   const accounts = getStoredAccounts();
-  
-  // If account doesn't exist, create it seamlessly
   if (!accounts[email]) {
     const randomSuffix = Math.random().toString(36).substring(2, 10);
     accounts[email] = {
-      name: fullName,
+      name: name,
       email: email,
       provider: provider,
       password: null, // OAuth authenticated
-      company: `${capitalized}'s Workspace`,
+      company: `${name}'s Workspace`,
       tier: 'Community',
       licenseKey: `sec_live_free_${randomSuffix}`,
       createdAt: new Date().toISOString(),
@@ -1358,7 +1387,7 @@ window.handleSocialAuth = function(provider) {
           id: `scan-${Date.now().toString().slice(-4)}`,
           time: 'Just now',
           target: 'https://api.gateway.internal/v1/health',
-          finding: `Initial Workspace Verification via ${providerName}`,
+          finding: `Initial Workspace Verification via ${provider === 'github' ? 'GitHub' : 'Google'}`,
           sev: 'LOW',
           status: 'Workspace Initialized & Clean'
         }
@@ -1371,33 +1400,48 @@ window.handleSocialAuth = function(provider) {
   updateNavAuthUI();
   updateEarlyBirdUI();
   updatePricingDisplay();
+  window.closeAuthModal();
+  window.closeOAuthIframeModal();
 
-  if (alertBox) {
-    alertBox.className = 'auth-alert-box success';
-    alertBox.textContent = `✓ Successfully authenticated via ${providerName}! Launching workspace...`;
-    alertBox.style.display = 'block';
+  try { localStorage.removeItem('scanner_last_oauth_payload'); } catch (e) {}
+
+  if (pendingCouponClaim) {
+    pendingCouponClaim = false;
+    setTimeout(() => {
+      window.copyAndApplyEarlyBirdCoupon();
+    }, 400);
+  } else if (pendingCheckoutPlan) {
+    const plan = pendingCheckoutPlan;
+    pendingCheckoutPlan = null;
+    setTimeout(() => {
+      window.triggerStripeCheckout(plan.tierName, plan.price);
+    }, 300);
+  } else {
+    setTimeout(() => {
+      window.openWorkspaceModal();
+    }, 250);
   }
-
-  setTimeout(() => {
-    window.closeAuthModal();
-    if (pendingCouponClaim) {
-      pendingCouponClaim = false;
-      setTimeout(() => {
-        window.copyAndApplyEarlyBirdCoupon();
-      }, 400);
-    } else if (pendingCheckoutPlan) {
-      const plan = pendingCheckoutPlan;
-      pendingCheckoutPlan = null;
-      setTimeout(() => {
-        window.triggerStripeCheckout(plan.tierName, plan.price);
-      }, 300);
-    } else {
-      setTimeout(() => {
-        window.openWorkspaceModal();
-      }, 200);
-    }
-  }, 400);
 };
+
+// Listen for OAuth completion from popup or iframe
+window.addEventListener('message', function(event) {
+  if (event.data && event.data.type === 'OAUTH_SUCCESS') {
+    window.processOAuthLogin(event.data);
+  }
+});
+
+// Focus check for localStorage fallback
+window.addEventListener('focus', function() {
+  try {
+    const saved = localStorage.getItem('scanner_last_oauth_payload');
+    if (saved) {
+      const data = JSON.parse(saved);
+      if (data && data.type === 'OAUTH_SUCCESS') {
+        window.processOAuthLogin(data);
+      }
+    }
+  } catch (e) {}
+});
 
 window.handleSignInSubmit = function(e) {
   e.preventDefault();
