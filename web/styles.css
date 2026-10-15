@@ -2595,6 +2595,182 @@ input:checked + .slider:before {
 
 
 
+/* -------------------------------- Email OTP Verification UI -------------------------------- */
+.otp-instruction-box {
+  text-align: center;
+  margin-bottom: 16px;
+}
+
+.otp-subtitle {
+  font-size: 0.85rem;
+  color: var(--text-muted);
+  margin-bottom: 6px;
+}
+
+.otp-target-email {
+  font-family: var(--font-mono, monospace);
+  font-size: 0.95rem;
+  font-weight: 700;
+  color: #00f5a0;
+  background: rgba(0, 245, 160, 0.08);
+  border: 1px solid rgba(0, 245, 160, 0.25);
+  border-radius: 6px;
+  padding: 4px 12px;
+  display: inline-block;
+  margin-bottom: 14px;
+}
+
+.otp-simulated-toast {
+  background: linear-gradient(135deg, rgba(20, 28, 48, 0.95), rgba(10, 16, 28, 0.95));
+  border: 1px solid rgba(0, 245, 160, 0.4);
+  border-radius: 10px;
+  padding: 10px 14px;
+  text-align: left;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.4), 0 0 12px rgba(0, 245, 160, 0.15);
+  animation: slideDownFade 0.3s ease-out;
+}
+
+.otp-toast-badge {
+  font-size: 0.72rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  color: #00f5a0;
+  letter-spacing: 0.5px;
+}
+
+.otp-toast-body {
+  font-size: 0.85rem;
+  color: #e2e8f0;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.otp-code-highlight {
+  font-family: var(--font-mono, monospace);
+  font-size: 1.15rem;
+  font-weight: 800;
+  color: #00f5a0;
+  background: rgba(0, 245, 160, 0.15);
+  border: 1px dashed rgba(0, 245, 160, 0.5);
+  border-radius: 6px;
+  padding: 2px 10px;
+  letter-spacing: 3px;
+}
+
+.otp-inputs-row {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 10px;
+  margin: 18px 0;
+}
+
+.otp-digit-input {
+  width: 48px;
+  height: 56px;
+  text-align: center;
+  font-size: 1.6rem;
+  font-weight: 800;
+  font-family: var(--font-mono, monospace);
+  color: #ffffff;
+  background: rgba(255, 255, 255, 0.05);
+  border: 2px solid rgba(255, 255, 255, 0.15);
+  border-radius: 10px;
+  transition: all 0.18s ease;
+  caret-color: #00f5a0;
+  box-sizing: border-box;
+}
+
+.otp-digit-input:focus {
+  border-color: #00f5a0;
+  background: rgba(0, 245, 160, 0.06);
+  box-shadow: 0 0 16px rgba(0, 245, 160, 0.35);
+  outline: none;
+  transform: translateY(-2px);
+}
+
+.otp-digit-input.filled {
+  border-color: rgba(0, 245, 160, 0.6);
+  background: rgba(0, 245, 160, 0.04);
+}
+
+.otp-digit-input.shake {
+  animation: otpShake 0.4s ease-in-out;
+  border-color: #ef4444 !important;
+  color: #ef4444 !important;
+}
+
+@keyframes otpShake {
+  0%, 100% { transform: translateX(0); }
+  20%, 60% { transform: translateX(-6px); }
+  40%, 80% { transform: translateX(6px); }
+}
+
+@keyframes slideDownFade {
+  from { opacity: 0; transform: translateY(-8px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.otp-footer-actions {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 10px;
+  margin-top: 14px;
+  font-size: 0.82rem;
+  color: #94a3b8;
+}
+
+.btn-link-action {
+  background: none;
+  border: none;
+  color: #00f5a0;
+  font-size: 0.82rem;
+  font-weight: 600;
+  cursor: pointer;
+  padding: 0;
+  transition: opacity 0.15s;
+}
+
+.btn-link-action:hover {
+  text-decoration: underline;
+  opacity: 0.85;
+}
+
+.btn-link-action:disabled {
+  color: #64748b;
+  cursor: not-allowed;
+  text-decoration: none;
+}
+
+[data-theme="light"] .otp-target-email {
+  color: #059669;
+  background: #ecfdf5;
+  border-color: #a7f3d0;
+}
+
+[data-theme="light"] .otp-simulated-toast {
+  background: #ffffff;
+  border-color: #10b981;
+  box-shadow: 0 4px 18px rgba(0, 0, 0, 0.08);
+}
+
+[data-theme="light"] .otp-toast-body {
+  color: #1e293b;
+}
+
+[data-theme="light"] .otp-digit-input {
+  background: #f8fafc;
+  border-color: #cbd5e1;
+  color: #0f172a;
+}
+
 /* -------------------------------- Personal Workspace Dashboard Modal -------------------------------- */
 .workspace-modal-card {
   max-width: 860px;

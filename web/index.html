@@ -1095,6 +1095,44 @@
                     <span>Create Account &amp; Continue</span> &rarr;
                 </button>
             </form>
+
+            <!-- Form: OTP Verification Step -->
+            <form id="otpVerifyForm" onsubmit="handleOtpSubmit(event)" style="display: none;">
+                <div class="otp-instruction-box">
+                    <p class="otp-subtitle">We have sent a 6-digit verification code to:</p>
+                    <div class="otp-target-email" id="otpTargetEmailDisplay">user@example.com</div>
+                    <div class="otp-simulated-toast" id="otpSimulatedToast">
+                        <div class="otp-toast-badge">📬 Verification Email Dispatched</div>
+                        <div class="otp-toast-body">
+                            <span>Your one-time security code is:</span>
+                            <span class="otp-code-highlight" id="otpSampleCodeBadge">123456</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="otp-inputs-row" id="otpInputsRow">
+                    <input type="text" class="otp-digit-input" maxlength="1" inputmode="numeric" pattern="[0-9]*" autocomplete="one-time-code" data-index="0" required>
+                    <input type="text" class="otp-digit-input" maxlength="1" inputmode="numeric" pattern="[0-9]*" data-index="1" required>
+                    <input type="text" class="otp-digit-input" maxlength="1" inputmode="numeric" pattern="[0-9]*" data-index="2" required>
+                    <input type="text" class="otp-digit-input" maxlength="1" inputmode="numeric" pattern="[0-9]*" data-index="3" required>
+                    <input type="text" class="otp-digit-input" maxlength="1" inputmode="numeric" pattern="[0-9]*" data-index="4" required>
+                    <input type="text" class="otp-digit-input" maxlength="1" inputmode="numeric" pattern="[0-9]*" data-index="5" required>
+                </div>
+
+                <button type="submit" class="btn btn-primary auth-submit-btn" id="otpSubmitBtn" style="margin-top: 14px;">
+                    <span>Verify Code &amp; Access Workspace</span> &rarr;
+                </button>
+
+                <div class="otp-footer-actions">
+                    <button type="button" class="btn-link-action" id="btnResendOtp" onclick="resendOtpCode()">
+                        Resend Code <span id="resendTimerCountdown"></span>
+                    </button>
+                    &bull;
+                    <button type="button" class="btn-link-action" onclick="switchAuthTab('signup')">
+                        Change Email
+                    </button>
+                </div>
+            </form>
         </div>
     </div>
 
