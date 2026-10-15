@@ -1307,8 +1307,6 @@ window.switchAuthTab = function(tab) {
   const signUpForm = document.getElementById('signUpForm');
   const title = document.getElementById('authModalTitle');
   const desc = document.getElementById('authModalDesc');
-  const btnGoogleText = document.getElementById('btnAuthGoogleText');
-  const btnGithubText = document.getElementById('btnAuthGithubText');
 
   if (tab === 'signup') {
     if (tabSignInBtn) tabSignInBtn.classList.remove('active');
@@ -1317,8 +1315,6 @@ window.switchAuthTab = function(tab) {
     if (signUpForm) signUpForm.style.display = 'block';
     if (title) title.textContent = 'Create Account';
     if (desc) desc.textContent = 'Create a secure workspace to save scans, licenses, and API keys.';
-    if (btnGoogleText) btnGoogleText.textContent = 'Create account with Google';
-    if (btnGithubText) btnGithubText.textContent = 'Create account with GitHub';
   } else {
     if (tabSignInBtn) tabSignInBtn.classList.add('active');
     if (tabSignUpBtn) tabSignUpBtn.classList.remove('active');
@@ -1326,8 +1322,6 @@ window.switchAuthTab = function(tab) {
     if (signUpForm) signUpForm.style.display = 'none';
     if (title) title.textContent = 'Sign In';
     if (desc) desc.textContent = 'Access your personal security workspace and private scan history.';
-    if (btnGoogleText) btnGoogleText.textContent = 'Sign in with Google';
-    if (btnGithubText) btnGithubText.textContent = 'Sign in with GitHub';
   }
 };
 
