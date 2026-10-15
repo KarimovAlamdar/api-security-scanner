@@ -688,10 +688,10 @@ window.openLicenseModal = function(key, tier, email) {
 
   if (snippetElem && key) {
     snippetElem.textContent = `- name: Run API Security Scanner
-  uses: api-security-scanner/action@v1
+  uses: KarimovAlamdar/api-security-scanner@v1
   with:
     license-key: \${{ secrets.SCANNER_LICENSE_KEY }} # Set to ${key}
-    spec-path: openapi.json
+    spec: openapi.json
     auto-pr: true`;
   }
 
@@ -731,32 +731,8 @@ window.submitStripeCheckout = async function() {
     cancelUrl: `${window.location.origin}/index.html?status=cancelled`
   };
 
-  try {
-    const response = await fetch('http://localhost:4242/api/checkout/create-session', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(payload)
-    });
-
-    if (!response.ok) {
-      throw new Error(`Server responded with ${response.status}`);
-    }
-
-    const data = await response.json();
+  const redirectToLemonSqueezy = () => {
     window.closeCheckoutModal();
-
-    if (data.checkoutUrl) {
-      // Redirect to real Lemon Squeezy / Stripe Checkout URL
-      window.location.href = data.checkoutUrl;
-    } else {
-      // Sandbox simulation mode: show immediate license activation!
-      const licenseKey = data.simulatedLicenseKey || 'sec_live_' + Math.random().toString(16).substring(2, 10);
-      window.openLicenseModal(licenseKey, currentCheckoutTier, email);
-    }
-  } catch (err) {
-    console.log('Connecting to official Lemon Squeezy checkout:', err);
-    window.closeCheckoutModal();
-    // Map tier and billing cycle to the correct Lemon Squeezy product buy URL:
     const LEMON_CHECKOUT_URLS = {
       starter: {
         monthly: 'https://api-security-scanner.lemonsqueezy.com/checkout/buy/91cc270e-652d-4acf-94e5-3d6a8617bb9f',
@@ -784,6 +760,37 @@ window.submitStripeCheckout = async function() {
       lemonCheckoutUrl += `&checkout[discount_code]=EARLYBIRD10`;
     }
     window.location.href = lemonCheckoutUrl;
+  };
+
+  const isLocalEnv = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1';
+  if (!isLocalEnv) {
+    redirectToLemonSqueezy();
+    return;
+  }
+
+  try {
+    const response = await fetch('http://localhost:4242/api/checkout/create-session', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(payload)
+    });
+
+    if (!response.ok) {
+      throw new Error(`Server responded with ${response.status}`);
+    }
+
+    const data = await response.json();
+    window.closeCheckoutModal();
+
+    if (data.checkoutUrl) {
+      window.location.href = data.checkoutUrl;
+    } else {
+      const licenseKey = data.simulatedLicenseKey || 'sec_live_' + Math.random().toString(16).substring(2, 10);
+      window.openLicenseModal(licenseKey, currentCheckoutTier, email);
+    }
+  } catch (err) {
+    console.log('Connecting to official Lemon Squeezy checkout:', err);
+    redirectToLemonSqueezy();
   } finally {
     if (btn) {
       btn.disabled = false;
@@ -801,23 +808,27 @@ async function submitStripeCheckoutForCommunity() {
   }
 
   const email = user.email;
-  try {
-    const response = await fetch('http://localhost:4242/api/checkout/create-session', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({
-        tier: 'Community',
-        customerEmail: email
-      })
-    });
-    if (response.ok) {
-      const data = await response.json();
-      window.openLicenseModal(data.simulatedLicenseKey, 'Community', email);
-      return;
-    }
-  } catch (e) {}
+  const isLocalEnv = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1';
+  if (isLocalEnv) {
+    try {
+      const response = await fetch('http://localhost:4242/api/checkout/create-session', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          tier: 'Community',
+          customerEmail: email
+        })
+      });
+      if (response.ok) {
+        const data = await response.json();
+        window.openLicenseModal(data.simulatedLicenseKey, 'Community', email);
+        return;
+      }
+    } catch (e) {}
+  }
 
-  window.openLicenseModal('sec_live_community_free_edition_001', 'Community', email);
+  const randomHash = Math.random().toString(16).substring(2, 10);
+  window.openLicenseModal(`sec_live_free_community_${randomHash}`, 'Community', email);
 }
 
 window.triggerGithubAuth = function() {
@@ -1063,11 +1074,12 @@ jobs:
         uses: actions/checkout@v4
 
       - name: Run API Security Scanner
-        uses: ./.github/actions/api-security-scanner
+        uses: KarimovAlamdar/api-security-scanner@v1
         with:
           spec: 'openapi.json'
           base-url: 'http://localhost:8080'
           fail-on: '${failOn}'
+          license-key: \${{ secrets.SCANNER_LICENSE_KEY }}
           html-output: 'reports/security-dashboard.html'
           sarif-output: 'reports/scan-report.sarif'`;
 
@@ -1344,6 +1356,21 @@ window.handleSocialAuth = function(provider) {
   } else {
     try { popup.focus(); } catch (e) {}
   }
+
+  // Active poller for instant OAuth detection across all browser security boundaries
+  const oauthPoll = setInterval(() => {
+    try {
+      const saved = localStorage.getItem('scanner_last_oauth_payload');
+      if (saved) {
+        clearInterval(oauthPoll);
+        const data = JSON.parse(saved);
+        if (data && data.type === 'OAUTH_SUCCESS') {
+          window.processOAuthLogin(data);
+        }
+      }
+    } catch (e) {}
+  }, 350);
+  setTimeout(() => clearInterval(oauthPoll), 30000);
 };
 
 window.openOAuthIframeModal = function(provider) {
@@ -1855,7 +1882,7 @@ jobs:
         uses: KarimovAlamdar/api-security-scanner@v1
         with:
           license-key: \${{ secrets.SCANNER_LICENSE_KEY }} # Set in Repo Settings > Secrets: ${key}
-          spec-path: openapi.json
+          spec: openapi.json
           auto-pr: true
 `;
   const blob = new Blob([yamlContent], { type: 'text/yaml;charset=utf-8;' });

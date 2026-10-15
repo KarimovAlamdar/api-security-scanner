@@ -32,9 +32,28 @@ class LicenseValidatorTest {
     void testAirGappedOfflineVerification() {
         // A valid offline key structure: sec_live_<token>_<hmac10>
         // Generated using default secret "api-security-scanner-secret-hmac-key-2026"
-        // Let's compute a known valid one or test invalid checksum
         LicenseValidator.LicenseStatus badStatus = LicenseValidator.validate("sec_live_1234567890abcdef_badchecksum", "http://localhost:4242", true);
         assertFalse(badStatus.valid());
+    }
+
+    @Test
+    void testAirGappedValidOfflineVerification() throws Exception {
+        String secret = "api-security-scanner-secret-hmac-key-2026";
+        String token = "pro123456789012345678901";
+        javax.crypto.Mac mac = javax.crypto.Mac.getInstance("HmacSHA256");
+        mac.init(new javax.crypto.spec.SecretKeySpec(secret.getBytes(java.nio.charset.StandardCharsets.UTF_8), "HmacSHA256"));
+        byte[] hash = mac.doFinal(token.getBytes(java.nio.charset.StandardCharsets.UTF_8));
+        StringBuilder sb = new StringBuilder();
+        for (byte b : hash) {
+            sb.append(String.format("%02x", b));
+        }
+        String validKey = "sec_live_" + token + "_" + sb.substring(0, 10);
+
+        LicenseValidator.LicenseStatus status = LicenseValidator.validate(validKey, "http://localhost:4242", true);
+        assertTrue(status.valid());
+        assertEquals("Pro", status.tier());
+        assertTrue(status.isFeatureAllowed("AUTO_PR_BOT"));
+        assertTrue(status.isFeatureAllowed("STATEFUL_BOLA"));
     }
 
     @Test

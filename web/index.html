@@ -1019,8 +1019,8 @@
                 uses: KarimovAlamdar/api-security-scanner@v1
                 with:
                 license-key: ${{ secrets.SCANNER_LICENSE_KEY }}
+                spec: openapi.json
                 auto-pr: true
-                spec-path: openapi.json
             </div>
 
             <div style="margin-top: 20px; display: flex; gap: 10px;">
@@ -1284,7 +1284,7 @@ jobs:
         uses: KarimovAlamdar/api-security-scanner@v1
         with:
           license-key: ${{ secrets.SCANNER_LICENSE_KEY }}
-          spec-path: openapi.json
+          spec: openapi.json
           auto-pr: true</pre>
                     </div>
                 </div>

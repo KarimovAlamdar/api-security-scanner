@@ -234,11 +234,23 @@
         <div class="oauth-subtitle">by <strong>KarimovAlamdar</strong> wants to access your GitHub account</div>
 
         <!-- Account -->
-        <div class="account-box">
-            <div class="user-avatar">AK</div>
-            <div>
-                <div class="user-name">Ələmdar Kərimov</div>
-                <div class="user-handle">@KarimovAlamdar &middot; ekerimov2025@std.beu.edu.az</div>
+        <div class="account-box" id="defaultAccountBox">
+            <div class="user-avatar" id="avatarText">AK</div>
+            <div style="flex: 1; min-width: 0;">
+                <div class="user-name" id="displayUserName">Ələmdar Kərimov</div>
+                <div class="user-handle" id="displayUserHandle">@KarimovAlamdar &middot; ekerimov2025@std.beu.edu.az</div>
+            </div>
+            <button type="button" onclick="toggleCustomAccount(true)" style="background: none; border: none; color: #58a6ff; font-size: 11px; cursor: pointer; text-decoration: underline;">Switch</button>
+        </div>
+
+        <!-- Custom Account Entry Form -->
+        <div id="customAccountForm" style="display: none; margin-bottom: 16px; background-color: #161b22; border: 1px solid #30363d; border-radius: 6px; padding: 12px;">
+            <div style="font-size: 12px; color: #7d8590; margin-bottom: 8px;">Enter your GitHub profile information:</div>
+            <input type="text" id="customHandle" placeholder="GitHub username (e.g. octocat)" style="width: 100%; padding: 8px 10px; background: #0d1117; border: 1px solid #30363d; border-radius: 6px; color: #c9d1d9; font-size: 13px; margin-bottom: 8px; box-sizing: border-box;">
+            <input type="email" id="customEmail" placeholder="Email address" style="width: 100%; padding: 8px 10px; background: #0d1117; border: 1px solid #30363d; border-radius: 6px; color: #c9d1d9; font-size: 13px; margin-bottom: 8px; box-sizing: border-box;">
+            <div style="display: flex; justify-content: flex-end; gap: 8px;">
+                <button type="button" onclick="toggleCustomAccount(false)" style="background: transparent; border: 1px solid #30363d; color: #c9d1d9; border-radius: 6px; padding: 5px 12px; font-size: 12px; cursor: pointer;">Cancel</button>
+                <button type="button" onclick="applyCustomAccount()" style="background: #238636; border: none; color: #fff; border-radius: 6px; padding: 5px 12px; font-size: 12px; font-weight: 600; cursor: pointer;">Apply</button>
             </div>
         </div>
 
@@ -262,14 +274,61 @@
     </div>
 
     <script>
+        let currentUser = {
+            name: 'Ələmdar Kərimov',
+            email: 'ekerimov2025@std.beu.edu.az',
+            handle: 'KarimovAlamdar'
+        };
+
+        // Check URL params if passed from client
+        try {
+            const params = new URLSearchParams(window.location.search);
+            if (params.get('email')) {
+                currentUser.email = params.get('email');
+                currentUser.name = params.get('name') || currentUser.email.split('@')[0];
+                currentUser.handle = currentUser.email.split('@')[0];
+                updateDisplay();
+            }
+        } catch (e) {}
+
+        function updateDisplay() {
+            const avatar = document.getElementById('avatarText');
+            const nameEl = document.getElementById('displayUserName');
+            const handleEl = document.getElementById('displayUserHandle');
+            if (avatar) avatar.textContent = currentUser.name.split(' ').map(w => w[0]).join('').substring(0, 2).toUpperCase() || 'GH';
+            if (nameEl) nameEl.textContent = currentUser.name;
+            if (handleEl) handleEl.textContent = `@${currentUser.handle} · ${currentUser.email}`;
+        }
+
+        function toggleCustomAccount(show) {
+            document.getElementById('defaultAccountBox').style.display = show ? 'none' : 'flex';
+            document.getElementById('customAccountForm').style.display = show ? 'block' : 'none';
+            if (show) document.getElementById('customHandle').focus();
+        }
+
+        function applyCustomAccount() {
+            const handle = document.getElementById('customHandle').value.trim();
+            const email = document.getElementById('customEmail').value.trim();
+            if (handle) currentUser.handle = handle;
+            if (email) {
+                currentUser.email = email;
+                currentUser.name = handle || email.split('@')[0];
+            } else if (handle) {
+                currentUser.email = `${handle}@users.noreply.github.com`;
+                currentUser.name = handle;
+            }
+            updateDisplay();
+            toggleCustomAccount(false);
+        }
+
         function authorizeGithub() {
             document.getElementById('loadingBar').style.display = 'block';
 
             const payload = {
                 type: 'OAUTH_SUCCESS',
                 provider: 'github',
-                name: 'Ələmdar Kərimov',
-                email: 'ekerimov2025@std.beu.edu.az'
+                name: currentUser.name,
+                email: currentUser.email
             };
 
             try {

@@ -286,7 +286,6 @@ public final class ApiSecurityScanner {
         try {
             Config cfg = parseArgs(args);
             if (cfg == null) {
-                printUsage();
                 exit = 0;
             } else {
                 exit = new ApiSecurityScanner(cfg).run();
@@ -343,7 +342,7 @@ public final class ApiSecurityScanner {
                                          (also read from env SCANNER_OAUTH_SCOPE / INPUT_OAUTH-SCOPE)
                   --auto-pr              Zero-Click AI PR Auto-Fix: automatically create branch & PR with remediations
                                          (also read from env SCANNER_AUTO_PR / INPUT_AUTO-PR)
-                  --air-gapped           100% Air-Gapped Mode: suppress external webhooks & verify zero telemetry
+                  --air-gapped           100%% Air-Gapped Mode: suppress external webhooks & verify zero telemetry
                                          (also read from env SCANNER_AIR_GAPPED / INPUT_AIR-GAPPED)
                   --license-key <key>    Customer license key (sec_live_...) for Pro/Enterprise features
                                          (also read from env SCANNER_LICENSE_KEY / INPUT_LICENSE-KEY)
@@ -362,17 +361,56 @@ public final class ApiSecurityScanner {
                 """.formatted(VERSION));
     }
 
+    private static void printInitWizard() {
+        System.out.println("""
+                ================================================================================
+                API Security Scanner %s — Interactive Setup & Integration Wizard
+                ================================================================================
+                1. Ensure your OpenAPI specification (openapi.json / swagger.json / openapi.yaml)
+                   is placed at the root of your target repository or specified with --spec.
+
+                2. Quick Execution (Local / CLI):
+                   java -jar api-security-scanner.jar --spec openapi.json --base-url http://localhost:8080
+
+                3. Automated CI/CD (GitHub Actions):
+                   Add the following step to your .github/workflows/security.yml:
+                   
+                   - name: Run API Security Engine
+                     uses: KarimovAlamdar/api-security-scanner@v1
+                     with:
+                       license-key: ${{ secrets.SCANNER_LICENSE_KEY }}
+                       spec: openapi.json
+                       auto-pr: true
+
+                4. Customer License Key:
+                   Set your repository secret 'SCANNER_LICENSE_KEY' to your sec_live_... key.
+                ================================================================================
+                """.formatted(VERSION));
+    }
+
     public static Config parseArgs(String[] args) {
         Map<String, String> opts = new HashMap<>();
         boolean dryRun = false;
         for (int i = 0; i < args.length; i++) {
             String a = args[i];
+            if (a.startsWith("--") && a.contains("=")) {
+                int eq = a.indexOf('=');
+                String key = a.substring(2, eq).trim().toLowerCase(Locale.ROOT);
+                String val = a.substring(eq + 1).trim().replaceAll("^[\"']|[\"']$", "");
+                opts.put(key, val);
+                continue;
+            }
             switch (a) {
                 case "-h", "--help" -> {
+                    printUsage();
+                    return null;
+                }
+                case "--init" -> {
+                    printInitWizard();
                     return null;
                 }
                 case "--dry-run" -> dryRun = true;
-                case "--auto-pr" -> {
+                case "--auto-pr", "--auto-fix" -> {
                     if (i + 1 < args.length && ("true".equalsIgnoreCase(args[i + 1]) || "false".equalsIgnoreCase(args[i + 1]))) {
                         opts.put("auto-pr", args[++i]);
                     } else {
@@ -393,22 +431,29 @@ public final class ApiSecurityScanner {
                     if (i + 1 >= args.length) {
                         throw new IllegalArgumentException("Missing value for " + a);
                     }
-                    opts.put(a.substring(2), args[++i]);
+                    opts.put(a.substring(2).toLowerCase(Locale.ROOT), args[++i]);
                 }
             }
         }
 
-        String spec = firstNonBlank(opts.get("spec"), "openapi.json");
+        String spec = firstNonBlank(opts.get("spec"), opts.get("spec-path"), "openapi.json");
         String baseUrl = firstNonBlank(opts.get("base-url"));
 
         // Single token fallback
-        String token = firstNonBlank(opts.get("auth-token"), System.getenv("SCANNER_AUTH_TOKEN"),
+        String token = firstNonBlank(opts.get("auth-token"),
+                System.getenv("SCANNER_AUTH_TOKEN"),
+                System.getenv("INPUT_AUTH_TOKEN"),
                 System.getenv("INPUT_AUTH-TOKEN"));
 
         // Dual-role tokens for BOLA / IDOR matrix testing
-        String userAToken = firstNonBlank(opts.get("user-a-token"), System.getenv("SCANNER_USER_A_TOKEN"),
-                System.getenv("INPUT_USER-A-TOKEN"), token);
-        String userBToken = firstNonBlank(opts.get("user-b-token"), System.getenv("SCANNER_USER_B_TOKEN"),
+        String userAToken = firstNonBlank(opts.get("user-a-token"),
+                System.getenv("SCANNER_USER_A_TOKEN"),
+                System.getenv("INPUT_USER_A_TOKEN"),
+                System.getenv("INPUT_USER-A-TOKEN"),
+                token);
+        String userBToken = firstNonBlank(opts.get("user-b-token"),
+                System.getenv("SCANNER_USER_B_TOKEN"),
+                System.getenv("INPUT_USER_B_TOKEN"),
                 System.getenv("INPUT_USER-B-TOKEN"));
 
         String authHeader = userAToken == null ? null : (userAToken.contains(" ") ? userAToken : "Bearer " + userAToken);
@@ -455,7 +500,9 @@ public final class ApiSecurityScanner {
         int concurrency;
         try {
             concurrency = Integer.parseInt(firstNonBlank(opts.get("concurrency"),
-                    System.getenv("SCANNER_CONCURRENCY"), System.getenv("INPUT_CONCURRENCY"), "4").trim());
+                    System.getenv("SCANNER_CONCURRENCY"),
+                    System.getenv("INPUT_CONCURRENCY"),
+                    "4").trim());
         } catch (NumberFormatException e) {
             throw new IllegalArgumentException("--concurrency must be a whole number (e.g. 4)");
         }
@@ -466,7 +513,10 @@ public final class ApiSecurityScanner {
         long requestDelayMs;
         try {
             requestDelayMs = Long.parseLong(firstNonBlank(opts.get("request-delay"),
-                    System.getenv("SCANNER_REQUEST_DELAY"), System.getenv("INPUT_REQUEST_DELAY"), "0").trim());
+                    System.getenv("SCANNER_REQUEST_DELAY"),
+                    System.getenv("INPUT_REQUEST_DELAY"),
+                    System.getenv("INPUT_REQUEST-DELAY"),
+                    "0").trim());
         } catch (NumberFormatException e) {
             throw new IllegalArgumentException("--request-delay must be milliseconds (e.g. 100)");
         }
@@ -475,38 +525,68 @@ public final class ApiSecurityScanner {
         }
 
         String reportPath = firstNonBlank(opts.get("output"), "scan-report.json");
-        String sarifPath = firstNonBlank(opts.get("sarif-output"), System.getenv("SCANNER_SARIF_OUTPUT"),
-                System.getenv("INPUT_SARIF-OUTPUT"), "scan-report.sarif");
-        String scanSourcePath = firstNonBlank(opts.get("scan-source"), System.getenv("SCANNER_SCAN_SOURCE"),
-                System.getenv("INPUT_SCAN-SOURCE"), ".");
+        String sarifPath = firstNonBlank(opts.get("sarif-output"),
+                System.getenv("SCANNER_SARIF_OUTPUT"),
+                System.getenv("INPUT_SARIF_OUTPUT"),
+                System.getenv("INPUT_SARIF-OUTPUT"),
+                "scan-report.sarif");
+        String scanSourcePath = firstNonBlank(opts.get("scan-source"),
+                System.getenv("SCANNER_SCAN_SOURCE"),
+                System.getenv("INPUT_SCAN_SOURCE"),
+                System.getenv("INPUT_SCAN-SOURCE"),
+                ".");
 
-        String htmlReportPath = firstNonBlank(opts.get("html-output"), System.getenv("SCANNER_HTML_OUTPUT"),
-                System.getenv("INPUT_HTML-OUTPUT"), "scan-report.html");
-        String slackWebhook = firstNonBlank(opts.get("slack-webhook"), System.getenv("SCANNER_SLACK_WEBHOOK"),
+        String htmlReportPath = firstNonBlank(opts.get("html-output"),
+                System.getenv("SCANNER_HTML_OUTPUT"),
+                System.getenv("INPUT_HTML_OUTPUT"),
+                System.getenv("INPUT_HTML-OUTPUT"),
+                "scan-report.html");
+        String slackWebhook = firstNonBlank(opts.get("slack-webhook"),
+                System.getenv("SCANNER_SLACK_WEBHOOK"),
+                System.getenv("INPUT_SLACK_WEBHOOK"),
                 System.getenv("INPUT_SLACK-WEBHOOK"));
-        String teamsWebhook = firstNonBlank(opts.get("teams-webhook"), System.getenv("SCANNER_TEAMS_WEBHOOK"),
+        String teamsWebhook = firstNonBlank(opts.get("teams-webhook"),
+                System.getenv("SCANNER_TEAMS_WEBHOOK"),
+                System.getenv("INPUT_TEAMS_WEBHOOK"),
                 System.getenv("INPUT_TEAMS-WEBHOOK"));
 
-        String oauthTokenUrl = firstNonBlank(opts.get("oauth-token-url"), System.getenv("SCANNER_OAUTH_TOKEN_URL"),
+        String oauthTokenUrl = firstNonBlank(opts.get("oauth-token-url"),
+                System.getenv("SCANNER_OAUTH_TOKEN_URL"),
+                System.getenv("INPUT_OAUTH_TOKEN_URL"),
                 System.getenv("INPUT_OAUTH-TOKEN-URL"));
-        String oauthClientId = firstNonBlank(opts.get("oauth-client-id"), System.getenv("SCANNER_OAUTH_CLIENT_ID"),
+        String oauthClientId = firstNonBlank(opts.get("oauth-client-id"),
+                System.getenv("SCANNER_OAUTH_CLIENT_ID"),
+                System.getenv("INPUT_OAUTH_CLIENT_ID"),
                 System.getenv("INPUT_OAUTH-CLIENT-ID"));
-        String oauthClientSecret = firstNonBlank(opts.get("oauth-client-secret"), System.getenv("SCANNER_OAUTH_CLIENT_SECRET"),
+        String oauthClientSecret = firstNonBlank(opts.get("oauth-client-secret"),
+                System.getenv("SCANNER_OAUTH_CLIENT_SECRET"),
+                System.getenv("INPUT_OAUTH_CLIENT_SECRET"),
                 System.getenv("INPUT_OAUTH-CLIENT-SECRET"));
-        String oauthScope = firstNonBlank(opts.get("oauth-scope"), System.getenv("SCANNER_OAUTH_SCOPE"),
+        String oauthScope = firstNonBlank(opts.get("oauth-scope"),
+                System.getenv("SCANNER_OAUTH_SCOPE"),
+                System.getenv("INPUT_OAUTH_SCOPE"),
                 System.getenv("INPUT_OAUTH-SCOPE"));
 
         Config.OAuthConfig oauth = new Config.OAuthConfig(oauthTokenUrl, oauthClientId, oauthClientSecret, oauthScope);
 
-        boolean autoPr = "true".equalsIgnoreCase(firstNonBlank(opts.get("auto-pr"),
-                System.getenv("SCANNER_AUTO_PR"), System.getenv("INPUT_AUTO-PR")));
+        boolean autoPr = "true".equalsIgnoreCase(firstNonBlank(opts.get("auto-pr"), opts.get("auto-fix"),
+                System.getenv("SCANNER_AUTO_PR"),
+                System.getenv("INPUT_AUTO_PR"),
+                System.getenv("INPUT_AUTO-PR")));
         boolean airGapped = "true".equalsIgnoreCase(firstNonBlank(opts.get("air-gapped"), opts.get("offline"),
-                System.getenv("SCANNER_AIR_GAPPED"), System.getenv("INPUT_AIR-GAPPED")));
+                System.getenv("SCANNER_AIR_GAPPED"),
+                System.getenv("INPUT_AIR_GAPPED"),
+                System.getenv("INPUT_AIR-GAPPED")));
 
-        String licenseKey = firstNonBlank(opts.get("license-key"),
-                System.getenv("SCANNER_LICENSE_KEY"), System.getenv("INPUT_LICENSE-KEY"));
+        String licenseKey = firstNonBlank(opts.get("license-key"), opts.get("license"),
+                System.getenv("SCANNER_LICENSE_KEY"),
+                System.getenv("INPUT_LICENSE_KEY"),
+                System.getenv("INPUT_LICENSE-KEY"));
         String licenseServer = firstNonBlank(opts.get("license-server"),
-                System.getenv("SCANNER_LICENSE_SERVER"), System.getenv("INPUT_LICENSE-SERVER"), "http://localhost:4242");
+                System.getenv("SCANNER_LICENSE_SERVER"),
+                System.getenv("INPUT_LICENSE_SERVER"),
+                System.getenv("INPUT_LICENSE-SERVER"),
+                "http://localhost:4242");
 
         return new Config(spec, baseUrl, authHeader, userAToken, userBToken, userAHeader, userBHeader,
                 methods, failOn, Duration.ofSeconds(timeoutSeconds),
@@ -517,7 +597,9 @@ public final class ApiSecurityScanner {
 
     /** Flags win over environment variables (GITHUB_TOKEN, GITHUB_REPOSITORY, GITHUB_REF, GITHUB_API_URL). */
     private static GithubConfig parseGithub(Map<String, String> opts) {
-        String token = firstNonBlank(opts.get("github-token"), System.getenv("GITHUB_TOKEN"),
+        String token = firstNonBlank(opts.get("github-token"),
+                System.getenv("GITHUB_TOKEN"),
+                System.getenv("INPUT_GITHUB_TOKEN"),
                 System.getenv("INPUT_GITHUB-TOKEN"));
 
         String repoFlag = firstNonBlank(opts.get("github-repo"));

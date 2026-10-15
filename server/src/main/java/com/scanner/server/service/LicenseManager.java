@@ -60,9 +60,11 @@ public class LicenseManager {
         int maxRepos = resolveMaxRepos(cleanTier);
         List<String> features = resolveFeatures(cleanTier);
 
-        String rawToken = UUID.randomUUID().toString().replace("-", "") + Long.toHexString(now.toEpochMilli());
-        String checksum = computeHmac(rawToken, hmacSecret).substring(0, 10);
-        String licenseKey = "sec_live_" + rawToken.substring(0, 24) + "_" + checksum;
+        String tierPrefix = cleanTier.toLowerCase(Locale.ROOT).substring(0, Math.min(3, cleanTier.length()));
+        String rawToken = tierPrefix + (UUID.randomUUID().toString().replace("-", "") + Long.toHexString(now.toEpochMilli()));
+        String token = rawToken.substring(0, 24);
+        String checksum = computeHmac(token, hmacSecret).substring(0, 10);
+        String licenseKey = "sec_live_" + token + "_" + checksum;
 
         LicenseInfo license = new LicenseInfo(
                 licenseKey,

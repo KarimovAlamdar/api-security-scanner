@@ -68,16 +68,31 @@ public class LicenseValidator {
             );
         }
 
+        // Community free key generated from portal
+        if (key.startsWith("sec_live_free_") || key.contains("community")) {
+            return new LicenseStatus(
+                    true,
+                    "Community",
+                    "community@open-source.org",
+                    1,
+                    Set.of("DAST_CORE", "SARIF_EXPORT"),
+                    "Running in Community Free Edition (Core DAST & SARIF export).",
+                    true
+            );
+        }
+
         // 3. Air-Gapped Mode: Perform offline cryptographic validation
         if (airGapped) {
             if (verifyOfflineHmac(key, DEFAULT_HMAC_SECRET)) {
+                String tier = resolveTierFromKey(key);
+                int maxRepos = "Enterprise".equalsIgnoreCase(tier) ? 9999 : ("Starter".equalsIgnoreCase(tier) ? 3 : 15);
                 return new LicenseStatus(
                         true,
-                        "Enterprise",
+                        tier,
                         "airgap@enterprise.internal",
-                        9999,
-                        resolveFeatures("Enterprise"),
-                        "Air-Gapped Mode: Offline cryptographic license signature verified.",
+                        maxRepos,
+                        resolveFeatures(tier),
+                        "Air-Gapped Mode: Offline cryptographic license signature verified (" + tier + " Plan).",
                         true
                 );
             } else {
@@ -98,6 +113,7 @@ public class LicenseValidator {
         if (baseUrl.endsWith("/")) {
             baseUrl = baseUrl.substring(0, baseUrl.length() - 1);
         }
+
         String verifyEndpoint = baseUrl + "/api/license/verify?key=" + key;
 
         try {
@@ -131,12 +147,14 @@ public class LicenseValidator {
         } catch (Exception e) {
             // Server offline or network timeout: Fallback gracefully to offline HMAC verification
             if (verifyOfflineHmac(key, DEFAULT_HMAC_SECRET)) {
+                String tier = resolveTierFromKey(key);
+                int maxRepos = "Enterprise".equalsIgnoreCase(tier) ? 9999 : ("Starter".equalsIgnoreCase(tier) ? 3 : 15);
                 return new LicenseStatus(
                         true,
-                        "Pro",
+                        tier,
                         "offline-cached@customer.org",
-                        15,
-                        resolveFeatures("Pro"),
+                        maxRepos,
+                        resolveFeatures(tier),
                         "License verified via offline cryptographic backup (Server unreachable: " + e.getMessage() + ").",
                         true
                 );
@@ -250,5 +268,13 @@ public class LicenseValidator {
             return matcher.group(1);
         }
         return null;
+    }
+
+    private static String resolveTierFromKey(String key) {
+        if (key == null) return "Pro";
+        String lower = key.toLowerCase(Locale.ROOT);
+        if (lower.startsWith("sec_live_ent") || lower.contains("enterprise")) return "Enterprise";
+        if (lower.startsWith("sec_live_sta") || lower.contains("starter")) return "Starter";
+        return "Pro";
     }
 }

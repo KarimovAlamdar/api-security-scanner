@@ -1,0 +1,138 @@
+name: 'API Security Scanner'
+description: 'Scans OpenAPI endpoints for auth bypass, CORS wildcard, SQL injection, and BOLA/IDOR issues with source line mapping, PR suggested changes, and native SARIF export.'
+author: 'KarimovAlamdar'
+branding:
+  icon: 'shield'
+  color: 'red'
+
+inputs:
+  spec:
+    description: 'Path to the OpenAPI/Swagger file in the repository'
+    required: false
+    default: 'openapi.json'
+  base-url:
+    description: 'Base URL of the API under test (overrides servers[0].url from the spec). Must be reachable from the action container.'
+    required: false
+    default: ''
+  auth-token:
+    description: 'Token used for fuzzing requests, sent as "Authorization: Bearer <token>". Pass it from a secret.'
+    required: false
+    default: ''
+  user-a-token:
+    description: 'Primary user token for BOLA / IDOR matrix testing. Pass it from a secret.'
+    required: false
+    default: ''
+  user-b-token:
+    description: 'Secondary / cross-tenant user token for BOLA / IDOR matrix testing. Pass it from a secret.'
+    required: false
+    default: ''
+  methods:
+    description: 'Comma separated HTTP methods to test (GET,POST,PUT,DELETE). Use GET for a read-only scan.'
+    required: false
+    default: 'GET,POST,PUT,DELETE'
+  fail-on:
+    description: 'Fail the job at or above this severity: none, low, medium, high, critical'
+    required: false
+    default: 'medium'
+  output:
+    description: 'Path of the JSON report'
+    required: false
+    default: 'scan-report.json'
+  sarif-output:
+    description: 'Path of the SARIF 2.1.0 report for native GitHub Code Scanning upload'
+    required: false
+    default: 'scan-report.sarif'
+  scan-source:
+    description: 'Source code root directory for DAST + SAST controller line mapping'
+    required: false
+    default: '.'
+  github-token:
+    description: 'Token used to post the findings as a pull request comment (needs "permissions: pull-requests: write"). Set it to an empty string to disable the comment.'
+    required: false
+    default: ${{ github.token }}
+  concurrency:
+    description: 'Number of concurrent worker threads for scanning endpoints'
+    required: false
+    default: '4'
+  request-delay:
+    description: 'Delay between requests in milliseconds for rate limiting'
+    required: false
+    default: '0'
+  html-output:
+    description: 'Path of the interactive HTML dashboard report'
+    required: false
+    default: 'scan-report.html'
+  slack-webhook:
+    description: 'Slack incoming webhook URL for scan completion alerts. Pass from a secret.'
+    required: false
+    default: ''
+  teams-webhook:
+    description: 'Microsoft Teams incoming webhook URL for scan completion alerts. Pass from a secret.'
+    required: false
+    default: ''
+  oauth-token-url:
+    description: 'OAuth2 token endpoint URL (grant_type=client_credentials)'
+    required: false
+    default: ''
+  oauth-client-id:
+    description: 'OAuth2 client identifier. Pass from a secret.'
+    required: false
+    default: ''
+  oauth-client-secret:
+    description: 'OAuth2 client secret. Pass from a secret.'
+    required: false
+    default: ''
+  oauth-scope:
+    description: 'OAuth2 requested scope'
+    required: false
+    default: ''
+  auto-pr:
+    description: 'Zero-Click AI PR Auto-Fix: automatically create branch & PR with remediations'
+    required: false
+    default: 'false'
+  air-gapped:
+    description: '100% Air-Gapped Mode: suppress external webhooks & verify zero telemetry'
+    required: false
+    default: 'false'
+  license-key:
+    description: 'Customer License Key (sec_live_...) for Pro / Enterprise features. Pass from a GitHub secret.'
+    required: false
+    default: ''
+  license-server:
+    description: 'License verification server URL'
+    required: false
+    default: 'http://localhost:4242'
+
+runs:
+  using: 'docker'
+  image: 'api-security-scanner/Dockerfile'
+  # Sensitive inputs (tokens, secrets, webhook URLs, license keys) are not passed on CLI args;
+  # the runner exposes every input to the container as INPUT_<NAME>, which the scanner reads from environment.
+  # GITHUB_REF, GITHUB_REPOSITORY and GITHUB_API_URL are set by the runner automatically.
+  args:
+    - '--spec'
+    - ${{ inputs.spec }}
+    - '--base-url'
+    - ${{ inputs.base-url }}
+    - '--methods'
+    - ${{ inputs.methods }}
+    - '--fail-on'
+    - ${{ inputs.fail-on }}
+    - '--output'
+    - ${{ inputs.output }}
+    - '--sarif-output'
+    - ${{ inputs.sarif-output }}
+    - '--html-output'
+    - ${{ inputs.html-output }}
+    - '--scan-source'
+    - ${{ inputs.scan-source }}
+    - '--concurrency'
+    - ${{ inputs.concurrency }}
+    - '--request-delay'
+    - ${{ inputs.request-delay }}
+    - '--auto-pr'
+    - ${{ inputs.auto-pr }}
+    - '--air-gapped'
+    - ${{ inputs.air-gapped }}
+    - '--license-server'
+    - ${{ inputs.license-server }}
