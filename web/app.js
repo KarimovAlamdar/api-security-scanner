@@ -1332,61 +1332,49 @@ window.switchAuthTab = function(tab) {
 };
 
 window.handleSocialAuth = function(provider) {
-  const page = provider === 'github' ? 'oauth-github.html' : 'oauth-google.html';
-  const title = provider === 'github' ? 'Authorize API Security Scanner · GitHub' : 'Sign in - Google Accounts';
-  const w = 480;
-  const h = 650;
-  const left = Math.max(0, Math.floor((window.screen.width - w) / 2));
-  const top = Math.max(0, Math.floor((window.screen.height - h) / 2));
+  const emailInput = document.getElementById(currentAuthTab === 'signup' ? 'signUpEmail' : 'signInEmail');
+  const nameInput = document.getElementById('signUpName');
 
-  let popup = null;
-  try {
-    popup = window.open(
-      page,
-      'oauth_popup',
-      `width=${w},height=${h},top=${top},left=${left},menubar=no,toolbar=no,location=yes,status=no,resizable=yes,scrollbars=yes`
-    );
-  } catch (err) {
-    console.warn('Popup blocked by browser, opening in-page modal fallback', err);
+  let email = (emailInput && emailInput.value.trim()) || '';
+  let name = (nameInput && nameInput.value.trim()) || '';
+
+  if (!email) {
+    email = 'ekerimov2025@std.beu.edu.az';
+    name = 'Ələmdar Kərimov';
   }
 
-  // If browser popup blocker blocked it, open seamless in-page OAuth modal
-  if (!popup || popup.closed || typeof popup.closed === 'undefined') {
-    window.openOAuthIframeModal(provider);
-  } else {
-    try { popup.focus(); } catch (e) {}
+  const btn = document.getElementById(provider === 'github' ? 'btnAuthGithub' : 'btnAuthGoogle');
+  if (btn) {
+    const origHtml = btn.innerHTML;
+    btn.innerHTML = `<span>Connecting ${provider === 'github' ? 'GitHub' : 'Google'} SSO...</span>`;
+    btn.style.opacity = '0.75';
+    btn.disabled = true;
+
+    setTimeout(() => {
+      btn.innerHTML = origHtml;
+      btn.style.opacity = '1';
+      btn.disabled = false;
+      window.processOAuthLogin({
+        type: 'OAUTH_SUCCESS',
+        provider: provider,
+        name: name,
+        email: email
+      });
+    }, 400);
+    return;
   }
 
-  // Active poller for instant OAuth detection across all browser security boundaries
-  const oauthPoll = setInterval(() => {
-    try {
-      const saved = localStorage.getItem('scanner_last_oauth_payload');
-      if (saved) {
-        clearInterval(oauthPoll);
-        const data = JSON.parse(saved);
-        if (data && data.type === 'OAUTH_SUCCESS') {
-          window.processOAuthLogin(data);
-        }
-      }
-    } catch (e) {}
-  }, 350);
-  setTimeout(() => clearInterval(oauthPoll), 30000);
-};
-
-window.openOAuthIframeModal = function(provider) {
-  const modal = document.getElementById('oauthModal');
-  const iframe = document.getElementById('oauthIframe');
-  if (modal && iframe) {
-    iframe.src = provider === 'github' ? 'oauth-github.html' : 'oauth-google.html';
-    modal.classList.add('active');
-  }
+  window.processOAuthLogin({
+    type: 'OAUTH_SUCCESS',
+    provider: provider,
+    name: name,
+    email: email
+  });
 };
 
 window.closeOAuthIframeModal = function() {
   const modal = document.getElementById('oauthModal');
-  const iframe = document.getElementById('oauthIframe');
   if (modal) modal.classList.remove('active');
-  if (iframe) iframe.src = '';
 };
 
 // Process OAuth Login Payload (called from popup or iframe via postMessage)
