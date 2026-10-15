@@ -1295,6 +1295,8 @@ window.switchAuthTab = function(tab) {
   const signUpForm = document.getElementById('signUpForm');
   const title = document.getElementById('authModalTitle');
   const desc = document.getElementById('authModalDesc');
+  const btnGoogleText = document.getElementById('btnAuthGoogleText');
+  const btnGithubText = document.getElementById('btnAuthGithubText');
 
   if (tab === 'signup') {
     if (tabSignInBtn) tabSignInBtn.classList.remove('active');
@@ -1303,6 +1305,8 @@ window.switchAuthTab = function(tab) {
     if (signUpForm) signUpForm.style.display = 'block';
     if (title) title.textContent = 'Create Account';
     if (desc) desc.textContent = 'Create a secure workspace to save scans, licenses, and API keys.';
+    if (btnGoogleText) btnGoogleText.textContent = 'Create account with Google';
+    if (btnGithubText) btnGithubText.textContent = 'Create account with GitHub';
   } else {
     if (tabSignInBtn) tabSignInBtn.classList.add('active');
     if (tabSignUpBtn) tabSignUpBtn.classList.remove('active');
@@ -1310,7 +1314,89 @@ window.switchAuthTab = function(tab) {
     if (signUpForm) signUpForm.style.display = 'none';
     if (title) title.textContent = 'Sign In';
     if (desc) desc.textContent = 'Access your personal security workspace and private scan history.';
+    if (btnGoogleText) btnGoogleText.textContent = 'Sign in with Google';
+    if (btnGithubText) btnGithubText.textContent = 'Sign in with GitHub';
   }
+};
+
+window.handleSocialAuth = function(provider) {
+  const isSignUp = document.getElementById('tabSignUpBtn') && document.getElementById('tabSignUpBtn').classList.contains('active');
+  const providerName = provider === 'google' ? 'Google' : 'GitHub';
+  const defaultUser = provider === 'google' ? 'alex.dev@gmail.com' : 'octocat-dev@github.com';
+  
+  const actionTitle = isSignUp ? `Create Account with ${providerName}` : `Sign in with ${providerName}`;
+  const actionPrompt = `${actionTitle}\n\nEnter your ${providerName} email address (or click OK to proceed with demo developer account):`;
+    
+  const entered = prompt(actionPrompt, defaultUser);
+  if (entered === null) {
+    // User cancelled
+    return;
+  }
+  
+  const email = (entered.trim() || defaultUser).toLowerCase();
+  const rawPrefix = email.split('@')[0].replace(/[._-]/g, ' ');
+  const capitalized = rawPrefix.split(' ').map(w => w.charAt(0).toUpperCase() + w.slice(1)).join(' ') || `${providerName} User`;
+  const fullName = `${capitalized} (${providerName})`;
+
+  const alertBox = document.getElementById('authAlertBox');
+  const accounts = getStoredAccounts();
+  
+  // If account doesn't exist, create it seamlessly
+  if (!accounts[email]) {
+    const randomSuffix = Math.random().toString(36).substring(2, 10);
+    accounts[email] = {
+      name: fullName,
+      email: email,
+      provider: provider,
+      password: null, // OAuth authenticated
+      company: `${capitalized}'s Workspace`,
+      tier: 'Community',
+      licenseKey: `sec_live_free_${randomSuffix}`,
+      createdAt: new Date().toISOString(),
+      scans: [
+        {
+          id: `scan-${Date.now().toString().slice(-4)}`,
+          time: 'Just now',
+          target: 'https://api.gateway.internal/v1/health',
+          finding: `Initial Workspace Verification via ${providerName}`,
+          sev: 'LOW',
+          status: 'Workspace Initialized & Clean'
+        }
+      ]
+    };
+    saveStoredAccounts(accounts);
+  }
+
+  setCurrentUserEmail(email);
+  updateNavAuthUI();
+  updateEarlyBirdUI();
+  updatePricingDisplay();
+
+  if (alertBox) {
+    alertBox.className = 'auth-alert-box success';
+    alertBox.textContent = `✓ Successfully authenticated via ${providerName}! Launching workspace...`;
+    alertBox.style.display = 'block';
+  }
+
+  setTimeout(() => {
+    window.closeAuthModal();
+    if (pendingCouponClaim) {
+      pendingCouponClaim = false;
+      setTimeout(() => {
+        window.copyAndApplyEarlyBirdCoupon();
+      }, 400);
+    } else if (pendingCheckoutPlan) {
+      const plan = pendingCheckoutPlan;
+      pendingCheckoutPlan = null;
+      setTimeout(() => {
+        window.triggerStripeCheckout(plan.tierName, plan.price);
+      }, 300);
+    } else {
+      setTimeout(() => {
+        window.openWorkspaceModal();
+      }, 200);
+    }
+  }, 400);
 };
 
 window.handleSignInSubmit = function(e) {

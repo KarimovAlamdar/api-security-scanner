@@ -2591,6 +2591,97 @@ input:checked + .slider:before {
   border-radius: 8px !important;
 }
 
+/* -------------------------------- Social OAuth Buttons (Google & GitHub) -------------------------------- */
+.social-auth-group {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin-bottom: 12px;
+}
+
+.btn-social-auth {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  width: 100%;
+  padding: 9px 14px;
+  border-radius: 8px;
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  color: #f8fafc;
+  font-size: 0.85rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+  box-sizing: border-box;
+}
+
+.btn-social-auth:hover {
+  background: rgba(255, 255, 255, 0.09);
+  border-color: rgba(255, 255, 255, 0.28);
+  color: #ffffff;
+  transform: translateY(-1px);
+  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.35);
+}
+
+.btn-social-auth:active {
+  transform: translateY(0);
+}
+
+.btn-social-auth .social-icon {
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+[data-theme="light"] .btn-social-auth {
+  background: #ffffff;
+  border-color: #cbd5e1;
+  color: #0f172a;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+}
+
+[data-theme="light"] .btn-social-auth:hover {
+  background: #f8fafc;
+  border-color: #94a3b8;
+  color: #000000;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+}
+
+.auth-divider {
+  display: flex;
+  align-items: center;
+  margin: 12px 0 12px 0;
+  color: #64748b;
+  font-size: 0.72rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.75px;
+}
+
+.auth-divider::before,
+.auth-divider::after {
+  content: '';
+  flex: 1;
+  height: 1px;
+  background: rgba(255, 255, 255, 0.1);
+}
+
+.auth-divider span {
+  padding: 0 10px;
+}
+
+[data-theme="light"] .auth-divider {
+  color: #94a3b8;
+}
+
+[data-theme="light"] .auth-divider::before,
+[data-theme="light"] .auth-divider::after {
+  background: #e2e8f0;
+}
+
 
 
 /* -------------------------------- Personal Workspace Dashboard Modal -------------------------------- */
