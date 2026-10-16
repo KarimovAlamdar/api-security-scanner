@@ -2620,47 +2620,42 @@ input:checked + .slider:before {
   margin-bottom: 14px;
 }
 
-.otp-simulated-toast {
+.otp-status-banner {
   background: linear-gradient(135deg, rgba(20, 28, 48, 0.95), rgba(10, 16, 28, 0.95));
-  border: 1px solid rgba(0, 245, 160, 0.4);
+  border: 1px solid rgba(0, 245, 160, 0.35);
   border-radius: 10px;
-  padding: 10px 14px;
+  padding: 12px 14px;
   text-align: left;
   display: flex;
-  flex-direction: column;
-  gap: 4px;
-  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.4), 0 0 12px rgba(0, 245, 160, 0.15);
+  align-items: center;
+  gap: 12px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.4), 0 0 12px rgba(0, 245, 160, 0.1);
   animation: slideDownFade 0.3s ease-out;
 }
 
-.otp-toast-badge {
-  font-size: 0.72rem;
-  font-weight: 700;
-  text-transform: uppercase;
-  color: #00f5a0;
-  letter-spacing: 0.5px;
+.otp-status-icon {
+  font-size: 1.6rem;
+  line-height: 1;
+  flex-shrink: 0;
 }
 
-.otp-toast-body {
-  font-size: 0.85rem;
-  color: #e2e8f0;
+.otp-status-info {
   display: flex;
-  align-items: center;
-  justify-content: space-between;
-  flex-wrap: wrap;
-  gap: 8px;
+  flex-direction: column;
+  gap: 3px;
 }
 
-.otp-code-highlight {
-  font-family: var(--font-mono, monospace);
-  font-size: 1.15rem;
-  font-weight: 800;
+.otp-status-title {
+  font-size: 0.88rem;
+  font-weight: 700;
   color: #00f5a0;
-  background: rgba(0, 245, 160, 0.15);
-  border: 1px dashed rgba(0, 245, 160, 0.5);
-  border-radius: 6px;
-  padding: 2px 10px;
-  letter-spacing: 3px;
+  letter-spacing: 0.3px;
+}
+
+.otp-status-subtitle {
+  font-size: 0.78rem;
+  color: #94a3b8;
+  line-height: 1.35;
 }
 
 .otp-inputs-row {
@@ -2755,14 +2750,18 @@ input:checked + .slider:before {
   border-color: #a7f3d0;
 }
 
-[data-theme="light"] .otp-simulated-toast {
+[data-theme="light"] .otp-status-banner {
   background: #ffffff;
   border-color: #10b981;
   box-shadow: 0 4px 18px rgba(0, 0, 0, 0.08);
 }
 
-[data-theme="light"] .otp-toast-body {
-  color: #1e293b;
+[data-theme="light"] .otp-status-title {
+  color: #059669;
+}
+
+[data-theme="light"] .otp-status-subtitle {
+  color: #475569;
 }
 
 [data-theme="light"] .otp-digit-input {

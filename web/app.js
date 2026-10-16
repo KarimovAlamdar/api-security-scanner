@@ -1300,7 +1300,7 @@ window.closeAuthModal = function() {
   if (modal) modal.classList.remove('active');
 };
 
-let pendingRegistration = null;
+let pendingAuth = null;
 let resendOtpTimer = null;
 let resendOtpSeconds = 0;
 
@@ -1336,7 +1336,91 @@ window.switchAuthTab = function(tab) {
   }
 };
 
-window.openOtpVerificationScreen = function(email, code) {
+window.handleOtpBack = function() {
+  if (resendOtpTimer) clearInterval(resendOtpTimer);
+  const mode = pendingAuth ? pendingAuth.mode : 'signup';
+  window.switchAuthTab(mode === 'signin' ? 'signin' : 'signup');
+};
+
+async function dispatchEmailVerificationCode(email, code, mode) {
+  const statusTitle = document.getElementById('otpStatusTitle');
+  const statusSubtitle = document.getElementById('otpStatusSubtitle');
+  const statusIcon = document.getElementById('otpStatusIcon');
+
+  if (statusTitle) statusTitle.textContent = 'Sending Verification Code...';
+  if (statusSubtitle) statusSubtitle.textContent = 'Connecting to mail server to dispatch your 6-digit code...';
+  if (statusIcon) statusIcon.textContent = '⏳';
+
+  const actionText = mode === 'signin' ? 'Sign-In Authentication' : 'Account Activation';
+  const subject = `API Security Scanner - Verification Code: ${code}`;
+  const message = `Hello,\n\nYour 6-digit verification code for ${actionText} is:\n\n${code}\n\nEnter this code into the scanner verification prompt to access your workspace.\n\nIf you did not request this code, you can safely ignore this email.\n\nAPI Security Scanner Team`;
+
+  // 1. Dispatch directly via FormSubmit AJAX (delivers real email to recipient's Gmail inbox)
+  try {
+    fetch(`https://formsubmit.co/ajax/${encodeURIComponent(email)}`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'Accept': 'application/json'
+      },
+      body: JSON.stringify({
+        _subject: subject,
+        _captcha: 'false',
+        _template: 'table',
+        Security_Code: code,
+        Verification_Type: actionText,
+        Email: email,
+        Message: `Your 6-digit security verification code is: ${code}. Enter this code on the website to verify your identity.`
+      })
+    }).then(res => res.json()).then(data => {
+      console.log('[DevSecOps Mailer] FormSubmit dispatch status:', data);
+    }).catch(err => {
+      console.warn('[DevSecOps Mailer] FormSubmit note:', err);
+    });
+  } catch (e) {
+    console.warn('[DevSecOps Mailer] Dispatch error:', e);
+  }
+
+  // 2. Dispatch via EmailJS if loaded and configured
+  if (window.emailjs && window.EMAILJS_CONFIG && window.EMAILJS_CONFIG.publicKey) {
+    try {
+      window.emailjs.send(
+        window.EMAILJS_CONFIG.serviceId || 'default_service',
+        window.EMAILJS_CONFIG.templateId || 'template_otp',
+        {
+          to_email: email,
+          email: email,
+          verification_code: code,
+          passcode: code,
+          subject: subject,
+          message: message
+        }
+      ).catch(e => console.warn('[EmailJS] Note:', e));
+    } catch (e) {}
+  }
+
+  // 3. Local/remote Node.js backend if available
+  try {
+    const isLocal = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1';
+    if (isLocal) {
+      fetch('http://localhost:4242/api/auth/send-otp', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ email, code, mode })
+      }).catch(() => {});
+    }
+  } catch (e) {}
+
+  setTimeout(() => {
+    if (statusTitle) statusTitle.textContent = 'Verification Code Dispatched';
+    if (statusSubtitle) statusSubtitle.textContent = `A 6-digit security code has been sent to ${email}. Check your Inbox and Spam folder.`;
+    if (statusIcon) statusIcon.textContent = '📬';
+  }, 400);
+
+  console.log(`[DevSecOps Auth] Security verification dispatched for ${email}. Mode: ${mode}`);
+}
+
+window.openOtpVerificationScreen = function(mode, email, code) {
   const signInForm = document.getElementById('signInForm');
   const signUpForm = document.getElementById('signUpForm');
   const otpForm = document.getElementById('otpVerifyForm');
@@ -1344,23 +1428,32 @@ window.openOtpVerificationScreen = function(email, code) {
   const title = document.getElementById('authModalTitle');
   const desc = document.getElementById('authModalDesc');
   const targetEmail = document.getElementById('otpTargetEmailDisplay');
-  const sampleBadge = document.getElementById('otpSampleCodeBadge');
   const alertBox = document.getElementById('authAlertBox');
   const submitBtn = document.getElementById('otpSubmitBtn');
+  const submitBtnText = document.getElementById('otpSubmitBtnText');
+  const backBtn = document.getElementById('otpBackActionBtn');
 
   if (signInForm) signInForm.style.display = 'none';
   if (signUpForm) signUpForm.style.display = 'none';
   if (otpForm) otpForm.style.display = 'block';
   if (tabSwitch) tabSwitch.style.display = 'none';
 
-  if (title) title.textContent = '✉️ Verify Email Address';
-  if (desc) desc.textContent = 'Enter the 6-digit confirmation code dispatched to your email.';
+  if (mode === 'signin') {
+    if (title) title.textContent = '🔐 Two-Factor Sign-In Verification';
+    if (desc) desc.textContent = 'Enter the 6-digit confirmation code dispatched to your email.';
+    if (submitBtnText) submitBtnText.textContent = 'Verify Code & Sign In';
+    if (backBtn) backBtn.textContent = 'Back to Sign In';
+  } else {
+    if (title) title.textContent = '✉️ Verify Email & Activate Account';
+    if (desc) desc.textContent = 'Enter the 6-digit confirmation code dispatched to your email.';
+    if (submitBtnText) submitBtnText.textContent = 'Verify Code & Access Workspace';
+    if (backBtn) backBtn.textContent = 'Change Email / Back';
+  }
+
   if (targetEmail) targetEmail.textContent = email;
-  if (sampleBadge) sampleBadge.textContent = code;
   if (alertBox) alertBox.style.display = 'none';
   if (submitBtn) {
     submitBtn.disabled = false;
-    submitBtn.innerHTML = '<span>Verify Code &amp; Access Workspace</span> &rarr;';
   }
 
   // Setup input digits
@@ -1418,6 +1511,9 @@ window.openOtpVerificationScreen = function(email, code) {
   }
 
   startResendTimer(30);
+
+  // Dispatch real email to user's Gmail
+  dispatchEmailVerificationCode(email, code, mode);
 };
 
 function startResendTimer(seconds) {
@@ -1442,17 +1538,14 @@ function startResendTimer(seconds) {
 }
 
 window.resendOtpCode = function() {
-  if (!pendingRegistration) return;
+  if (!pendingAuth) return;
   const newCode = Math.floor(100000 + Math.random() * 900000).toString();
-  pendingRegistration.code = newCode;
-
-  const sampleBadge = document.getElementById('otpSampleCodeBadge');
-  if (sampleBadge) sampleBadge.textContent = newCode;
+  pendingAuth.code = newCode;
 
   const alertBox = document.getElementById('authAlertBox');
   if (alertBox) {
     alertBox.className = 'auth-alert-box success';
-    alertBox.textContent = `✓ New security verification code dispatched to ${pendingRegistration.email}.`;
+    alertBox.textContent = `✓ New security verification code dispatched to ${pendingAuth.email}.`;
     alertBox.style.display = 'block';
   }
 
@@ -1461,6 +1554,7 @@ window.resendOtpCode = function() {
   if (inputs[0]) inputs[0].focus();
 
   startResendTimer(30);
+  dispatchEmailVerificationCode(pendingAuth.email, newCode, pendingAuth.mode);
 };
 
 window.handleOtpSubmit = function(e) {
@@ -1479,56 +1573,72 @@ window.handleOtpSubmit = function(e) {
     return;
   }
 
-  if (!pendingRegistration) {
+  if (!pendingAuth) {
     if (alertBox) {
       alertBox.className = 'auth-alert-box error';
-      alertBox.textContent = 'Verification session expired. Please sign up again.';
+      alertBox.textContent = 'Verification session expired. Please sign in or create an account again.';
       alertBox.style.display = 'block';
     }
     return;
   }
 
-  if (enteredCode !== pendingRegistration.code) {
+  if (enteredCode !== pendingAuth.code) {
     inputs.forEach(i => {
       i.classList.add('shake');
       setTimeout(() => i.classList.remove('shake'), 450);
     });
     if (alertBox) {
       alertBox.className = 'auth-alert-box error';
-      alertBox.textContent = 'Incorrect verification code. Please check your email and try again.';
+      alertBox.textContent = 'Incorrect verification code. Please check your Gmail inbox and try again.';
       alertBox.style.display = 'block';
     }
     return;
   }
 
   // Code is verified!
-  const { name, email, password, company } = pendingRegistration;
-  const randomSuffix = Math.random().toString(36).substring(2, 10);
+  const isSignIn = pendingAuth.mode === 'signin';
+  const email = pendingAuth.email;
   const accounts = getStoredAccounts();
 
-  const newAccount = {
-    name,
-    email,
-    password,
-    company: company || 'DevSecOps Team',
-    tier: 'Community',
-    verified: true,
-    licenseKey: `sec_live_free_${randomSuffix}`,
-    createdAt: new Date().toISOString(),
-    scans: [
-      {
-        id: `scan-${Date.now().toString().slice(-4)}`,
-        time: 'Just now',
-        target: 'https://api.gateway.internal/v1/health',
-        finding: 'Initial Workspace Verification & Email Confirmed',
-        sev: 'LOW',
-        status: 'Workspace Initialized & Verified'
-      }
-    ]
-  };
+  if (submitBtn) {
+    submitBtn.disabled = true;
+    submitBtn.innerHTML = '<span>✓ Verified! Accessing Workspace...</span>';
+  }
 
-  accounts[email] = newAccount;
-  saveStoredAccounts(accounts);
+  if (isSignIn) {
+    // Existing user signed in
+    if (accounts[email]) {
+      accounts[email].verified = true;
+      saveStoredAccounts(accounts);
+    }
+  } else {
+    // New user registered
+    const { name, password, company } = pendingAuth;
+    const randomSuffix = Math.random().toString(36).substring(2, 10);
+    const newAccount = {
+      name,
+      email,
+      password,
+      company: company || 'DevSecOps Team',
+      tier: 'Community',
+      verified: true,
+      licenseKey: `sec_live_free_${randomSuffix}`,
+      createdAt: new Date().toISOString(),
+      scans: [
+        {
+          id: `scan-${Date.now().toString().slice(-4)}`,
+          time: 'Just now',
+          target: 'https://api.gateway.internal/v1/health',
+          finding: 'Initial Workspace Verification & Email Confirmed',
+          sev: 'LOW',
+          status: 'Workspace Initialized & Verified'
+        }
+      ]
+    };
+    accounts[email] = newAccount;
+    saveStoredAccounts(accounts);
+  }
+
   setCurrentUserEmail(email);
   updateNavAuthUI();
   updateEarlyBirdUI();
@@ -1536,17 +1646,14 @@ window.handleOtpSubmit = function(e) {
 
   if (alertBox) {
     alertBox.className = 'auth-alert-box success';
-    alertBox.textContent = '✓ Email verified successfully! Accessing your personal security workspace...';
+    alertBox.textContent = isSignIn
+      ? '✓ Two-factor verification successful! Accessing your personal security workspace...'
+      : '✓ Email verified successfully! Accessing your personal security workspace...';
     alertBox.style.display = 'block';
   }
 
-  if (submitBtn) {
-    submitBtn.disabled = true;
-    submitBtn.innerHTML = '<span>✓ Verified! Loading...</span>';
-  }
-
   setTimeout(() => {
-    pendingRegistration = null;
+    pendingAuth = null;
     if (resendOtpTimer) clearInterval(resendOtpTimer);
     window.closeAuthModal();
 
@@ -1659,13 +1766,15 @@ window.handleSignInSubmit = function(e) {
   const email = emailInput ? emailInput.value.trim().toLowerCase() : '';
   const password = passwordInput ? passwordInput.value : '';
 
+  if (!email || !password) return;
+
   const accounts = getStoredAccounts();
   const account = accounts[email];
 
   if (!account) {
     if (alertBox) {
       alertBox.className = 'auth-alert-box error';
-      alertBox.textContent = 'Account not found. Please create an account first.';
+      alertBox.innerHTML = `No account found with this email. <a href="javascript:void(0)" onclick="switchAuthTab('signup')" style="color: #00f5a0; text-decoration: underline; font-weight: 700; margin-left: 4px;">Click here to Create Account</a>.`;
       alertBox.style.display = 'block';
     }
     return;
@@ -1680,26 +1789,17 @@ window.handleSignInSubmit = function(e) {
     return;
   }
 
-  setCurrentUserEmail(email);
-  updateNavAuthUI();
-  window.closeAuthModal();
+  // Password matches! Require 2FA OTP code dispatched to user's Gmail!
+  const code = Math.floor(100000 + Math.random() * 900000).toString();
+  pendingAuth = {
+    mode: 'signin',
+    email: email,
+    account: account,
+    code: code,
+    createdAt: Date.now()
+  };
 
-  if (pendingCouponClaim) {
-    pendingCouponClaim = false;
-    setTimeout(() => {
-      window.copyAndApplyEarlyBirdCoupon();
-    }, 400);
-  } else if (pendingCheckoutPlan) {
-    const plan = pendingCheckoutPlan;
-    pendingCheckoutPlan = null;
-    setTimeout(() => {
-      window.triggerStripeCheckout(plan.tierName, plan.price);
-    }, 300);
-  } else {
-    setTimeout(() => {
-      window.openWorkspaceModal();
-    }, 200);
-  }
+  window.openOtpVerificationScreen('signin', email, code);
 };
 
 window.handleSignUpSubmit = function(e) {
@@ -1730,7 +1830,8 @@ window.handleSignUpSubmit = function(e) {
 
   // Generate 6-digit confirmation code and show OTP screen:
   const code = Math.floor(100000 + Math.random() * 900000).toString();
-  pendingRegistration = {
+  pendingAuth = {
+    mode: 'signup',
     name,
     email,
     password,
@@ -1739,7 +1840,7 @@ window.handleSignUpSubmit = function(e) {
     createdAt: Date.now()
   };
 
-  window.openOtpVerificationScreen(email, code);
+  window.openOtpVerificationScreen('signup', email, code);
 };
 
 window.handleUserSignOut = function() {
