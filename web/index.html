@@ -4,6 +4,11 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <!-- Defensive Security Headers -->
+    <meta http-equiv="X-Content-Type-Options" content="nosniff">
+    <meta http-equiv="X-Frame-Options" content="SAMEORIGIN">
+    <meta name="referrer" content="strict-origin-when-cross-origin">
     <title>API Security Scanner | Next-Gen DAST + SAST Hybrid Engine</title>
     <meta name="description"
         content="Stop reading vulnerability reports. Automatically discover Shadow APIs, exploit stateful BOLA/IDOR, secure LLM agents, and auto-generate ready-to-merge Pull Requests in CI/CD.">
@@ -1096,44 +1101,6 @@
                 </button>
             </form>
 
-            <!-- Form: OTP Verification Step -->
-            <form id="otpVerifyForm" onsubmit="handleOtpSubmit(event)" style="display: none;">
-                <div class="otp-instruction-box">
-                    <p class="otp-subtitle" id="otpInstructionSubtitle">We have sent a 6-digit verification code to:</p>
-                    <div class="otp-target-email" id="otpTargetEmailDisplay">user@example.com</div>
-
-                    <div class="otp-status-banner" id="otpStatusBanner">
-                        <div class="otp-status-icon" id="otpStatusIcon">📬</div>
-                        <div class="otp-status-info">
-                            <div class="otp-status-title" id="otpStatusTitle">Verification Code Dispatched</div>
-                            <div class="otp-status-subtitle" id="otpStatusSubtitle">A 6-digit one-time code has been sent to your Gmail inbox. Check your Inbox and Spam folder. (First time: Click 'Activate Form' in your Gmail, then codes arrive directly).</div>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="otp-inputs-row" id="otpInputsRow">
-                    <input type="text" class="otp-digit-input" maxlength="1" inputmode="numeric" pattern="[0-9]*" autocomplete="one-time-code" data-index="0" required>
-                    <input type="text" class="otp-digit-input" maxlength="1" inputmode="numeric" pattern="[0-9]*" data-index="1" required>
-                    <input type="text" class="otp-digit-input" maxlength="1" inputmode="numeric" pattern="[0-9]*" data-index="2" required>
-                    <input type="text" class="otp-digit-input" maxlength="1" inputmode="numeric" pattern="[0-9]*" data-index="3" required>
-                    <input type="text" class="otp-digit-input" maxlength="1" inputmode="numeric" pattern="[0-9]*" data-index="4" required>
-                    <input type="text" class="otp-digit-input" maxlength="1" inputmode="numeric" pattern="[0-9]*" data-index="5" required>
-                </div>
-
-                <button type="submit" class="btn btn-primary auth-submit-btn" id="otpSubmitBtn" style="margin-top: 14px;">
-                    <span id="otpSubmitBtnText">Verify Code &amp; Access Workspace</span> &rarr;
-                </button>
-
-                <div class="otp-footer-actions">
-                    <button type="button" class="btn-link-action" id="btnResendOtp" onclick="resendOtpCode()">
-                        Resend Code <span id="resendTimerCountdown"></span>
-                    </button>
-                    &bull;
-                    <button type="button" class="btn-link-action" id="otpBackActionBtn" onclick="handleOtpBack()">
-                        Change Email / Back
-                    </button>
-                </div>
-            </form>
         </div>
     </div>
 

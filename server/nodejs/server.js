@@ -118,8 +118,61 @@ function issueLicense(email, tier, billingCycle, stripeSessionId, stripeCustomer
   return license;
 }
 
-// ------------------- Middleware -------------------
-app.use(cors());
+// ------------------- Security & Middleware -------------------
+app.disable('x-powered-by');
+
+const allowedOrigins = [
+  'https://apisecurityscanner.github.io',
+  'http://localhost:3000',
+  'http://localhost:8080',
+  'http://127.0.0.1:3000',
+  'http://localhost:4242'
+];
+if (FRONTEND_URL) allowedOrigins.push(FRONTEND_URL);
+
+app.use(cors({
+  origin: (origin, callback) => {
+    if (!origin || allowedOrigins.includes(origin) || origin.endsWith('.github.io')) {
+      callback(null, true);
+    } else {
+      callback(new Error('Blocked by CORS policy'));
+    }
+  },
+  credentials: true
+}));
+
+// In-Memory Rate Limiter (Protects against DoS / Brute-force attacks)
+const rateLimitMap = new Map();
+app.use((req, res, next) => {
+  const ip = req.ip || req.connection.remoteAddress || 'unknown';
+  const now = Date.now();
+  const record = rateLimitMap.get(ip) || { count: 0, resetTime: now + 60000 };
+  if (now > record.resetTime) {
+    record.count = 1;
+    record.resetTime = now + 60000;
+  } else {
+    record.count++;
+  }
+  rateLimitMap.set(ip, record);
+  if (record.count > 120) {
+    return res.status(429).json({ error: 'Too many requests. Please slow down.' });
+  }
+  next();
+});
+
+function isSafeRedirectUrl(urlStr) {
+  if (!urlStr) return false;
+  try {
+    const parsed = new URL(urlStr);
+    const safeHosts = ['localhost', '127.0.0.1', 'apisecurityscanner.github.io'];
+    if (FRONTEND_URL) {
+      try { safeHosts.push(new URL(FRONTEND_URL).hostname); } catch (e) {}
+    }
+    return safeHosts.some(h => parsed.hostname === h || parsed.hostname.endsWith('.' + h));
+  } catch (e) {
+    return false;
+  }
+}
 
 // Webhook endpoint MUST use raw body for cryptographic signature verification
 app.post('/api/webhook/stripe', express.raw({ type: 'application/json' }), async (req, res) => {
@@ -176,11 +229,18 @@ app.post('/api/checkout/create-session', async (req, res) => {
     const discountApplied = (couponCode || '').trim().toUpperCase() === 'EARLYBIRD10';
     const finalAmount = discountApplied ? Math.round(baseAmount * 0.5) : baseAmount;
 
+    const safeSuccessUrl = isSafeRedirectUrl(successUrl)
+      ? successUrl
+      : `${FRONTEND_URL}/index.html?session_id={CHECKOUT_SESSION_ID}&status=success`;
+    const safeCancelUrl = isSafeRedirectUrl(cancelUrl)
+      ? cancelUrl
+      : `${FRONTEND_URL}/index.html?status=cancelled`;
+
     // Free community plan
     if (cleanTierKey === 'community' || finalAmount === 0) {
       const sessionId = `cs_free_${uuidv4().substring(0, 8)}`;
       const license = issueLicense(customerEmail, 'Community', cleanCycle, sessionId, 'cus_free');
-      const targetUrl = (successUrl || `${FRONTEND_URL}/index.html?session_id={CHECKOUT_SESSION_ID}&status=success`)
+      const targetUrl = safeSuccessUrl
         .replace('{CHECKOUT_SESSION_ID}', sessionId) + `&license=${license.licenseKey}`;
 
       return res.json({
@@ -221,8 +281,8 @@ app.post('/api/checkout/create-session', async (req, res) => {
           billingCycle: cleanCycle,
           couponCode: discountApplied ? 'EARLYBIRD10' : ''
         },
-        success_url: successUrl || `${FRONTEND_URL}/index.html?session_id={CHECKOUT_SESSION_ID}&status=success`,
-        cancel_url: cancelUrl || `${FRONTEND_URL}/index.html?status=cancelled`
+        success_url: safeSuccessUrl,
+        cancel_url: safeCancelUrl
       });
 
       return res.json({
@@ -243,7 +303,7 @@ app.post('/api/checkout/create-session', async (req, res) => {
     // Sandbox Simulation Mode (Zero Setup Required)
     const mockSessionId = `cs_test_mock_${uuidv4().replace(/-/g, '').substring(0, 20)}`;
     const mockLicense = issueLicense(customerEmail, tier, cleanCycle, mockSessionId, 'cus_mock');
-    const mockRedirect = (successUrl || `${FRONTEND_URL}/index.html?session_id={CHECKOUT_SESSION_ID}&status=success`)
+    const mockRedirect = safeSuccessUrl
       .replace('{CHECKOUT_SESSION_ID}', mockSessionId) + `&license=${mockLicense.licenseKey}`;
 
     return res.json({
@@ -300,9 +360,16 @@ app.get('/api/license/verify', (req, res) => {
 });
 
 /**
- * GET /api/licenses
+ * GET /api/licenses (Protected Admin Endpoint)
  */
 app.get('/api/licenses', (req, res) => {
+  const adminKey = process.env.ADMIN_API_KEY;
+  if (adminKey) {
+    const authHeader = req.headers['authorization'] || req.headers['x-admin-key'];
+    if (!authHeader || (authHeader !== adminKey && authHeader !== `Bearer ${adminKey}`)) {
+      return res.status(401).json({ error: 'Unauthorized: Admin authentication required' });
+    }
+  }
   res.json(Object.values(licensesCache));
 });
 

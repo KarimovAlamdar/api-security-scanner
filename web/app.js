@@ -997,14 +997,14 @@ function renderPlaygroundFindings(findings) {
     <div class="finding-card-demo" id="finding-card-${i}">
       <div class="finding-card-header" style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:8px;">
         <div style="display: flex; align-items: center; gap: 10px; flex-wrap: wrap;">
-          <span class="badge ${f.sev === 'CRITICAL' ? 'badge-crit' : 'badge-high'}">${f.sev}</span>
-          <strong style="color: var(--text-main); font-size:1.05rem;">${f.id}</strong>
-          <span class="finding-route-code"><code>${f.method} ${f.path}</code></span>
+          <span class="badge ${f.sev === 'CRITICAL' ? 'badge-crit' : 'badge-high'}">${escapeHtml(f.sev)}</span>
+          <strong style="color: var(--text-main); font-size:1.05rem;">${escapeHtml(f.id)}</strong>
+          <span class="finding-route-code"><code>${escapeHtml(f.method)} ${escapeHtml(f.path)}</code></span>
         </div>
-        <span class="finding-source-loc">📍 ${f.sourceFile}:${f.line}</span>
+        <span class="finding-source-loc">📍 ${escapeHtml(f.sourceFile)}:${escapeHtml(String(f.line))}</span>
       </div>
 
-      <p style="color: var(--text-muted); font-size: 0.95rem; margin: 12px 0;">${f.detail}</p>
+      <p style="color: var(--text-muted); font-size: 0.95rem; margin: 12px 0;">${escapeHtml(f.detail)}</p>
 
       <div class="remediation-box">
         <div class="remediation-box-header">
@@ -1016,7 +1016,7 @@ function renderPlaygroundFindings(findings) {
 
       <div style="margin-top: 12px; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 8px;">
         <span class="reproduce-text">Reproduce: <code>${escapeHtml(f.curl)}</code></span>
-        <button class="btn btn-sm btn-glow-indigo" onclick="simulatePrCreation('${f.id}', this)">⚡ Open Auto-PR on GitHub</button>
+        <button class="btn btn-sm btn-glow-indigo" onclick="simulatePrCreation('${escapeJsString(f.id)}', this)">⚡ Open Auto-PR on GitHub</button>
       </div>
     </div>
   `).join('');
@@ -1300,22 +1300,16 @@ window.closeAuthModal = function() {
   if (modal) modal.classList.remove('active');
 };
 
-let pendingAuth = null;
-let resendOtpTimer = null;
-let resendOtpSeconds = 0;
-
 window.switchAuthTab = function(tab) {
   const tabSignInBtn = document.getElementById('tabSignInBtn');
   const tabSignUpBtn = document.getElementById('tabSignUpBtn');
   const signInForm = document.getElementById('signInForm');
   const signUpForm = document.getElementById('signUpForm');
-  const otpForm = document.getElementById('otpVerifyForm');
   const tabSwitch = document.querySelector('.auth-tab-switch');
   const title = document.getElementById('authModalTitle');
   const desc = document.getElementById('authModalDesc');
   const alertBox = document.getElementById('authAlertBox');
 
-  if (otpForm) otpForm.style.display = 'none';
   if (tabSwitch) tabSwitch.style.display = 'flex';
   if (alertBox) alertBox.style.display = 'none';
 
@@ -1336,428 +1330,21 @@ window.switchAuthTab = function(tab) {
   }
 };
 
-window.handleOtpBack = function() {
-  if (resendOtpTimer) clearInterval(resendOtpTimer);
-  const mode = pendingAuth ? pendingAuth.mode : 'signup';
-  window.switchAuthTab(mode === 'signin' ? 'signin' : 'signup');
-};
-
-async function dispatchEmailVerificationCode(email, code, mode) {
-  const statusTitle = document.getElementById('otpStatusTitle');
-  const statusSubtitle = document.getElementById('otpStatusSubtitle');
-  const statusIcon = document.getElementById('otpStatusIcon');
-
-  if (statusTitle) statusTitle.textContent = 'Sending Verification Code...';
-  if (statusSubtitle) statusSubtitle.textContent = 'Connecting to mail server to dispatch your 6-digit code...';
-  if (statusIcon) statusIcon.textContent = '⏳';
-
-  const actionText = mode === 'signin' ? 'Sign-In Authentication' : 'Account Activation';
-  const subject = `API Security Scanner - Verification Code: ${code}`;
-  const message = `Hello,\n\nYour 6-digit verification code for ${actionText} is:\n\n${code}\n\nEnter this code into the scanner verification prompt to access your workspace.\n\nIf you did not request this code, you can safely ignore this email.\n\nAPI Security Scanner Team`;
-
-  // 1. Dispatch directly via FormSubmit AJAX (delivers real email to recipient's Gmail inbox)
+async function hashPassword(str) {
+  if (!str) return '';
   try {
-    fetch(`https://formsubmit.co/ajax/${encodeURIComponent(email)}`, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        'Accept': 'application/json'
-      },
-      body: JSON.stringify({
-        _subject: subject,
-        _captcha: 'false',
-        _template: 'table',
-        Security_Code: code,
-        Verification_Type: actionText,
-        Email: email,
-        Message: `Your 6-digit security verification code is: ${code}. Enter this code on the website to verify your identity.`
-      })
-    }).then(res => res.json()).then(data => {
-      console.log('[DevSecOps Mailer] FormSubmit dispatch status:', data);
-    }).catch(err => {
-      console.warn('[DevSecOps Mailer] FormSubmit note:', err);
-    });
+    const encoder = new TextEncoder();
+    const data = encoder.encode(str + "_sec_scanner_salt_2026");
+    const hashBuffer = await crypto.subtle.digest('SHA-256', data);
+    const hashArray = Array.from(new Uint8Array(hashBuffer));
+    return hashArray.map(b => b.toString(16).padStart(2, '0')).join('');
   } catch (e) {
-    console.warn('[DevSecOps Mailer] Dispatch error:', e);
+    // Fallback if SubtleCrypto is unavailable in certain sandboxes
+    return str;
   }
-
-  // 2. Dispatch via EmailJS if loaded and configured
-  if (window.emailjs && window.EMAILJS_CONFIG && window.EMAILJS_CONFIG.publicKey) {
-    try {
-      window.emailjs.send(
-        window.EMAILJS_CONFIG.serviceId || 'default_service',
-        window.EMAILJS_CONFIG.templateId || 'template_otp',
-        {
-          to_email: email,
-          email: email,
-          verification_code: code,
-          passcode: code,
-          subject: subject,
-          message: message
-        }
-      ).catch(e => console.warn('[EmailJS] Note:', e));
-    } catch (e) {}
-  }
-
-  // 3. Local/remote Node.js backend if available
-  try {
-    const isLocal = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1';
-    if (isLocal) {
-      fetch('http://localhost:4242/api/auth/send-otp', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ email, code, mode })
-      }).catch(() => {});
-    }
-  } catch (e) {}
-
-  setTimeout(() => {
-    if (statusTitle) statusTitle.textContent = 'Verification Code Dispatched';
-    if (statusSubtitle) statusSubtitle.textContent = `A 6-digit security code has been sent to ${email}. Check your Inbox and Spam folder. (First time: Click 'Activate Form' in your Gmail, then codes arrive directly).`;
-    if (statusIcon) statusIcon.textContent = '📬';
-  }, 400);
-
-  console.log(`[DevSecOps Auth] Security verification dispatched for ${email}. Mode: ${mode}`);
 }
 
-window.openOtpVerificationScreen = function(mode, email, code) {
-  const signInForm = document.getElementById('signInForm');
-  const signUpForm = document.getElementById('signUpForm');
-  const otpForm = document.getElementById('otpVerifyForm');
-  const tabSwitch = document.querySelector('.auth-tab-switch');
-  const title = document.getElementById('authModalTitle');
-  const desc = document.getElementById('authModalDesc');
-  const targetEmail = document.getElementById('otpTargetEmailDisplay');
-  const alertBox = document.getElementById('authAlertBox');
-  const submitBtn = document.getElementById('otpSubmitBtn');
-  const submitBtnText = document.getElementById('otpSubmitBtnText');
-  const backBtn = document.getElementById('otpBackActionBtn');
-
-  if (signInForm) signInForm.style.display = 'none';
-  if (signUpForm) signUpForm.style.display = 'none';
-  if (otpForm) otpForm.style.display = 'block';
-  if (tabSwitch) tabSwitch.style.display = 'none';
-
-  if (mode === 'signin') {
-    if (title) title.textContent = '🔐 Two-Factor Sign-In Verification';
-    if (desc) desc.textContent = 'Enter the 6-digit confirmation code dispatched to your email.';
-    if (submitBtnText) submitBtnText.textContent = 'Verify Code & Sign In';
-    if (backBtn) backBtn.textContent = 'Back to Sign In';
-  } else {
-    if (title) title.textContent = '✉️ Verify Email & Activate Account';
-    if (desc) desc.textContent = 'Enter the 6-digit confirmation code dispatched to your email.';
-    if (submitBtnText) submitBtnText.textContent = 'Verify Code & Access Workspace';
-    if (backBtn) backBtn.textContent = 'Change Email / Back';
-  }
-
-  if (targetEmail) targetEmail.textContent = email;
-  if (alertBox) alertBox.style.display = 'none';
-  if (submitBtn) {
-    submitBtn.disabled = false;
-  }
-
-  // Setup input digits
-  const inputs = document.querySelectorAll('.otp-digit-input');
-  inputs.forEach((input, idx) => {
-    input.value = '';
-    input.classList.remove('filled', 'shake');
-
-    input.oninput = () => {
-      const val = input.value.replace(/[^0-9]/g, '');
-      input.value = val ? val.slice(-1) : '';
-      if (input.value) {
-        input.classList.add('filled');
-        if (idx < inputs.length - 1) {
-          inputs[idx + 1].focus();
-        }
-      } else {
-        input.classList.remove('filled');
-      }
-
-      const allFilled = Array.from(inputs).every(i => i.value.trim().length === 1);
-      if (allFilled) {
-        window.handleOtpSubmit(new Event('submit'));
-      }
-    };
-
-    input.onkeydown = (e) => {
-      if (e.key === 'Backspace' && !input.value && idx > 0) {
-        inputs[idx - 1].focus();
-      }
-    };
-
-    input.onpaste = (e) => {
-      e.preventDefault();
-      const pasteData = (e.clipboardData || window.clipboardData).getData('text').trim();
-      const digits = pasteData.replace(/[^0-9]/g, '').slice(0, 6);
-      if (digits) {
-        digits.split('').forEach((d, i) => {
-          if (inputs[i]) {
-            inputs[i].value = d;
-            inputs[i].classList.add('filled');
-          }
-        });
-        const focusIdx = Math.min(digits.length, inputs.length - 1);
-        inputs[focusIdx].focus();
-        if (digits.length === 6) {
-          window.handleOtpSubmit(new Event('submit'));
-        }
-      }
-    };
-  });
-
-  if (inputs[0]) {
-    setTimeout(() => inputs[0].focus(), 150);
-  }
-
-  startResendTimer(30);
-
-  // Dispatch real email to user's Gmail
-  dispatchEmailVerificationCode(email, code, mode);
-};
-
-function startResendTimer(seconds) {
-  if (resendOtpTimer) clearInterval(resendOtpTimer);
-  resendOtpSeconds = seconds;
-  const resendBtn = document.getElementById('btnResendOtp');
-  const timerSpan = document.getElementById('resendTimerCountdown');
-
-  if (resendBtn) resendBtn.disabled = true;
-  if (timerSpan) timerSpan.textContent = `(${resendOtpSeconds}s)`;
-
-  resendOtpTimer = setInterval(() => {
-    resendOtpSeconds--;
-    if (resendOtpSeconds <= 0) {
-      clearInterval(resendOtpTimer);
-      if (resendBtn) resendBtn.disabled = false;
-      if (timerSpan) timerSpan.textContent = '';
-    } else {
-      if (timerSpan) timerSpan.textContent = `(${resendOtpSeconds}s)`;
-    }
-  }, 1000);
-}
-
-window.resendOtpCode = function() {
-  if (!pendingAuth) return;
-  const newCode = Math.floor(100000 + Math.random() * 900000).toString();
-  pendingAuth.code = newCode;
-
-  const alertBox = document.getElementById('authAlertBox');
-  if (alertBox) {
-    alertBox.className = 'auth-alert-box success';
-    alertBox.textContent = `✓ New security verification code dispatched to ${pendingAuth.email}.`;
-    alertBox.style.display = 'block';
-  }
-
-  const inputs = document.querySelectorAll('.otp-digit-input');
-  inputs.forEach(i => { i.value = ''; i.classList.remove('filled', 'shake'); });
-  if (inputs[0]) inputs[0].focus();
-
-  startResendTimer(30);
-  dispatchEmailVerificationCode(pendingAuth.email, newCode, pendingAuth.mode);
-};
-
-window.handleOtpSubmit = function(e) {
-  if (e && e.preventDefault) e.preventDefault();
-  const inputs = document.querySelectorAll('.otp-digit-input');
-  const enteredCode = Array.from(inputs).map(i => i.value.trim()).join('');
-  const alertBox = document.getElementById('authAlertBox');
-  const submitBtn = document.getElementById('otpSubmitBtn');
-
-  if (enteredCode.length !== 6) {
-    if (alertBox) {
-      alertBox.className = 'auth-alert-box error';
-      alertBox.textContent = 'Please enter all 6 digits of your verification code.';
-      alertBox.style.display = 'block';
-    }
-    return;
-  }
-
-  if (!pendingAuth) {
-    if (alertBox) {
-      alertBox.className = 'auth-alert-box error';
-      alertBox.textContent = 'Verification session expired. Please sign in or create an account again.';
-      alertBox.style.display = 'block';
-    }
-    return;
-  }
-
-  if (enteredCode !== pendingAuth.code) {
-    inputs.forEach(i => {
-      i.classList.add('shake');
-      setTimeout(() => i.classList.remove('shake'), 450);
-    });
-    if (alertBox) {
-      alertBox.className = 'auth-alert-box error';
-      alertBox.textContent = 'Incorrect verification code. Please check your Gmail inbox and try again.';
-      alertBox.style.display = 'block';
-    }
-    return;
-  }
-
-  // Code is verified!
-  const isSignIn = pendingAuth.mode === 'signin';
-  const email = pendingAuth.email;
-  const accounts = getStoredAccounts();
-
-  if (submitBtn) {
-    submitBtn.disabled = true;
-    submitBtn.innerHTML = '<span>✓ Verified! Accessing Workspace...</span>';
-  }
-
-  if (isSignIn) {
-    // Existing user signed in
-    if (accounts[email]) {
-      accounts[email].verified = true;
-      saveStoredAccounts(accounts);
-    }
-  } else {
-    // New user registered
-    const { name, password, company } = pendingAuth;
-    const randomSuffix = Math.random().toString(36).substring(2, 10);
-    const newAccount = {
-      name,
-      email,
-      password,
-      company: company || 'DevSecOps Team',
-      tier: 'Community',
-      verified: true,
-      licenseKey: `sec_live_free_${randomSuffix}`,
-      createdAt: new Date().toISOString(),
-      scans: [
-        {
-          id: `scan-${Date.now().toString().slice(-4)}`,
-          time: 'Just now',
-          target: 'https://api.gateway.internal/v1/health',
-          finding: 'Initial Workspace Verification & Email Confirmed',
-          sev: 'LOW',
-          status: 'Workspace Initialized & Verified'
-        }
-      ]
-    };
-    accounts[email] = newAccount;
-    saveStoredAccounts(accounts);
-  }
-
-  setCurrentUserEmail(email);
-  updateNavAuthUI();
-  updateEarlyBirdUI();
-  updatePricingDisplay();
-
-  if (alertBox) {
-    alertBox.className = 'auth-alert-box success';
-    alertBox.textContent = isSignIn
-      ? '✓ Two-factor verification successful! Accessing your personal security workspace...'
-      : '✓ Email verified successfully! Accessing your personal security workspace...';
-    alertBox.style.display = 'block';
-  }
-
-  setTimeout(() => {
-    pendingAuth = null;
-    if (resendOtpTimer) clearInterval(resendOtpTimer);
-    window.closeAuthModal();
-
-    if (pendingCouponClaim) {
-      pendingCouponClaim = false;
-      setTimeout(() => {
-        window.copyAndApplyEarlyBirdCoupon();
-      }, 400);
-    } else if (pendingCheckoutPlan) {
-      const plan = pendingCheckoutPlan;
-      pendingCheckoutPlan = null;
-      setTimeout(() => {
-        window.triggerStripeCheckout(plan.tierName, plan.price);
-      }, 300);
-    } else {
-      setTimeout(() => {
-        window.openWorkspaceModal();
-      }, 250);
-    }
-  }, 600);
-};
-
-// Process OAuth Login Payload (called from popup or iframe via postMessage)
-window.processOAuthLogin = function(data) {
-  if (!data || !data.email) return;
-
-  const email = data.email.toLowerCase().trim();
-  const name = data.name || (data.provider === 'github' ? 'GitHub Developer' : 'Google User');
-  const provider = data.provider || 'google';
-
-  const accounts = getStoredAccounts();
-  if (!accounts[email]) {
-    const randomSuffix = Math.random().toString(36).substring(2, 10);
-    accounts[email] = {
-      name: name,
-      email: email,
-      provider: provider,
-      password: null, // OAuth authenticated
-      company: `${name}'s Workspace`,
-      tier: 'Community',
-      licenseKey: `sec_live_free_${randomSuffix}`,
-      createdAt: new Date().toISOString(),
-      scans: [
-        {
-          id: `scan-${Date.now().toString().slice(-4)}`,
-          time: 'Just now',
-          target: 'https://api.gateway.internal/v1/health',
-          finding: `Initial Workspace Verification via ${provider === 'github' ? 'GitHub' : 'Google'}`,
-          sev: 'LOW',
-          status: 'Workspace Initialized & Clean'
-        }
-      ]
-    };
-    saveStoredAccounts(accounts);
-  }
-
-  setCurrentUserEmail(email);
-  updateNavAuthUI();
-  updateEarlyBirdUI();
-  updatePricingDisplay();
-  window.closeAuthModal();
-  window.closeOAuthIframeModal();
-
-  try { localStorage.removeItem('scanner_last_oauth_payload'); } catch (e) {}
-
-  if (pendingCouponClaim) {
-    pendingCouponClaim = false;
-    setTimeout(() => {
-      window.copyAndApplyEarlyBirdCoupon();
-    }, 400);
-  } else if (pendingCheckoutPlan) {
-    const plan = pendingCheckoutPlan;
-    pendingCheckoutPlan = null;
-    setTimeout(() => {
-      window.triggerStripeCheckout(plan.tierName, plan.price);
-    }, 300);
-  } else {
-    setTimeout(() => {
-      window.openWorkspaceModal();
-    }, 250);
-  }
-};
-
-// Listen for OAuth completion from popup or iframe
-window.addEventListener('message', function(event) {
-  if (event.data && event.data.type === 'OAUTH_SUCCESS') {
-    window.processOAuthLogin(event.data);
-  }
-});
-
-// Focus check for localStorage fallback
-window.addEventListener('focus', function() {
-  try {
-    const saved = localStorage.getItem('scanner_last_oauth_payload');
-    if (saved) {
-      const data = JSON.parse(saved);
-      if (data && data.type === 'OAUTH_SUCCESS') {
-        window.processOAuthLogin(data);
-      }
-    }
-  } catch (e) {}
-});
-
-window.handleSignInSubmit = function(e) {
+window.handleSignInSubmit = async function(e) {
   e.preventDefault();
   const emailInput = document.getElementById('signInEmail');
   const passwordInput = document.getElementById('signInPassword');
@@ -1780,7 +1367,9 @@ window.handleSignInSubmit = function(e) {
     return;
   }
 
-  if (account.password && account.password !== password) {
+  const hashedPassword = await hashPassword(password);
+  // Verify against secure hash or legacy plaintext
+  if (account.password && account.password !== hashedPassword && account.password !== password) {
     if (alertBox) {
       alertBox.className = 'auth-alert-box error';
       alertBox.textContent = 'Incorrect password. Please try again.';
@@ -1789,20 +1378,37 @@ window.handleSignInSubmit = function(e) {
     return;
   }
 
-  // Password matches! Require 2FA OTP code dispatched to user's Gmail!
-  const code = Math.floor(100000 + Math.random() * 900000).toString();
-  pendingAuth = {
-    mode: 'signin',
-    email: email,
-    account: account,
-    code: code,
-    createdAt: Date.now()
-  };
+  // Upgrade legacy plaintext password to secure hash automatically
+  if (account.password === password && hashedPassword !== password) {
+    account.password = hashedPassword;
+    saveStoredAccounts(accounts);
+  }
 
-  window.openOtpVerificationScreen('signin', email, code);
+  setCurrentUserEmail(email);
+  updateNavAuthUI();
+  updateEarlyBirdUI();
+  updatePricingDisplay();
+  window.closeAuthModal();
+
+  if (pendingCouponClaim) {
+    pendingCouponClaim = false;
+    setTimeout(() => {
+      window.copyAndApplyEarlyBirdCoupon();
+    }, 400);
+  } else if (pendingCheckoutPlan) {
+    const plan = pendingCheckoutPlan;
+    pendingCheckoutPlan = null;
+    setTimeout(() => {
+      window.triggerStripeCheckout(plan.tierName, plan.price);
+    }, 300);
+  } else {
+    setTimeout(() => {
+      window.openWorkspaceModal();
+    }, 200);
+  }
 };
 
-window.handleSignUpSubmit = function(e) {
+window.handleSignUpSubmit = async function(e) {
   e.preventDefault();
   const nameInput = document.getElementById('signUpName');
   const emailInput = document.getElementById('signUpEmail');
@@ -1828,19 +1434,53 @@ window.handleSignUpSubmit = function(e) {
     return;
   }
 
-  // Generate 6-digit confirmation code and show OTP screen:
-  const code = Math.floor(100000 + Math.random() * 900000).toString();
-  pendingAuth = {
-    mode: 'signup',
+  const hashedPassword = await hashPassword(password);
+  const randomSuffix = Math.random().toString(36).substring(2, 10);
+  const newAccount = {
     name,
     email,
-    password,
+    password: hashedPassword,
     company: company || 'DevSecOps Team',
-    code,
-    createdAt: Date.now()
+    tier: 'Community',
+    verified: true,
+    licenseKey: `sec_live_free_${randomSuffix}`,
+    createdAt: new Date().toISOString(),
+    scans: [
+      {
+        id: `scan-${Date.now().toString().slice(-4)}`,
+        time: 'Just now',
+        target: 'https://api.gateway.internal/v1/health',
+        finding: 'Initial Workspace Verification (Clean)',
+        sev: 'LOW',
+        status: 'Workspace Initialized & Ready'
+      }
+    ]
   };
 
-  window.openOtpVerificationScreen('signup', email, code);
+  accounts[email] = newAccount;
+  saveStoredAccounts(accounts);
+  setCurrentUserEmail(email);
+  updateNavAuthUI();
+  updateEarlyBirdUI();
+  updatePricingDisplay();
+  window.closeAuthModal();
+
+  if (pendingCouponClaim) {
+    pendingCouponClaim = false;
+    setTimeout(() => {
+      window.copyAndApplyEarlyBirdCoupon();
+    }, 400);
+  } else if (pendingCheckoutPlan) {
+    const plan = pendingCheckoutPlan;
+    pendingCheckoutPlan = null;
+    setTimeout(() => {
+      window.triggerStripeCheckout(plan.tierName, plan.price);
+    }, 300);
+  } else {
+    setTimeout(() => {
+      window.openWorkspaceModal();
+    }, 200);
+  }
 };
 
 window.handleUserSignOut = function() {

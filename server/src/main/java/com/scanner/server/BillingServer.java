@@ -233,6 +233,17 @@ public class BillingServer {
             return;
         }
 
+        String adminKey = resolveConfig(null, "admin.api.key", "ADMIN_API_KEY", null);
+        if (adminKey != null && !adminKey.isBlank()) {
+            String authHeader = exchange.getRequestHeaders().getFirst("Authorization");
+            String customKey = exchange.getRequestHeaders().getFirst("X-Admin-Key");
+            boolean authorized = ("Bearer " + adminKey).equals(authHeader) || adminKey.equals(customKey) || adminKey.equals(authHeader);
+            if (!authorized) {
+                sendJsonResponse(exchange, 401, Map.of("error", "Unauthorized: Admin authentication required"));
+                return;
+            }
+        }
+
         sendJsonResponse(exchange, 200, licenseManager.getAllLicenses());
     }
 
@@ -259,10 +270,19 @@ public class BillingServer {
 
     private void addCorsHeaders(HttpExchange exchange) {
         Headers headers = exchange.getResponseHeaders();
-        headers.set("Access-Control-Allow-Origin", "*");
+        String origin = exchange.getRequestHeaders().getFirst("Origin");
+        if (origin != null && (origin.contains("localhost") || origin.contains("127.0.0.1") || origin.endsWith("github.io"))) {
+            headers.set("Access-Control-Allow-Origin", origin);
+        } else if (origin == null) {
+            headers.set("Access-Control-Allow-Origin", "*");
+        } else {
+            headers.set("Access-Control-Allow-Origin", "https://apisecurityscanner.github.io");
+        }
         headers.set("Access-Control-Allow-Methods", "GET, POST, OPTIONS, PUT, DELETE");
-        headers.set("Access-Control-Allow-Headers", "Content-Type, Authorization, Stripe-Signature, X-Signature, X-Requested-With");
+        headers.set("Access-Control-Allow-Headers", "Content-Type, Authorization, Stripe-Signature, X-Signature, X-Requested-With, X-Admin-Key");
         headers.set("Access-Control-Max-Age", "86400");
+        headers.set("X-Content-Type-Options", "nosniff");
+        headers.set("X-Frame-Options", "DENY");
     }
 
     private void sendJsonResponse(HttpExchange exchange, int statusCode, Object data) throws IOException {
