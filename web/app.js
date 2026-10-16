@@ -1413,7 +1413,7 @@ async function dispatchEmailVerificationCode(email, code, mode) {
 
   setTimeout(() => {
     if (statusTitle) statusTitle.textContent = 'Verification Code Dispatched';
-    if (statusSubtitle) statusSubtitle.textContent = `A 6-digit security code has been sent to ${email}. Check your Inbox and Spam folder.`;
+    if (statusSubtitle) statusSubtitle.textContent = `A 6-digit security code has been sent to ${email}. Check your Inbox and Spam folder. (First time: Click 'Activate Form' in your Gmail, then codes arrive directly).`;
     if (statusIcon) statusIcon.textContent = '📬';
   }, 400);
 
