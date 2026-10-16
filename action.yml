@@ -1,5 +1,5 @@
 name: 'API Security Scanner'
-description: 'Scans OpenAPI endpoints for auth bypass, CORS wildcard, SQL injection, and BOLA/IDOR issues with source line mapping, PR suggested changes, and native SARIF export.'
+description: 'Automated DAST+SAST scanner for OpenAPI with BOLA detection, SARIF export, and zero-click PR auto-fix.'
 author: 'KarimovAlamdar'
 branding:
   icon: 'shield'
